@@ -7,6 +7,7 @@ import globals
 from globals import *
 import vector3
 from vector3 import *
+import steamvr
 
 #######################################################
 #LOADING A BASIC SCENE FOR TESTING
