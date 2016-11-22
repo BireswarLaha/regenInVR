@@ -104,11 +104,32 @@ def move():
 #		print m.getPosition()
 vizact.ontimer(0,move)
 
+keysToBeIgnored = []
+keysToBeIgnored.append(KEYS['forward'])
+keysToBeIgnored.append(KEYS['back'])
+keysToBeIgnored.append(KEYS['left'])
+keysToBeIgnored.append(KEYS['right'])
+keysToBeIgnored.append(KEYS['reset'])
+keysToBeIgnored.append(KEYS['camera'])
+keysToBeIgnored.append(KEYS['help'])
+
 #Adding a quad to show a movie
-object = viz.addTexQuad()
+videoRenderingBoard = viz.addTexQuad()
 video = viz.addVideo('media/movie1.avi')
 video.setRate(2)
-object.texture(video)
-object.setPosition(0.0, 1.0, 0.0)
+videoRenderingBoard.texture(video)
+videoRenderingBoard.setPosition(0.0, 1.0, 0.0)
 video.loop()
 video.play()
+
+def onKeyDown(key):
+	global videoRenderingBoard, keysToBeIgnored
+	print "key = " + str(key)
+
+	if key in keysToBeIgnored:
+		print "ignoring the key press in onKeyDown function"
+	elif key is 'p': #spacebar
+		print "toggling the visibility of the stimulus video rendering board"
+		videoRenderingBoard.visible(viz.TOGGLE)
+
+viz.callback(viz.KEYDOWN_EVENT, onKeyDown, priority=-10)
