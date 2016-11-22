@@ -104,3 +104,11 @@ def move():
 #		print m.getPosition()
 vizact.ontimer(0,move)
 
+#Adding a quad to show a movie
+object = viz.addTexQuad()
+video = viz.addVideo('media/movie1.avi')
+video.setRate(2)
+object.texture(video)
+object.setPosition(0.0, 1.0, 0.0)
+video.loop()
+video.play()
