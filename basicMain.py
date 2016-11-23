@@ -118,12 +118,14 @@ videoRenderingBoard = viz.addTexQuad()
 video = viz.addVideo('media/movie1.avi')
 video.setRate(2)
 videoRenderingBoard.texture(video)
-videoRenderingBoard.setPosition(0.0, 1.0, 0.0)
+#videoRenderingBoard.setPosition([0.0, 0.0, 0.0], mode = viz.REL_PARENT)
+videoRenderingBoard.setPosition([0.0, 1.0, 0.0])
 video.loop()
 video.play()
 
-linkBetweenHeadAndVideo = viz.link(headTracker, videoRenderingBoard)
-linkBetweenHeadAndVideo.setMask(viz.LINK_POS)
+#linkBetweenHeadAndVideo = viz.link(headTracker, videoRenderingBoard)
+linkBetweenHeadAndVideo = viz.grab(headTracker, videoRenderingBoard)
+#linkBetweenHeadAndVideo.setMask(viz.LINK_POS)
 linkBetweenHeadAndVideo.disable()
 
 def onKeyDown(key):
@@ -132,7 +134,9 @@ def onKeyDown(key):
 
 	if key in keysToBeIgnored:
 		print "ignoring the key press in onKeyDown function"
-	elif key is 'p': #spacebar
+	elif key is 'p':
+		print "videoRenderingBoard.getPosition(viz.ABS_GLOBAL) = " + str(videoRenderingBoard.getPosition(viz.ABS_GLOBAL))
+	elif key is 'v': #spacebar
 		print "toggling the visibility of the stimulus video rendering board"
 		videoRenderingBoard.visible(viz.TOGGLE)
 	elif key is '1':
@@ -142,6 +146,14 @@ def onKeyDown(key):
 		else:
 			print "enabling the link now ..."
 			linkBetweenHeadAndVideo.enable()
-			linkBetweenHeadAndVideo.postTrans([0.0, 0.0, 0.4])
+#			linkBetweenHeadAndVideo.postTrans([0.0, 0.0, 0.4])
+			linkBetweenHeadAndVideo.setOffset([0.0, 0.0, 0.9])
+	elif key is '2':
+		print "setting parent of the infoboard as the headtracker ..."
+		videoRenderingBoard.setParent(headTracker)
+	elif key is '3':
+		print "setting parent of the infoboard as the WORLD ..."
+		videoRenderingBoard.clearParents()
+		videoRenderingBoard.setParent(viz.WORLD)
 
 viz.callback(viz.KEYDOWN_EVENT, onKeyDown, priority=-10)
