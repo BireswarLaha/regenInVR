@@ -8,6 +8,7 @@ from globals import *
 import vector3
 from vector3 import *
 import steamvr
+import vizshape
 
 #######################################################
 #LOADING A BASIC SCENE FOR TESTING
@@ -113,18 +114,31 @@ keysToBeIgnored.append(KEYS['reset'])
 keysToBeIgnored.append(KEYS['camera'])
 keysToBeIgnored.append(KEYS['help'])
 
+#adding a video
+video = viz.addVideo('media/movie1.avi')
+
 #Adding a quad to show a movie
 videoRenderingBoard = viz.addTexQuad()
-video = viz.addVideo('media/movie1.avi')
-video.setRate(2)
 videoRenderingBoard.texture(video)
 #videoRenderingBoard.setPosition([0.0, 0.0, 0.0], mode = viz.REL_PARENT)
-videoRenderingBoard.setPosition([0.0, 1.0, 0.0])
+videoRenderingBoard.setPosition([0.0, 1.0, 1.0])
 video.loop()
 video.play()
 
-#linkBetweenHeadAndVideo = viz.link(headTracker, videoRenderingBoard)
-linkBetweenHeadAndVideo = viz.grab(headTracker, videoRenderingBoard)
+DEFAULT_RADIUS = 0.5
+
+#Adding a sphere to show a movie
+videoRenderingSphere = vizshape.addSphere(radius=DEFAULT_RADIUS, slices = 32, stacks = 32, flipFaces=True, cullFace=True, lighting=True)
+videoRenderingSphere.texture(video)
+videoRenderingSphere.setPosition(2.0, 1.0, 1.0)
+
+#Adding a box to show a movie
+videoRenderingBox = vizshape.addBox(size=[DEFAULT_RADIUS * 2.0, DEFAULT_RADIUS * 2.0, DEFAULT_RADIUS * 2.0], flipFaces=True, cullFace=True, lighting=True)
+videoRenderingBox.texture(video)
+videoRenderingBox.setPosition(-2.0, 1.0, 1.0)
+
+linkBetweenHeadAndVideo = viz.link(headTracker, videoRenderingBoard)
+#linkBetweenHeadAndVideo = viz.grab(headTracker, videoRenderingBoard)
 #linkBetweenHeadAndVideo.setMask(viz.LINK_POS)
 linkBetweenHeadAndVideo.disable()
 
@@ -136,6 +150,8 @@ def onKeyDown(key):
 		print "ignoring the key press in onKeyDown function"
 	elif key is 'p':
 		print "videoRenderingBoard.getPosition(viz.ABS_GLOBAL) = " + str(videoRenderingBoard.getPosition(viz.ABS_GLOBAL))
+		print "videoRenderingBoard.getPosition(viz.ABS_PARENT) = " + str(videoRenderingBoard.getPosition(viz.ABS_PARENT))
+		print "videoRenderingBoard.getPosition(viz.ABS_LOCAL) = " + str(videoRenderingBoard.getPosition(viz.ABS_LOCAL))
 	elif key is 'v': #spacebar
 		print "toggling the visibility of the stimulus video rendering board"
 		videoRenderingBoard.visible(viz.TOGGLE)
@@ -147,13 +163,15 @@ def onKeyDown(key):
 			print "enabling the link now ..."
 			linkBetweenHeadAndVideo.enable()
 #			linkBetweenHeadAndVideo.postTrans([0.0, 0.0, 0.4])
-			linkBetweenHeadAndVideo.setOffset([0.0, 0.0, 0.9])
+			linkBetweenHeadAndVideo.setOffset([0.0, 0.0, 0.4])
 	elif key is '2':
 		print "setting parent of the infoboard as the headtracker ..."
 		videoRenderingBoard.setParent(headTracker)
+		videoRenderingBoard.setPosition(0.0, 0.0, -1.0, viz.ABS_PARENT)
 	elif key is '3':
 		print "setting parent of the infoboard as the WORLD ..."
 		videoRenderingBoard.clearParents()
 		videoRenderingBoard.setParent(viz.WORLD)
+		videoRenderingBoard.setPosition([0.0, 1.0, 0.0])
 
 viz.callback(viz.KEYDOWN_EVENT, onKeyDown, priority=-10)
