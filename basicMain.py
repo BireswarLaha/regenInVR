@@ -127,29 +127,41 @@ video.play()
 
 videoRenderingBoard.visible(False)
 
-DEFAULT_RADIUS = 0.5
-
 #Adding a sphere to show a movie
-videoRenderingSphere = vizshape.addSphere(radius=DEFAULT_RADIUS, slices = 32, stacks = 32, flipFaces=True, cullFace=True, lighting=True)
+DEFAULT_SPHERE_RADIUS = 0.5
+DEFAULT_SPHERE_POSITION = [2.0, 1.0, 1.0]
+videoRenderingSphere = vizshape.addSphere(radius=DEFAULT_SPHERE_RADIUS, slices = 32, stacks = 32, flipFaces=True, cullFace=True, lighting=True)
 videoRenderingSphere.texture(video)
-videoRenderingSphere.setPosition(2.0, 1.0, 1.0)
+videoRenderingSphere.setPosition(DEFAULT_SPHERE_POSITION)
 videoRenderingSphere.visible(False)
 sphereLink = viz.link(headTracker, videoRenderingSphere)
 sphereLink.setMask(viz.LINK_POS)
 sphereLink.disable()
 
+def unlinkAndResetSphere():
+	global sphereLink, DEFAULT_SPHERE_POSITION, videoRenderingSphere
+	sphereLink.disable()
+	videoRenderingSphere.setPosition(DEFAULT_SPHERE_POSITION)
+
 #Adding a box to show a movie
-videoRenderingBox = vizshape.addBox(size=[DEFAULT_RADIUS * 2.0, DEFAULT_RADIUS * 2.0, DEFAULT_RADIUS * 2.0], flipFaces=True, cullFace=True, lighting=True)
+DEFAULT_BOX_SIDE_LENGTH = 1.0
+DEFAULT_BOX_POSITION = [-2.0, 1.0, 1.0]
+videoRenderingBox = vizshape.addBox(size=[DEFAULT_BOX_SIDE_LENGTH, DEFAULT_BOX_SIDE_LENGTH, DEFAULT_BOX_SIDE_LENGTH], flipFaces=True, cullFace=True, lighting=True)
 videoRenderingBox.texture(video)
-videoRenderingBox.setPosition(-2.0, 1.0, 1.0)
+videoRenderingBox.setPosition(DEFAULT_BOX_POSITION)
 videoRenderingBox.visible(False)
 boxLink = viz.link(headTracker, videoRenderingBox)
 boxLink.setMask(viz.LINK_POS)
 boxLink.disable()
 
+def unlinkAndResetBox():
+	global boxLink, DEFAULT_BOX_POSITION, videoRenderingBox
+	boxLink.disable()
+	videoRenderingBox.setPosition(DEFAULT_BOX_POSITION)
+
 def onKeyDown(key):
 	global videoRenderingBoard, videoRenderingSphere, videoRenderingBox, keysToBeIgnored
-	global sphereLink, boxLink
+	global sphereLink, boxLink, DEFAULT_SPHERE_POSITION, DEFAULT_BOX_POSITION
 	print "key = " + str(key)
 
 	if key in keysToBeIgnored:
@@ -158,26 +170,28 @@ def onKeyDown(key):
 #		print "videoRenderingBoard.getPosition(viz.ABS_GLOBAL) = " + str(videoRenderingBoard.getPosition(viz.ABS_GLOBAL))
 #		print "videoRenderingBoard.getPosition(viz.ABS_PARENT) = " + str(videoRenderingBoard.getPosition(viz.ABS_PARENT))
 #		print "videoRenderingBoard.getPosition(viz.ABS_LOCAL) = " + str(videoRenderingBoard.getPosition(viz.ABS_LOCAL))
-	elif key is '1': #spacebar
-		boxLink.disable()
-		sphereLink.disable()
+	elif key is '1': #visibility toggle
+		unlinkAndResetBox()
+		unlinkAndResetSphere()
 		print "toggling the visibility of the stimulus screens"
 		videoRenderingBoard.visible(viz.TOGGLE)
 		videoRenderingSphere.visible(viz.TOGGLE)
 		videoRenderingBox.visible(viz.TOGGLE)
 	elif key is '2': #box viewing
+		unlinkAndResetSphere()
 		if boxLink.getEnabled():
 			print "disabling the box link now ..."
-			boxLink.disable()
+			unlinkAndResetBox()
 		else:
 			print "enabling the box link now ..."
 			boxLink.enable()
 #			boxLink.postTrans([0.0, 0.0, 0.4])
 #			boxLink.setOffset([0.0, 0.0, 0.4])
 	elif key is '3': #sphere link
+		unlinkAndResetBox()
 		if sphereLink.getEnabled():
 			print "disabling the sphere link now ..."
-			sphereLink.disable()
+			unlinkAndResetSphere()
 		else:
 			print "enabling the sphere link now ..."
 			sphereLink.enable()
