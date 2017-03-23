@@ -1,7 +1,7 @@
 ﻿#DK2 demo
 import viz
 import oculus
-#import steamvr
+import steamvr
 import vizfx
 import globals
 from globals import *
