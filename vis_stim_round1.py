@@ -13,7 +13,8 @@ viz.go()
 
 #loading scene
 #viz.add('piazza.osgb')
-viz.add('models/rockHall.osgb')
+#viz.add('models/rockHall.osgb')
+viz.add('models/sydney_opera_house.osgb')
 
 #initializing the HMD
 hmd = steamvr.HMD()
