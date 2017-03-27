@@ -14,15 +14,16 @@ import vizshape
 #LOADING A BASIC SCENE FOR TESTING
 viz.go()
 
-#viz.add('piazza.osgb')
-viz.add('models/rockHall.osgb')
+viz.add('piazza.osgb')
+#viz.add('models/rockHall.osgb')
 #viz.add('piazza_animations.osgb')
 #######################################################
 
 # Setup Oculus Rift HMD
 headTracker = None
-hmd = oculus.Rift()
-headTracker = hmd.getSensor()
+hmd = None
+#hmd = oculus.Rift()
+#headTracker = hmd.getSensor()
 
 if not headTracker:
 	hmd = steamvr.HMD()

@@ -1,4 +1,4 @@
-﻿#Developed on Vizard sample code, titled steamvrExample.py
+﻿#Developed on Vizard sample code, titled 'steamvrExample.py'
 #Bireswar Laha, Huberman Lab, Department of Neurobiology, Stanford University
 #Dated: March, 2017
 
@@ -179,10 +179,22 @@ canvas.setMouseStyle(0)
 canvas.alignment(viz.ALIGN_CENTER)
 canvas.setRenderWorld([400,400], [5.0,5.0])
 
-instructions ="""10 out of the 11 paintings pack unique stimulations
-for a specific retinal ganglion cell type in your eye.
-Your job is to find each painting with an active stimulation,
-and complete each session to your satisfaction.
+instructions ="""INSTRUCTIONS:
+1. 10 out of the 11 paintings pack unique visual stimulation.
+2. Find each painting with an active stimulation.
+3. Complete all sessions to your satisfaction.
 
-Use the trigger to select and jump to a painting. GO GET THEM!!"""
-panel = vizinfo.InfoPanel(instructions, title='Non-invasive stimulation experience for vision restoration', key=None, icon=False, align=viz.ALIGN_CENTER, parent=canvas)
+TODO: Use the trigger to select and jump to a painting. GO GET THEM!!"""
+panel = vizinfo.InfoPanel(instructions, title='NON-INVASIVE STIMULATION FOR VISION RESTORATION', key=None, icon=False, align=viz.ALIGN_CENTER, parent=canvas)
+
+#videos to be played
+videoPlaceholder1 = viz.addVideo('media/maxFireStim1_OffParasol.avi')
+#videoPlaceholder2 = viz.addVideo('media/onParasol2.avi')
+#videoPlaceholder3 = viz.addVideo('media/offParasol1.avi')
+#videoPlaceholder4 = viz.addVideo('media/offParasol2.avi')
+#videoPlaceholder5 = viz.addVideo('media/onMidget1.avi')
+#videoPlaceholder6 = viz.addVideo('media/onMidget2.avi')
+#videoPlaceholder7 = viz.addVideo('media/offMidget1.avi')
+#videoPlaceholder8 = viz.addVideo('media/offMidget2.avi')
+#videoPlaceholder9 = viz.addVideo('media/SBS1.avi')
+#videoPlaceholder10 = viz.addVideo('media/SBS1.avi')
