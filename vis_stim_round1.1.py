@@ -9,6 +9,7 @@ import vizact
 import vizinfo
 import viztask
 import steamvr
+import vector3
 
 # Initialize window
 viz.setMultiSample(8)
@@ -25,9 +26,55 @@ viewLink = viz.link(navigationNode, viz.MainView)
 viewLink.preMultLinkable(hmd.getSensor())
 
 # Load environment
-gallery = vizfx.addChild('gallery.osgb')
+gallery = vizfx.addChild('models/galleryWithoutPaintings.osgb')
 gallery.hint(viz.OPTIMIZE_INTERSECT_HINT)
 gallery.disable(viz.SHADOW_CASTING)
+
+#load paintings
+painting_birth_of_venus = vizfx.addChild('models/painting_birth-of-venus.osgb')
+painting_dali_memory = vizfx.addChild('models/painting_dali-memory.osgb')
+painting_harring_bestbuddies = vizfx.addChild('models/painting_harring-bestbuddies.osgb')
+painting_magritte = vizfx.addChild('models/painting_magritte.osgb')
+painting_monalisa = vizfx.addChild('models/painting_monalisa.osgb')
+painting_monet_venice = vizfx.addChild('models/painting_monet-venice.osgb')
+painting_picasso = vizfx.addChild('models/painting_picasso.osgb')
+painting_scream = vizfx.addChild('models/painting_scream.osgb')
+painting_starry_night = vizfx.addChild('models/painting_starry-night.osgb')
+painting_van_gogh = vizfx.addChild('models/painting_van-gogh.osgb')
+painting_warhol_soup = vizfx.addChild('models/painting_warhol_soup.osgb')
+
+painting_birth_of_venus.visible(False)
+painting_dali_memory.visible(False)
+painting_harring_bestbuddies.visible(False)
+painting_magritte.visible(False)
+painting_monalisa.visible(False)
+painting_monet_venice.visible(False)
+painting_picasso.visible(False)
+painting_scream.visible(False)
+painting_starry_night.visible(False)
+painting_van_gogh.visible(False)
+painting_warhol_soup.visible(False)
+
+painting_birth_of_venus_black = vizfx.addChild('models/painting_birth-of-venus_black.osgb')
+painting_dali_memory_black = vizfx.addChild('models/painting_dali-memory_black.osgb')
+painting_harring_bestbuddies_black = vizfx.addChild('models/painting_harring-bestbuddies_black.osgb')
+painting_magritte_black = vizfx.addChild('models/painting_magritte_black.osgb')
+painting_monalisa_black = vizfx.addChild('models/painting_monalisa_black.osgb')
+painting_monet_venice_black = vizfx.addChild('models/painting_monet-venice_black.osgb')
+painting_picasso_black = vizfx.addChild('models/painting_picasso_black.osgb')
+painting_scream_black = vizfx.addChild('models/painting_scream_black.osgb')
+painting_starry_night_black = vizfx.addChild('models/painting_starry-night_black.osgb')
+painting_van_gogh_black = vizfx.addChild('models/painting_van-gogh_black.osgb')
+painting_warhol_soup_black = vizfx.addChild('models/painting_warhol_soup_black.osgb')
+
+#collect all the paintings in an array of objects
+#paintingObjects = []
+#for name in gallery.getNodeNames():
+#	if name.startswith('painting'):
+#		painting = gallery.getChild(name)
+#		if painting:
+#			print "painting found = " + str(name)
+#			paintingObjects.append(painting)
 
 #Create skylight
 viz.MainView.getHeadLight().disable()
@@ -148,19 +195,30 @@ def JumpTask(controller):
 			print "viewPos = " + str(viewPos)
 			print "navPos = " + str(navPos)
 			print "jumpPos = " + str(jumpPos)
+			print "info.normal = " + str(info.normal)
+			print "info.normalVector = " + str(info.normalVector)
 			
 			# Display jump flash
 			jump_flash.visible(True)
 			jump_flash.runAction(vizact.fadeTo(viz.BLACK, begin=viz.WHITE, time=2.0, interpolate=vizact.easeOutStrong))
 			jump_flash.addAction(vizact.method.visible(False))
 
-			print "jumped"
-			
 			# Hide instruction canvasForInitMsg after first jump
 			canvasForInitMsg.visible(False)
-			
+
 			canvasForStim.visible(True)
-			canvasForStim.setPosition(JUMP_LOCATIONS[info.name])
+			normalizedDirectionToMoveTheCanvas = vector3.Vec3ToVizardFloatList(vector3.vizardFloatListToVec3([-info.normal[0], 0.0, -info.normal[2]]).normalize())
+			print "normalizedDirectionToMoveTheCanvas = " + str(normalizedDirectionToMoveTheCanvas)
+			
+			separationOnHorizontalPlane = 1.0
+			canvasForStim.billboard(viz.BILLBOARD_VIEW_POS)
+			canvasForStim.setPosition(
+				jumpPos[0] + (normalizedDirectionToMoveTheCanvas[0] * separationOnHorizontalPlane),
+				1.0,
+				jumpPos[2] + (normalizedDirectionToMoveTheCanvas[2] * separationOnHorizontalPlane))
+
+#			jumpPos[0] + 1.0, 4.0, jumpPos[2] + 1.0)
+			print "jumped\n"
 
 # Add controllers
 for controller in steamvr.getControllerList():
@@ -189,9 +247,9 @@ canvasForInitMsg.alignment(viz.ALIGN_CENTER)
 canvasForInitMsg.setRenderWorld([400,400], [5.0,5.0])
 
 instructions ="""INSTRUCTIONS:
-1. 10 out of the 11 paintings pack unique visual stimulation.
-2. Find each painting with an active stimulation.
-3. Complete all sessions to your satisfaction.
+1. 10 out of the 11 frames pack unique visual stimulation.
+2. Find each frame with an active stimulation.
+3. Complete each session to view (and appreciate!) the painting.
 
 TODO: Use the trigger to select and jump to a painting. GO GET THEM!!"""
 panel = vizinfo.InfoPanel(instructions, title='NON-INVASIVE STIMULATION FOR VISION RESTORATION', key=None, icon=False, align=viz.ALIGN_CENTER, parent=canvasForInitMsg)
@@ -200,13 +258,14 @@ panel = vizinfo.InfoPanel(instructions, title='NON-INVASIVE STIMULATION FOR VISI
 canvasForStim = viz.addGUICanvas(pos=[0, 3.0, 6.0])
 canvasForStim.setMouseStyle(0)
 canvasForStim.alignment(viz.ALIGN_CENTER)
-canvasForStim.setRenderWorld([400,400], [5.0,5.0])
+canvasForStim.setRenderWorld([400,400], [2.0,2.0])
 canvasForStim.visible(False)
 
-instructions ="""INSTRUCTIONS:
-1. Press the trigger, and keep it pressed, to get the visual stimulation
-2. Release the trigger to STOP the stimulation
-3. """
+instructions ="""1. Pull the trigger to START the stimulation
+2. Keep the trigger pressed to CONTINUE
+3. Release the trigger to STOP it
+4. Complete the stimulation to see the art!!
+"""
 panelForStimInstructions = vizinfo.InfoPanel(instructions, title='VISUAL STIMULATION IN STORE FOR YOU!', key=None, icon=False, align=viz.ALIGN_CENTER, parent=canvasForStim)
 
 
@@ -221,3 +280,32 @@ videoPlaceholder1 = viz.addVideo('media/maxFireStim1_OffParasol.avi')
 #videoPlaceholder8 = viz.addVideo('media/offMidget2.avi')
 #videoPlaceholder9 = viz.addVideo('media/SBS1.avi')
 #videoPlaceholder10 = viz.addVideo('media/SBS1.avi')
+
+def togglePaintingsVisibility():
+	painting_birth_of_venus.visible(viz.TOGGLE)
+	painting_dali_memory.visible(viz.TOGGLE)
+	painting_harring_bestbuddies.visible(viz.TOGGLE)
+	painting_magritte.visible(viz.TOGGLE)
+	painting_monalisa.visible(viz.TOGGLE)
+	painting_monet_venice.visible(viz.TOGGLE)
+	painting_picasso.visible(viz.TOGGLE)
+	painting_scream.visible(viz.TOGGLE)
+	painting_starry_night.visible(viz.TOGGLE)
+	painting_van_gogh.visible(viz.TOGGLE)
+	painting_warhol_soup.visible(viz.TOGGLE)
+
+	painting_birth_of_venus_black.visible(viz.TOGGLE)
+	painting_dali_memory_black.visible(viz.TOGGLE)
+	painting_harring_bestbuddies_black.visible(viz.TOGGLE)
+	painting_magritte_black.visible(viz.TOGGLE)
+	painting_monalisa_black.visible(viz.TOGGLE)
+	painting_monet_venice_black.visible(viz.TOGGLE)
+	painting_picasso_black.visible(viz.TOGGLE)
+	painting_scream_black.visible(viz.TOGGLE)
+	painting_starry_night_black.visible(viz.TOGGLE)
+	painting_van_gogh_black.visible(viz.TOGGLE)
+	painting_warhol_soup_black.visible(viz.TOGGLE)
+
+
+	
+vizact.onkeydown('v', togglePaintingsVisibility)
