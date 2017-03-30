@@ -192,12 +192,6 @@ def JumpTask(controller):
 			jumpPos[2] = jumpPos[2] - (viewPos[2] - navPos[2])
 			navigationNode.setPosition(jumpPos)
 			
-			print "viewPos = " + str(viewPos)
-			print "navPos = " + str(navPos)
-			print "jumpPos = " + str(jumpPos)
-			print "info.normal = " + str(info.normal)
-			print "info.normalVector = " + str(info.normalVector)
-			
 			# Display jump flash
 			jump_flash.visible(True)
 			jump_flash.runAction(vizact.fadeTo(viz.BLACK, begin=viz.WHITE, time=2.0, interpolate=vizact.easeOutStrong))
@@ -208,17 +202,13 @@ def JumpTask(controller):
 
 			canvasForStim.visible(True)
 			normalizedDirectionToMoveTheCanvas = vector3.Vec3ToVizardFloatList(vector3.vizardFloatListToVec3([-info.normal[0], 0.0, -info.normal[2]]).normalize())
-			print "normalizedDirectionToMoveTheCanvas = " + str(normalizedDirectionToMoveTheCanvas)
 			
 			separationOnHorizontalPlane = 1.0
 			canvasForStim.billboard(viz.BILLBOARD_VIEW_POS)
 			canvasForStim.setPosition(
 				jumpPos[0] + (normalizedDirectionToMoveTheCanvas[0] * separationOnHorizontalPlane),
-				1.0,
+				0.5,
 				jumpPos[2] + (normalizedDirectionToMoveTheCanvas[2] * separationOnHorizontalPlane))
-
-#			jumpPos[0] + 1.0, 4.0, jumpPos[2] + 1.0)
-			print "jumped\n"
 
 # Add controllers
 for controller in steamvr.getControllerList():
@@ -306,6 +296,4 @@ def togglePaintingsVisibility():
 	painting_van_gogh_black.visible(viz.TOGGLE)
 	painting_warhol_soup_black.visible(viz.TOGGLE)
 
-
-	
 vizact.onkeydown('v', togglePaintingsVisibility)
