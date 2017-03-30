@@ -150,8 +150,17 @@ def JumpTask(controller):
 			jump_flash.runAction(vizact.fadeTo(viz.BLACK, begin=viz.WHITE, time=2.0, interpolate=vizact.easeOutStrong))
 			jump_flash.addAction(vizact.method.visible(False))
 
-			# Hide instruction canvas after first jump
-			canvas.visible(False)
+			print "jumped"
+			
+			instructions ="""INSTRUCTIONS:
+			1. Press the trigger, and keep it pressed, to get the visual stimulation
+			2. Release the trigger to STOP the stimulation
+			3. """
+			panel1 = vizinfo.InfoPanel(instructions, title='NON-INVASIVE STIMULATION FOR VISION RESTORATION', key=None, icon=False, align=viz.ALIGN_CENTER, parent=canvasForInitMsg)
+
+
+			# Hide instruction canvasForInitMsg after first jump
+			canvasForInitMsg.visible(False)
 
 # Add controllers
 for controller in steamvr.getControllerList():
@@ -173,11 +182,11 @@ for controller in steamvr.getControllerList():
 	# Setup task for triggering jumps using controller
 	viztask.schedule(JumpTask(controller))
 
-# Add directions to canvas
-canvas = viz.addGUICanvas(pos=[0, 3.0, 6.0])
-canvas.setMouseStyle(0)
-canvas.alignment(viz.ALIGN_CENTER)
-canvas.setRenderWorld([400,400], [5.0,5.0])
+# Add directions to canvasForInitMsg
+canvasForInitMsg = viz.addGUICanvas(pos=[0, 3.0, 6.0])
+canvasForInitMsg.setMouseStyle(0)
+canvasForInitMsg.alignment(viz.ALIGN_CENTER)
+canvasForInitMsg.setRenderWorld([400,400], [5.0,5.0])
 
 instructions ="""INSTRUCTIONS:
 1. 10 out of the 11 paintings pack unique visual stimulation.
@@ -185,7 +194,7 @@ instructions ="""INSTRUCTIONS:
 3. Complete all sessions to your satisfaction.
 
 TODO: Use the trigger to select and jump to a painting. GO GET THEM!!"""
-panel = vizinfo.InfoPanel(instructions, title='NON-INVASIVE STIMULATION FOR VISION RESTORATION', key=None, icon=False, align=viz.ALIGN_CENTER, parent=canvas)
+panel = vizinfo.InfoPanel(instructions, title='NON-INVASIVE STIMULATION FOR VISION RESTORATION', key=None, icon=False, align=viz.ALIGN_CENTER, parent=canvasForInitMsg)
 
 #videos to be played
 videoPlaceholder1 = viz.addVideo('media/maxFireStim1_OffParasol.avi')
