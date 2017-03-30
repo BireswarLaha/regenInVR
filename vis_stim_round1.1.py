@@ -144,7 +144,11 @@ def JumpTask(controller):
 			jumpPos[0] = jumpPos[0] - (viewPos[0] - navPos[0])
 			jumpPos[2] = jumpPos[2] - (viewPos[2] - navPos[2])
 			navigationNode.setPosition(jumpPos)
-
+			
+			print "viewPos = " + str(viewPos)
+			print "navPos = " + str(navPos)
+			print "jumpPos = " + str(jumpPos)
+			
 			# Display jump flash
 			jump_flash.visible(True)
 			jump_flash.runAction(vizact.fadeTo(viz.BLACK, begin=viz.WHITE, time=2.0, interpolate=vizact.easeOutStrong))
@@ -152,15 +156,11 @@ def JumpTask(controller):
 
 			print "jumped"
 			
-			instructions ="""INSTRUCTIONS:
-			1. Press the trigger, and keep it pressed, to get the visual stimulation
-			2. Release the trigger to STOP the stimulation
-			3. """
-			panel1 = vizinfo.InfoPanel(instructions, title='NON-INVASIVE STIMULATION FOR VISION RESTORATION', key=None, icon=False, align=viz.ALIGN_CENTER, parent=canvasForInitMsg)
-
-
 			# Hide instruction canvasForInitMsg after first jump
 			canvasForInitMsg.visible(False)
+			
+			canvasForStim.visible(True)
+			canvasForStim.setPosition(JUMP_LOCATIONS[info.name])
 
 # Add controllers
 for controller in steamvr.getControllerList():
@@ -195,6 +195,20 @@ instructions ="""INSTRUCTIONS:
 
 TODO: Use the trigger to select and jump to a painting. GO GET THEM!!"""
 panel = vizinfo.InfoPanel(instructions, title='NON-INVASIVE STIMULATION FOR VISION RESTORATION', key=None, icon=False, align=viz.ALIGN_CENTER, parent=canvasForInitMsg)
+
+# Add directions to canvasForStim
+canvasForStim = viz.addGUICanvas(pos=[0, 3.0, 6.0])
+canvasForStim.setMouseStyle(0)
+canvasForStim.alignment(viz.ALIGN_CENTER)
+canvasForStim.setRenderWorld([400,400], [5.0,5.0])
+canvasForStim.visible(False)
+
+instructions ="""INSTRUCTIONS:
+1. Press the trigger, and keep it pressed, to get the visual stimulation
+2. Release the trigger to STOP the stimulation
+3. """
+panelForStimInstructions = vizinfo.InfoPanel(instructions, title='VISUAL STIMULATION IN STORE FOR YOU!', key=None, icon=False, align=viz.ALIGN_CENTER, parent=canvasForStim)
+
 
 #videos to be played
 videoPlaceholder1 = viz.addVideo('media/maxFireStim1_OffParasol.avi')
