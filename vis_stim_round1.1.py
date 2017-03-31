@@ -203,11 +203,11 @@ def JumpTask(controller):
 			canvasForStim.visible(True)
 			normalizedDirectionToMoveTheCanvas = vector3.Vec3ToVizardFloatList(vector3.vizardFloatListToVec3([-info.normal[0], 0.0, -info.normal[2]]).normalize())
 			
-			separationOnHorizontalPlane = 1.0
+			separationOnHorizontalPlane = 0.8
 			canvasForStim.billboard(viz.BILLBOARD_VIEW_POS)
 			canvasForStim.setPosition(
 				jumpPos[0] + (normalizedDirectionToMoveTheCanvas[0] * separationOnHorizontalPlane),
-				0.5,
+				0.6,
 				jumpPos[2] + (normalizedDirectionToMoveTheCanvas[2] * separationOnHorizontalPlane))
 
 # Add controllers
