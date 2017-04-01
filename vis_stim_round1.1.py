@@ -154,14 +154,11 @@ def HighlightPainting(name, mode):
 			for x in range(0, len(splitNames) - 1):
 				nameNew = nameNew + splitNames[x] + "_"
 			nameNew = nameNew + splitNames[len(splitNames) - 1]
-#		nameNew.replace('-', '_')
 		objToHighlight = nameNew
 		global paintingsDictionary
 		if paintingsDictionary[objToHighlight].getVisible() == False:
 			objToHighlight = objToHighlight + "_black"
 			
-#		print "name = " + str(name)
-#		print "objToHighlight = " + str(objToHighlight)
 		
 		if mode:
 #			gallery.apply(highlightEffect, node=name)
@@ -189,13 +186,10 @@ def HighlightTask(controller):
 
 			# Update highlight state if selected painting changed
 			if last_highlight != node_name:
-#				print "info.name = " + str(info.name)
 				controller.setVibration(0.001)
 				HighlightPainting(last_highlight, False)
-#				print "info.name1 = " + str(info.name)
 				last_highlight = node_name
 				HighlightPainting(last_highlight, True)
-#				print "info.name2 = " + str(info.name)
 
 			# Wait for next frame
 			yield None
@@ -203,9 +197,7 @@ def HighlightTask(controller):
 	finally:
 
 		# Remove highlight when task finishes
-#		print "info.name3 = " + str(info.name)
 		HighlightPainting(last_highlight, False)
-#		print "info.name4 = " + str(info.name)
 
 		# Hide controller pointer
 		controller.line.visible(False)
