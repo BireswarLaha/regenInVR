@@ -30,18 +30,30 @@ gallery = vizfx.addChild('models/galleryWithoutPaintings.osgb')
 gallery.hint(viz.OPTIMIZE_INTERSECT_HINT)
 gallery.disable(viz.SHADOW_CASTING)
 
+paintingsDictionary = {}
 #load paintings
 painting_birth_of_venus = vizfx.addChild('models/painting_birth-of-venus.osgb')
+paintingsDictionary['painting_birth_of_venus'] = painting_birth_of_venus
 painting_dali_memory = vizfx.addChild('models/painting_dali-memory.osgb')
+paintingsDictionary['painting_dali_memory'] = painting_dali_memory
 painting_harring_bestbuddies = vizfx.addChild('models/painting_harring-bestbuddies.osgb')
+paintingsDictionary['painting_harring_bestbuddies'] = painting_harring_bestbuddies
 painting_magritte = vizfx.addChild('models/painting_magritte.osgb')
+paintingsDictionary['painting_magritte'] = painting_magritte
 painting_monalisa = vizfx.addChild('models/painting_monalisa.osgb')
+paintingsDictionary['painting_monalisa'] = painting_monalisa
 painting_monet_venice = vizfx.addChild('models/painting_monet-venice.osgb')
+paintingsDictionary['painting_monet_venice'] = painting_monet_venice
 painting_picasso = vizfx.addChild('models/painting_picasso.osgb')
+paintingsDictionary['painting_picasso'] = painting_picasso
 painting_scream = vizfx.addChild('models/painting_scream.osgb')
+paintingsDictionary['painting_scream'] = painting_scream
 painting_starry_night = vizfx.addChild('models/painting_starry-night.osgb')
+paintingsDictionary['painting_starry_night'] = painting_starry_night
 painting_van_gogh = vizfx.addChild('models/painting_van-gogh.osgb')
+paintingsDictionary['painting_van_gogh'] = painting_van_gogh
 painting_warhol_soup = vizfx.addChild('models/painting_warhol_soup.osgb')
+paintingsDictionary['painting_warhol_soup'] = painting_warhol_soup
 
 painting_birth_of_venus.visible(False)
 painting_dali_memory.visible(False)
@@ -56,16 +68,27 @@ painting_van_gogh.visible(False)
 painting_warhol_soup.visible(False)
 
 painting_birth_of_venus_black = vizfx.addChild('models/painting_birth-of-venus_black.osgb')
+paintingsDictionary['painting_birth_of_venus_black'] = painting_birth_of_venus_black
 painting_dali_memory_black = vizfx.addChild('models/painting_dali-memory_black.osgb')
+paintingsDictionary['painting_dali_memory_black'] = painting_dali_memory_black
 painting_harring_bestbuddies_black = vizfx.addChild('models/painting_harring-bestbuddies_black.osgb')
+paintingsDictionary['painting_harring_bestbuddies_black'] = painting_harring_bestbuddies_black
 painting_magritte_black = vizfx.addChild('models/painting_magritte_black.osgb')
+paintingsDictionary['painting_magritte_black'] = painting_magritte_black
 painting_monalisa_black = vizfx.addChild('models/painting_monalisa_black.osgb')
+paintingsDictionary['painting_monalisa_black'] = painting_monalisa_black
 painting_monet_venice_black = vizfx.addChild('models/painting_monet-venice_black.osgb')
+paintingsDictionary['painting_monet_venice_black'] = painting_monet_venice_black
 painting_picasso_black = vizfx.addChild('models/painting_picasso_black.osgb')
+paintingsDictionary['painting_picasso_black'] = painting_picasso_black
 painting_scream_black = vizfx.addChild('models/painting_scream_black.osgb')
+paintingsDictionary['painting_scream_black'] = painting_scream_black
 painting_starry_night_black = vizfx.addChild('models/painting_starry-night_black.osgb')
+paintingsDictionary['painting_starry_night_black'] = painting_starry_night_black
 painting_van_gogh_black = vizfx.addChild('models/painting_van-gogh_black.osgb')
+paintingsDictionary['painting_van_gogh_black'] = painting_van_gogh_black
 painting_warhol_soup_black = vizfx.addChild('models/painting_warhol_soup_black.osgb')
+paintingsDictionary['painting_warhol_soup_black'] = painting_warhol_soup_black
 
 #collect all the paintings in an array of objects
 #paintingObjects = []
@@ -124,10 +147,28 @@ def IntersectController(controller):
 def HighlightPainting(name, mode):
 	"""Apply/Unapply highlight effect from specified painting"""
 	if name:
+		nameNew = name
+		splitNames = nameNew.split("-")
+		if len(splitNames) > 1:
+			nameNew = ''
+			for x in range(0, len(splitNames) - 1):
+				nameNew = nameNew + splitNames[x] + "_"
+			nameNew = nameNew + splitNames[len(splitNames) - 1]
+#		nameNew.replace('-', '_')
+		objToHighlight = nameNew
+		global paintingsDictionary
+		if paintingsDictionary[objToHighlight].getVisible() == False:
+			objToHighlight = objToHighlight + "_black"
+			
+#		print "name = " + str(name)
+#		print "objToHighlight = " + str(objToHighlight)
+		
 		if mode:
-			gallery.apply(highlightEffect, node=name)
+#			gallery.apply(highlightEffect, node=name)
+			paintingsDictionary[objToHighlight].apply(highlightEffect, node=name)
 		else:
-			gallery.unapply(highlightEffect, node=name)
+#			gallery.unapply(highlightEffect, node=name)
+			paintingsDictionary[objToHighlight].unapply(highlightEffect, node=name)
 
 def HighlightTask(controller):
 	"""Task that highlights jump locations pointed at by controller"""
@@ -142,16 +183,19 @@ def HighlightTask(controller):
 
 			# Intersect pointer with scene
 			info = IntersectController(controller)
-
+			
 			# Check if name is a jump location painting
 			node_name = info.name if info.name in JUMP_LOCATIONS else ''
 
 			# Update highlight state if selected painting changed
 			if last_highlight != node_name:
+#				print "info.name = " + str(info.name)
 				controller.setVibration(0.001)
 				HighlightPainting(last_highlight, False)
+#				print "info.name1 = " + str(info.name)
 				last_highlight = node_name
 				HighlightPainting(last_highlight, True)
+#				print "info.name2 = " + str(info.name)
 
 			# Wait for next frame
 			yield None
@@ -159,7 +203,9 @@ def HighlightTask(controller):
 	finally:
 
 		# Remove highlight when task finishes
+#		print "info.name3 = " + str(info.name)
 		HighlightPainting(last_highlight, False)
+#		print "info.name4 = " + str(info.name)
 
 		# Hide controller pointer
 		controller.line.visible(False)
@@ -236,8 +282,7 @@ canvasForInitMsg.setMouseStyle(0)
 canvasForInitMsg.alignment(viz.ALIGN_CENTER)
 canvasForInitMsg.setRenderWorld([400,400], [5.0,5.0])
 
-instructions ="""INSTRUCTIONS:
-1. 10 out of the 11 frames pack unique visual stimulation.
+instructions ="""1. 10 out of the 11 frames pack unique visual stimulation.
 2. Find each frame with an active stimulation.
 3. Complete each session to view (and appreciate!) the painting.
 
