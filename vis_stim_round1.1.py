@@ -33,25 +33,25 @@ gallery.disable(viz.SHADOW_CASTING)
 paintingsDictionary = {}
 #load paintings
 painting_birth_of_venus = vizfx.addChild('models/painting_birth-of-venus.osgb')
-paintingsDictionary['painting_birth_of_venus'] = painting_birth_of_venus
+paintingsDictionary['painting_birth-of-venus'] = painting_birth_of_venus
 painting_dali_memory = vizfx.addChild('models/painting_dali-memory.osgb')
-paintingsDictionary['painting_dali_memory'] = painting_dali_memory
+paintingsDictionary['painting_dali-memory'] = painting_dali_memory
 painting_harring_bestbuddies = vizfx.addChild('models/painting_harring-bestbuddies.osgb')
-paintingsDictionary['painting_harring_bestbuddies'] = painting_harring_bestbuddies
+paintingsDictionary['painting_harring-bestbuddies'] = painting_harring_bestbuddies
 painting_magritte = vizfx.addChild('models/painting_magritte.osgb')
 paintingsDictionary['painting_magritte'] = painting_magritte
 painting_monalisa = vizfx.addChild('models/painting_monalisa.osgb')
 paintingsDictionary['painting_monalisa'] = painting_monalisa
 painting_monet_venice = vizfx.addChild('models/painting_monet-venice.osgb')
-paintingsDictionary['painting_monet_venice'] = painting_monet_venice
+paintingsDictionary['painting_monet-venice'] = painting_monet_venice
 painting_picasso = vizfx.addChild('models/painting_picasso.osgb')
 paintingsDictionary['painting_picasso'] = painting_picasso
 painting_scream = vizfx.addChild('models/painting_scream.osgb')
 paintingsDictionary['painting_scream'] = painting_scream
 painting_starry_night = vizfx.addChild('models/painting_starry-night.osgb')
-paintingsDictionary['painting_starry_night'] = painting_starry_night
+paintingsDictionary['painting_starry-night'] = painting_starry_night
 painting_van_gogh = vizfx.addChild('models/painting_van-gogh.osgb')
-paintingsDictionary['painting_van_gogh'] = painting_van_gogh
+paintingsDictionary['painting_van-gogh'] = painting_van_gogh
 painting_warhol_soup = vizfx.addChild('models/painting_warhol_soup.osgb')
 paintingsDictionary['painting_warhol_soup'] = painting_warhol_soup
 
@@ -68,25 +68,25 @@ painting_van_gogh.visible(False)
 painting_warhol_soup.visible(False)
 
 painting_birth_of_venus_black = vizfx.addChild('models/painting_birth-of-venus_black.osgb')
-paintingsDictionary['painting_birth_of_venus_black'] = painting_birth_of_venus_black
+paintingsDictionary['painting_birth-of-venus_black'] = painting_birth_of_venus_black
 painting_dali_memory_black = vizfx.addChild('models/painting_dali-memory_black.osgb')
-paintingsDictionary['painting_dali_memory_black'] = painting_dali_memory_black
+paintingsDictionary['painting_dali-memory_black'] = painting_dali_memory_black
 painting_harring_bestbuddies_black = vizfx.addChild('models/painting_harring-bestbuddies_black.osgb')
-paintingsDictionary['painting_harring_bestbuddies_black'] = painting_harring_bestbuddies_black
+paintingsDictionary['painting_harring-bestbuddies_black'] = painting_harring_bestbuddies_black
 painting_magritte_black = vizfx.addChild('models/painting_magritte_black.osgb')
 paintingsDictionary['painting_magritte_black'] = painting_magritte_black
 painting_monalisa_black = vizfx.addChild('models/painting_monalisa_black.osgb')
 paintingsDictionary['painting_monalisa_black'] = painting_monalisa_black
 painting_monet_venice_black = vizfx.addChild('models/painting_monet-venice_black.osgb')
-paintingsDictionary['painting_monet_venice_black'] = painting_monet_venice_black
+paintingsDictionary['painting_monet-venice_black'] = painting_monet_venice_black
 painting_picasso_black = vizfx.addChild('models/painting_picasso_black.osgb')
 paintingsDictionary['painting_picasso_black'] = painting_picasso_black
 painting_scream_black = vizfx.addChild('models/painting_scream_black.osgb')
 paintingsDictionary['painting_scream_black'] = painting_scream_black
 painting_starry_night_black = vizfx.addChild('models/painting_starry-night_black.osgb')
-paintingsDictionary['painting_starry_night_black'] = painting_starry_night_black
+paintingsDictionary['painting_starry-night_black'] = painting_starry_night_black
 painting_van_gogh_black = vizfx.addChild('models/painting_van-gogh_black.osgb')
-paintingsDictionary['painting_van_gogh_black'] = painting_van_gogh_black
+paintingsDictionary['painting_van-gogh_black'] = painting_van_gogh_black
 painting_warhol_soup_black = vizfx.addChild('models/painting_warhol_soup_black.osgb')
 paintingsDictionary['painting_warhol_soup_black'] = painting_warhol_soup_black
 
@@ -130,6 +130,23 @@ JUMP_LOCATIONS = {   'painting_picasso': [-3.4, -0.00000, 0.42632]
 					,'painting_birth-of-venus': [3.4, -0.00000, 2.19906]
 					,'painting_magritte': [3.4, 0.00000, 0.07459]
 }
+paintingNames = []
+paintingNames.append('painting_picasso')
+paintingNames.append('painting_dali-memory')
+paintingNames.append('painting_van-gogh')
+paintingNames.append('painting_monet-venice')
+paintingNames.append('painting_scream')
+paintingNames.append('painting_starry-night')
+paintingNames.append('painting_harring-bestbuddies')
+paintingNames.append('painting_monalisa')
+paintingNames.append('painting_warhol_soup')
+paintingNames.append('painting_birth-of-venus')
+paintingNames.append('painting_magritte')
+
+from random import randint
+itemIndexWithNoStimulation = randint(0,10)
+print "itemIndexWithNoStimulation = " + str(itemIndexWithNoStimulation)
+print "painting without stimulation for this round is " + str(paintingNames[itemIndexWithNoStimulation])
 
 # Create quad for flashing screen during jump
 jump_flash = viz.addTexQuad(size=100, pos=[0,0,1], color=viz.BLACK)
@@ -149,23 +166,24 @@ def HighlightPainting(name, mode):
 	if name:
 		nameNew = name
 		splitNames = nameNew.split("-")
-		if len(splitNames) > 1:
-			nameNew = ''
-			for x in range(0, len(splitNames) - 1):
-				nameNew = nameNew + splitNames[x] + "_"
-			nameNew = nameNew + splitNames[len(splitNames) - 1]
-		objToHighlight = nameNew
+#		if len(splitNames) > 1:
+#			nameNew = ''
+#			for x in range(0, len(splitNames) - 1):
+#				nameNew = nameNew + splitNames[x] + "_"
+#			nameNew = nameNew + splitNames[len(splitNames) - 1]
+#		objToHighlight = nameNew
 		global paintingsDictionary
-		if paintingsDictionary[objToHighlight].getVisible() == False:
-			objToHighlight = objToHighlight + "_black"
-			
+#		if paintingsDictionary[objToHighlight].getVisible() == False:
+		if paintingsDictionary[nameNew].getVisible() == False:
+#			objToHighlight = objToHighlight + "_black"
+			nameNew = nameNew + "_black"
 		
 		if mode:
 #			gallery.apply(highlightEffect, node=name)
-			paintingsDictionary[objToHighlight].apply(highlightEffect, node=name)
+			paintingsDictionary[nameNew].apply(highlightEffect, node=name)
 		else:
 #			gallery.unapply(highlightEffect, node=name)
-			paintingsDictionary[objToHighlight].unapply(highlightEffect, node=name)
+			paintingsDictionary[nameNew].unapply(highlightEffect, node=name)
 
 def HighlightTask(controller):
 	"""Task that highlights jump locations pointed at by controller"""
@@ -235,18 +253,35 @@ def JumpTask(controller):
 			jump_flash.runAction(vizact.fadeTo(viz.BLACK, begin=viz.WHITE, time=2.0, interpolate=vizact.easeOutStrong))
 			jump_flash.addAction(vizact.method.visible(False))
 
+			global itemIndexWithNoStimulation, paintingNames, canvasForStim, canvasWithoutStim, canvasForInitMsg, paintingsDictionary
+
 			# Hide instruction canvasForInitMsg after first jump
 			canvasForInitMsg.visible(False)
-
-			canvasForStim.visible(True)
-			normalizedDirectionToMoveTheCanvas = vector3.Vec3ToVizardFloatList(vector3.vizardFloatListToVec3([-info.normal[0], 0.0, -info.normal[2]]).normalize())
 			
 			separationOnHorizontalPlane = 0.8
-			canvasForStim.billboard(viz.BILLBOARD_VIEW_POS)
-			canvasForStim.setPosition(
-				jumpPos[0] + (normalizedDirectionToMoveTheCanvas[0] * separationOnHorizontalPlane),
-				0.6,
-				jumpPos[2] + (normalizedDirectionToMoveTheCanvas[2] * separationOnHorizontalPlane))
+			verticalPosOfCanvas = 0.6
+			normalizedDirectionToShiftTheCanvas = vector3.Vec3ToVizardFloatList(vector3.vizardFloatListToVec3([-info.normal[0], 0.0, -info.normal[2]]).normalize())
+			
+			if (info.name != paintingNames[itemIndexWithNoStimulation]) and (paintingsDictionary[info.name].getVisible() == False) :
+				canvasWithoutStim.visible(False)
+				canvasForStim.visible(True)
+				canvasForStim.billboard(viz.BILLBOARD_VIEW_POS)
+				canvasForStim.setPosition(
+					jumpPos[0] + (normalizedDirectionToShiftTheCanvas[0] * separationOnHorizontalPlane),
+					verticalPosOfCanvas,
+					jumpPos[2] + (normalizedDirectionToShiftTheCanvas[2] * separationOnHorizontalPlane))
+					
+			else:
+				print "info.name = " + str(info.name)
+				paintingsDictionary[info.name + '_black'].visible = False
+				paintingsDictionary[info.name].visible = True
+				canvasForStim.visible(False)
+				canvasWithoutStim.visible(True)
+				canvasWithoutStim.billboard(viz.BILLBOARD_VIEW_POS)
+				canvasWithoutStim.setPosition(
+					jumpPos[0] + (normalizedDirectionToShiftTheCanvas[0] * separationOnHorizontalPlane),
+					verticalPosOfCanvas,
+					jumpPos[2] + (normalizedDirectionToShiftTheCanvas[2] * separationOnHorizontalPlane))
 
 # Add controllers
 for controller in steamvr.getControllerList():
@@ -294,6 +329,19 @@ instructions ="""1. Pull the trigger to START the stimulation
 4. Complete the stimulation to see the art!!
 """
 panelForStimInstructions = vizinfo.InfoPanel(instructions, title='VISUAL STIMULATION IN STORE FOR YOU!', key=None, icon=False, align=viz.ALIGN_CENTER, parent=canvasForStim)
+
+# Add directions to canvasWithoutStim
+canvasWithoutStim = viz.addGUICanvas(pos=[0, 3.0, 6.0])
+canvasWithoutStim.setMouseStyle(0)
+canvasWithoutStim.alignment(viz.ALIGN_CENTER)
+canvasWithoutStim.setRenderWorld([400,400], [2.0,2.0])
+canvasWithoutStim.visible(False)
+
+instructions ="""This canvas either has no stimulation,
+OR you got the stimulation to reaveal this art already!
+Appreciate the art, and explore a different one.
+"""
+panelForCanvasWithoutStim = vizinfo.InfoPanel(instructions, title='ENJOY THE ART, AND MOVE ON!', key=None, icon=False, align=viz.ALIGN_CENTER, parent=canvasWithoutStim)
 
 
 #videos to be played
