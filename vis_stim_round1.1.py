@@ -90,15 +90,6 @@ paintingsDictionary['painting_van-gogh_black'] = painting_van_gogh_black
 painting_warhol_soup_black = vizfx.addChild('models/painting_warhol_soup_black.osgb')
 paintingsDictionary['painting_warhol_soup_black'] = painting_warhol_soup_black
 
-#collect all the paintings in an array of objects
-#paintingObjects = []
-#for name in gallery.getNodeNames():
-#	if name.startswith('painting'):
-#		painting = gallery.getChild(name)
-#		if painting:
-#			print "painting found = " + str(name)
-#			paintingObjects.append(painting)
-
 #Create skylight
 viz.MainView.getHeadLight().disable()
 sky_light = viz.addDirectionalLight(euler=(0,90,0), color=viz.WHITE)
@@ -166,16 +157,9 @@ def HighlightPainting(name, mode):
 	if name:
 		nameNew = name
 		splitNames = nameNew.split("-")
-#		if len(splitNames) > 1:
-#			nameNew = ''
-#			for x in range(0, len(splitNames) - 1):
-#				nameNew = nameNew + splitNames[x] + "_"
-#			nameNew = nameNew + splitNames[len(splitNames) - 1]
-#		objToHighlight = nameNew
 		global paintingsDictionary
-#		if paintingsDictionary[objToHighlight].getVisible() == False:
+
 		if paintingsDictionary[nameNew].getVisible() == False:
-#			objToHighlight = objToHighlight + "_black"
 			nameNew = nameNew + "_black"
 		
 		if mode:
@@ -273,8 +257,8 @@ def JumpTask(controller):
 					
 			else:
 				print "info.name = " + str(info.name)
-				paintingsDictionary[info.name + '_black'].visible = False
-				paintingsDictionary[info.name].visible = True
+				paintingsDictionary[info.name + '_black'].visible(False)
+				paintingsDictionary[info.name].visible(True)
 				canvasForStim.visible(False)
 				canvasWithoutStim.visible(True)
 				canvasWithoutStim.billboard(viz.BILLBOARD_VIEW_POS)
@@ -338,11 +322,11 @@ canvasWithoutStim.setRenderWorld([400,400], [2.0,2.0])
 canvasWithoutStim.visible(False)
 
 instructions ="""This canvas either has no stimulation,
-OR you got the stimulation to reaveal this art already!
+OR you got it already!
+
 Appreciate the art, and explore a different one.
 """
 panelForCanvasWithoutStim = vizinfo.InfoPanel(instructions, title='ENJOY THE ART, AND MOVE ON!', key=None, icon=False, align=viz.ALIGN_CENTER, parent=canvasWithoutStim)
-
 
 #videos to be played
 videoPlaceholder1 = viz.addVideo('media/maxFireStim1_OffParasol.avi')
