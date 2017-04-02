@@ -256,7 +256,6 @@ def JumpTask(controller):
 					jumpPos[2] + (normalizedDirectionToShiftTheCanvas[2] * separationOnHorizontalPlane))
 					
 			else:
-				print "info.name = " + str(info.name)
 				paintingsDictionary[info.name + '_black'].visible(False)
 				paintingsDictionary[info.name].visible(True)
 				canvasForStim.visible(False)
@@ -366,3 +365,20 @@ def togglePaintingsVisibility():
 	painting_warhol_soup_black.visible(viz.TOGGLE)
 
 vizact.onkeydown('v', togglePaintingsVisibility)
+
+
+#adding a video
+video = viz.addVideo('media/maxFireStim1_OffParasol.avi')
+
+#Adding a quad to show a movie
+videoRenderingBoard = viz.addTexQuad()
+videoRenderingBoard.texture(video)
+#videoRenderingBoard.setPosition([0.0, 0.0, 0.0], mode = viz.REL_PARENT)
+videoRenderingBoard.setPosition([0.0, 1.0, 1.0])
+video.loop()
+video.play()
+
+#videoRenderingBoard.setTexQuadDisplayMode(viz.TEXQUAD_FIXED)
+#videoRenderingBoard.setSize([1080, 1200])
+print "videoRenderingBoard.getTexQuadDisplayMode() = " + str(videoRenderingBoard.getTexQuadDisplayMode())
+print "videoRenderingBoard.getSize() = " + str(videoRenderingBoard.getSize())
