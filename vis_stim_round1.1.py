@@ -368,17 +368,24 @@ vizact.onkeydown('v', togglePaintingsVisibility)
 
 
 #adding a video
-video = viz.addVideo('media/maxFireStim1_OffParasol.avi')
+video = viz.addVideo('media/test1.avi')
+
+#video.setBorderRect([0.0, 0.0, 0.75, 1.0])
 
 #Adding a quad to show a movie
-videoRenderingBoard = viz.addTexQuad()
+videoRenderingBoard = viz.addTexQuad(parent = viz.WORLD)
 videoRenderingBoard.texture(video)
 #videoRenderingBoard.setPosition([0.0, 0.0, 0.0], mode = viz.REL_PARENT)
 videoRenderingBoard.setPosition([0.0, 1.0, 1.0])
 video.loop()
 video.play()
 
-#videoRenderingBoard.setTexQuadDisplayMode(viz.TEXQUAD_FIXED)
-#videoRenderingBoard.setSize([1080, 1200])
+videoRenderingBoard.setTexQuadDisplayMode(viz.TEXQUAD_CORNER_FIXED)
+#videoRenderingBoard.setSize([1.0830, 1.2040])
+videoRenderingBoard.setSize([1.0, 1.0])
+
 print "videoRenderingBoard.getTexQuadDisplayMode() = " + str(videoRenderingBoard.getTexQuadDisplayMode())
 print "videoRenderingBoard.getSize() = " + str(videoRenderingBoard.getSize())
+print "video.getFrameCount() = " + str(video.getFrameCount())
+print "video.getDuration() = " + str(video.getDuration())
+print "Video frame rate: video.getFrameCount()/video.getDuration() = " + str(video.getFrameCount()/video.getDuration())
