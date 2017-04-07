@@ -373,19 +373,37 @@ video = viz.addVideo('media/test1.avi')
 #video.setBorderRect([0.0, 0.0, 0.75, 1.0])
 
 #Adding a quad to show a movie
-videoRenderingBoard = viz.addTexQuad(parent = viz.WORLD)
-videoRenderingBoard.texture(video)
-#videoRenderingBoard.setPosition([0.0, 0.0, 0.0], mode = viz.REL_PARENT)
-videoRenderingBoard.setPosition([0.0, 1.0, 1.0])
+leftVideoRenderingBoard = viz.addTexQuad(parent = viz.WORLD)
+rightVideoRenderingBoard = viz.addTexQuad(parent = viz.WORLD)
+leftVideoRenderingBoard.texture(video)
+rightVideoRenderingBoard.texture(video)
+#rightVideoRenderingBoard.setPosition([0.0, 0.0, 0.0], mode = viz.REL_PARENT)
 video.loop()
 video.play()
 
-videoRenderingBoard.setTexQuadDisplayMode(viz.TEXQUAD_CORNER_FIXED)
-#videoRenderingBoard.setSize([1.0830, 1.2040])
-videoRenderingBoard.setSize([1.0, 1.0])
+#rightVideoRenderingBoard.setTexQuadDisplayMode(viz.TEXQUAD_CORNER_FIXED)
+#rightVideoRenderingBoard.setSize([1.0830, 1.2040])
+#rightVideoRenderingBoard.setSize([1.0, 1.0])
 
-print "videoRenderingBoard.getTexQuadDisplayMode() = " + str(videoRenderingBoard.getTexQuadDisplayMode())
-print "videoRenderingBoard.getSize() = " + str(videoRenderingBoard.getSize())
+sideLength = 0.05
+
+xShift = 0.031
+zShift = 0.01
+
+leftVideoRenderingBoard.setSize([sideLength, sideLength])
+leftVideoRenderingBoard.setPosition([-xShift, 0.0, zShift])
+rightVideoRenderingBoard.setSize([sideLength, sideLength])
+rightVideoRenderingBoard.setPosition([xShift, 0.0, zShift])
+
+#attaching the video rendering board to the head/eye
+leftVideoRenderingBoard.setReferenceFrame(viz.RF_VIEW)
+rightVideoRenderingBoard.setReferenceFrame(viz.RF_VIEW)
+
+
+print "rightVideoRenderingBoard.getTexQuadDisplayMode() = " + str(rightVideoRenderingBoard.getTexQuadDisplayMode())
+print "rightVideoRenderingBoard.getSize() = " + str(rightVideoRenderingBoard.getSize())
 print "video.getFrameCount() = " + str(video.getFrameCount())
 print "video.getDuration() = " + str(video.getDuration())
 print "Video frame rate: video.getFrameCount()/video.getDuration() = " + str(video.getFrameCount()/video.getDuration())
+
+
