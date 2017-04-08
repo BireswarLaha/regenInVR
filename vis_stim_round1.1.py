@@ -396,8 +396,8 @@ rightVideoRenderingBoard.setSize([sideLength, sideLength])
 rightVideoRenderingBoard.setPosition([xShift, 0.0, zShift])
 
 #attaching the video rendering board to the head/eye
-leftVideoRenderingBoard.setReferenceFrame(viz.RF_VIEW)
-rightVideoRenderingBoard.setReferenceFrame(viz.RF_VIEW)
+#leftVideoRenderingBoard.setReferenceFrame(viz.RF_VIEW)
+#rightVideoRenderingBoard.setReferenceFrame(viz.RF_VIEW)
 
 
 print "rightVideoRenderingBoard.getTexQuadDisplayMode() = " + str(rightVideoRenderingBoard.getTexQuadDisplayMode())
@@ -407,3 +407,14 @@ print "video.getDuration() = " + str(video.getDuration())
 print "Video frame rate: video.getFrameCount()/video.getDuration() = " + str(video.getFrameCount()/video.getDuration())
 
 
+# a canvas for the visual stimulation
+canvasForVisStim = viz.addGUICanvas()
+canvasForVisStim.setMouseStyle(0)
+canvasForVisStim.alignment(viz.ALIGN_CENTER)
+#canvasForVisStim.setRenderWorld([400,400], [5.0,5.0])
+canvasForVisStim.setRenderWorldOverlay([800,800],50,3)
+leftVideoRenderingBoard.setParent(canvasForVisStim)
+#canvasForVisStim.setPosition([0,0,0])
+
+#canvasForVisStim.setRenderScreenOrtho()
+#canvasForVisStim.setPosition([0,0,0])
