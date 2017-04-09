@@ -10,20 +10,27 @@ import vizinfo
 import viztask
 import steamvr
 import vector3
+import vizcam
 
 # Initialize window
 viz.setMultiSample(8)
 viz.go()
 
 # Setup SteamVR HMD
+hmd = None
 hmd = steamvr.HMD()
-if not hmd.getSensor():
+if (hmd is not None) and (not hmd.getSensor()):
 	sys.exit('SteamVR HMD not detected')
 
 # Setup navigation node and link to main view
 navigationNode = viz.addGroup()
 viewLink = viz.link(navigationNode, viz.MainView)
-viewLink.preMultLinkable(hmd.getSensor())
+if (hmd is not None) and (hmd.getSensor()):
+	viewLink.preMultLinkable(hmd.getSensor())
+else:
+	tracker = vizcam.addKeyboard6DOF()
+	tracker.setPosition([0,1.8,0])
+	viz.link(tracker, viz.MainView)
 
 # Load environment
 gallery = vizfx.addChild('models/galleryWithoutPaintings.osgb')
@@ -34,24 +41,34 @@ paintingsDictionary = {}
 #load paintings
 painting_birth_of_venus = vizfx.addChild('models/painting_birth-of-venus.osgb')
 paintingsDictionary['painting_birth-of-venus'] = painting_birth_of_venus
+
 painting_dali_memory = vizfx.addChild('models/painting_dali-memory.osgb')
 paintingsDictionary['painting_dali-memory'] = painting_dali_memory
+
 painting_harring_bestbuddies = vizfx.addChild('models/painting_harring-bestbuddies.osgb')
 paintingsDictionary['painting_harring-bestbuddies'] = painting_harring_bestbuddies
+
 painting_magritte = vizfx.addChild('models/painting_magritte.osgb')
 paintingsDictionary['painting_magritte'] = painting_magritte
+
 painting_monalisa = vizfx.addChild('models/painting_monalisa.osgb')
 paintingsDictionary['painting_monalisa'] = painting_monalisa
+
 painting_monet_venice = vizfx.addChild('models/painting_monet-venice.osgb')
 paintingsDictionary['painting_monet-venice'] = painting_monet_venice
+
 painting_picasso = vizfx.addChild('models/painting_picasso.osgb')
 paintingsDictionary['painting_picasso'] = painting_picasso
+
 painting_scream = vizfx.addChild('models/painting_scream.osgb')
 paintingsDictionary['painting_scream'] = painting_scream
+
 painting_starry_night = vizfx.addChild('models/painting_starry-night.osgb')
 paintingsDictionary['painting_starry-night'] = painting_starry_night
+
 painting_van_gogh = vizfx.addChild('models/painting_van-gogh.osgb')
 paintingsDictionary['painting_van-gogh'] = painting_van_gogh
+
 painting_warhol_soup = vizfx.addChild('models/painting_warhol_soup.osgb')
 paintingsDictionary['painting_warhol_soup'] = painting_warhol_soup
 
@@ -69,24 +86,34 @@ painting_warhol_soup.visible(False)
 
 painting_birth_of_venus_black = vizfx.addChild('models/painting_birth-of-venus_black.osgb')
 paintingsDictionary['painting_birth-of-venus_black'] = painting_birth_of_venus_black
+
 painting_dali_memory_black = vizfx.addChild('models/painting_dali-memory_black.osgb')
 paintingsDictionary['painting_dali-memory_black'] = painting_dali_memory_black
+
 painting_harring_bestbuddies_black = vizfx.addChild('models/painting_harring-bestbuddies_black.osgb')
 paintingsDictionary['painting_harring-bestbuddies_black'] = painting_harring_bestbuddies_black
+
 painting_magritte_black = vizfx.addChild('models/painting_magritte_black.osgb')
 paintingsDictionary['painting_magritte_black'] = painting_magritte_black
+
 painting_monalisa_black = vizfx.addChild('models/painting_monalisa_black.osgb')
 paintingsDictionary['painting_monalisa_black'] = painting_monalisa_black
+
 painting_monet_venice_black = vizfx.addChild('models/painting_monet-venice_black.osgb')
 paintingsDictionary['painting_monet-venice_black'] = painting_monet_venice_black
+
 painting_picasso_black = vizfx.addChild('models/painting_picasso_black.osgb')
 paintingsDictionary['painting_picasso_black'] = painting_picasso_black
+
 painting_scream_black = vizfx.addChild('models/painting_scream_black.osgb')
 paintingsDictionary['painting_scream_black'] = painting_scream_black
+
 painting_starry_night_black = vizfx.addChild('models/painting_starry-night_black.osgb')
 paintingsDictionary['painting_starry-night_black'] = painting_starry_night_black
+
 painting_van_gogh_black = vizfx.addChild('models/painting_van-gogh_black.osgb')
 paintingsDictionary['painting_van-gogh_black'] = painting_van_gogh_black
+
 painting_warhol_soup_black = vizfx.addChild('models/painting_warhol_soup_black.osgb')
 paintingsDictionary['painting_warhol_soup_black'] = painting_warhol_soup_black
 
@@ -122,17 +149,39 @@ JUMP_LOCATIONS = {   'painting_picasso': [-3.4, -0.00000, 0.42632]
 					,'painting_magritte': [3.4, 0.00000, 0.07459]
 }
 paintingNames = []
+dictionaryMappingPaintingNamesToVideoListIndex = {}
 paintingNames.append('painting_picasso')
+dictionaryMappingPaintingNamesToVideoListIndex['painting_picasso'] = 0
+
 paintingNames.append('painting_dali-memory')
+dictionaryMappingPaintingNamesToVideoListIndex['painting_dali-memory'] = 1
+
 paintingNames.append('painting_van-gogh')
+dictionaryMappingPaintingNamesToVideoListIndex['painting_van-gogh'] = 2
+
 paintingNames.append('painting_monet-venice')
+dictionaryMappingPaintingNamesToVideoListIndex['painting_monet-venice'] = 3
+
 paintingNames.append('painting_scream')
+dictionaryMappingPaintingNamesToVideoListIndex['painting_scream'] = 4
+
 paintingNames.append('painting_starry-night')
+dictionaryMappingPaintingNamesToVideoListIndex['painting_starry-night'] = 5
+
 paintingNames.append('painting_harring-bestbuddies')
+dictionaryMappingPaintingNamesToVideoListIndex['painting_harring-bestbuddies'] = 6
+
 paintingNames.append('painting_monalisa')
+dictionaryMappingPaintingNamesToVideoListIndex['painting_monalisa'] = 7
+
 paintingNames.append('painting_warhol_soup')
+dictionaryMappingPaintingNamesToVideoListIndex['painting_warhol_soup'] = 8
+
 paintingNames.append('painting_birth-of-venus')
+dictionaryMappingPaintingNamesToVideoListIndex['painting_birth-of-venus'] = 9
+
 paintingNames.append('painting_magritte')
+dictionaryMappingPaintingNamesToVideoListIndex['painting_magritte'] = 10
 
 from random import randint
 itemIndexWithNoStimulation = randint(0,10)
@@ -237,7 +286,7 @@ def JumpTask(controller):
 			jump_flash.runAction(vizact.fadeTo(viz.BLACK, begin=viz.WHITE, time=2.0, interpolate=vizact.easeOutStrong))
 			jump_flash.addAction(vizact.method.visible(False))
 
-			global itemIndexWithNoStimulation, paintingNames, canvasForStim, canvasWithoutStim, canvasForInitMsg, paintingsDictionary
+			global itemIndexWithNoStimulation, paintingNames, canvasForStim, canvasWithoutStim, canvasForInitMsg, paintingsDictionary, dictionaryMappingPaintingNamesToVideoListIndex, videoPlaceholder, videoPaths
 
 			# Hide instruction canvasForInitMsg after first jump
 			canvasForInitMsg.visible(False)
@@ -246,7 +295,11 @@ def JumpTask(controller):
 			verticalPosOfCanvas = 0.6
 			normalizedDirectionToShiftTheCanvas = vector3.Vec3ToVizardFloatList(vector3.vizardFloatListToVec3([-info.normal[0], 0.0, -info.normal[2]]).normalize())
 			
-			if (info.name != paintingNames[itemIndexWithNoStimulation]) and (paintingsDictionary[info.name].getVisible() == False) :
+			if (info.name != paintingNames[itemIndexWithNoStimulation]) and (paintingsDictionary[info.name].getVisible() == False):
+				#visual stimulation ready to be taken
+				videoListIndex = dictionaryMappingPaintingNamesToVideoListIndex[info.name]
+				if videoListIndex > itemIndexWithNoStimulation: videoListIndex -= 1
+				print "You have arrived at the painting " + info.name + " and you can receive visual stimulation from the video file named: " + videoPaths[videoListIndex] + " and at video list index# " + str(videoListIndex)
 				canvasWithoutStim.visible(False)
 				canvasForStim.visible(True)
 				canvasForStim.billboard(viz.BILLBOARD_VIEW_POS)
@@ -254,8 +307,9 @@ def JumpTask(controller):
 					jumpPos[0] + (normalizedDirectionToShiftTheCanvas[0] * separationOnHorizontalPlane),
 					verticalPosOfCanvas,
 					jumpPos[2] + (normalizedDirectionToShiftTheCanvas[2] * separationOnHorizontalPlane))
-					
 			else:
+				#visual stimulation unavailable or already taken
+				print "You have arrived at the painting " + info.name + " but the visual stimulation here is either unavailable or has already been taken"
 				paintingsDictionary[info.name + '_black'].visible(False)
 				paintingsDictionary[info.name].visible(True)
 				canvasForStim.visible(False)
@@ -328,16 +382,51 @@ Appreciate the art, and explore a different one.
 panelForCanvasWithoutStim = vizinfo.InfoPanel(instructions, title='ENJOY THE ART, AND MOVE ON!', key=None, icon=False, align=viz.ALIGN_CENTER, parent=canvasWithoutStim)
 
 #videos to be played
-videoPlaceholder1 = viz.addVideo('media/maxFireStim1_OffParasol.avi')
-#videoPlaceholder2 = viz.addVideo('media/onParasol2.avi')
-#videoPlaceholder3 = viz.addVideo('media/offParasol1.avi')
-#videoPlaceholder4 = viz.addVideo('media/offParasol2.avi')
-#videoPlaceholder5 = viz.addVideo('media/onMidget1.avi')
-#videoPlaceholder6 = viz.addVideo('media/onMidget2.avi')
-#videoPlaceholder7 = viz.addVideo('media/offMidget1.avi')
-#videoPlaceholder8 = viz.addVideo('media/offMidget2.avi')
-#videoPlaceholder9 = viz.addVideo('media/SBS1.avi')
-#videoPlaceholder10 = viz.addVideo('media/SBS1.avi')
+numberOfVideos = 10
+videoPaths = [None] * numberOfVideos
+videoPlaceholder = [None] * numberOfVideos
+
+videoPaths[0] = 'media/onParasol1.avi'
+videoPaths[1] = 'media/offParasol1.avi'
+videoPaths[2] = 'media/onMidget1.avi'
+videoPaths[3] = 'media/offMidget1.avi'
+videoPaths[4] = 'media/sbc1.avi'
+videoPaths[5] = 'media/onParasol2.avi'
+videoPaths[6] = 'media/offParasol2.avi'
+videoPaths[7] = 'media/onMidget2.avi'
+videoPaths[8] = 'media/offMidget2.avi'
+videoPaths[9] = 'media/sbc2.avi'
+
+for i in range(10):
+	videoPlaceholder[i] = viz.addVideo(videoPaths[i])
+#videoPlaceholder[0] = viz.addVideo('media/onParasol1.avi')
+#
+#videoPaths[1] = 'media/onParasol2.avi'
+#videoPlaceholder[1] = viz.addVideo('media/onParasol2.avi')
+#
+#videoPaths[2] = 'media/offParasol1.avi'
+#videoPlaceholder[2] = viz.addVideo('media/offParasol1.avi')
+#
+#videoPaths[3] = 'media/offParasol2.avi'
+#videoPlaceholder[3] = viz.addVideo('media/offParasol2.avi')
+#
+#videoPaths[4] = 'media/onMidget1.avi'
+#videoPlaceholder[4] = viz.addVideo('media/onMidget1.avi')
+#videoPlaceholder[5] = viz.addVideo('media/onMidget2.avi')
+#videoPlaceholder[6] = viz.addVideo('media/offMidget1.avi')
+#videoPlaceholder[7] = viz.addVideo('media/offMidget2.avi')
+#videoPlaceholder[8] = viz.addVideo('media/sbc1.avi')
+#videoPlaceholder[9] = viz.addVideo('media/sbc2.avi')
+
+videoList = []
+videoPlaceholderIndex = 0
+for i in range(11):
+	if i == itemIndexWithNoStimulation:
+		videoList.append(None)
+	else:
+		videoList.append(videoPlaceholder[videoPlaceholderIndex])
+		videoPlaceholderIndex += 1
+
 
 def togglePaintingsVisibility():
 	painting_birth_of_venus.visible(viz.TOGGLE)
@@ -367,8 +456,8 @@ def togglePaintingsVisibility():
 vizact.onkeydown('v', togglePaintingsVisibility)
 
 
-#adding a video
-video = viz.addVideo('media/test1.avi')
+#using a video
+video = videoPlaceholder[0]
 
 #video.setBorderRect([0.0, 0.0, 0.75, 1.0])
 
@@ -387,8 +476,8 @@ video.play()
 
 sideLength = 0.05
 
-xShift = 0.031
-zShift = 0.01
+xShift = 0.031 	#meters
+zShift = 0.005 	#meters
 
 leftVideoRenderingBoard.setSize([sideLength, sideLength])
 leftVideoRenderingBoard.setPosition([-xShift, 0.0, zShift])
@@ -396,7 +485,7 @@ rightVideoRenderingBoard.setSize([sideLength, sideLength])
 rightVideoRenderingBoard.setPosition([xShift, 0.0, zShift])
 
 #attaching the video rendering board to the head/eye
-#leftVideoRenderingBoard.setReferenceFrame(viz.RF_VIEW)
+leftVideoRenderingBoard.setReferenceFrame(viz.RF_VIEW)
 #rightVideoRenderingBoard.setReferenceFrame(viz.RF_VIEW)
 
 
@@ -404,16 +493,19 @@ print "rightVideoRenderingBoard.getTexQuadDisplayMode() = " + str(rightVideoRend
 print "rightVideoRenderingBoard.getSize() = " + str(rightVideoRenderingBoard.getSize())
 print "video.getFrameCount() = " + str(video.getFrameCount())
 print "video.getDuration() = " + str(video.getDuration())
-print "Video frame rate: video.getFrameCount()/video.getDuration() = " + str(video.getFrameCount()/video.getDuration())
+print "Video frame rate: video.getFrameCount()/video.getDuration() = " + str(video.getFrameCount()/video.getDuration()) + " FPS"
 
 
 # a canvas for the visual stimulation
-canvasForVisStim = viz.addGUICanvas()
-canvasForVisStim.setMouseStyle(0)
-canvasForVisStim.alignment(viz.ALIGN_CENTER)
-#canvasForVisStim.setRenderWorld([400,400], [5.0,5.0])
-canvasForVisStim.setRenderWorldOverlay([800,800],50,3)
-leftVideoRenderingBoard.setParent(canvasForVisStim)
+#canvasForVisStim = viz.addGUICanvas()
+#canvasForVisStim.setMouseStyle(0)
+#canvasForVisStim.alignment(viz.ALIGN_CENTER)
+##canvasForVisStim.setRenderWorld([400,400], [5.0,5.0])
+#canvasForVisStim.setRenderWorldOverlay([800,800],50,3)
+#
+#viz.MainWindow.setDefaultGUICanvas(canvasForVisStim)
+#
+#leftVideoRenderingBoard.setParent(canvasForVisStim)
 #canvasForVisStim.setPosition([0,0,0])
 
 #canvasForVisStim.setRenderScreenOrtho()
