@@ -11,6 +11,7 @@ import viztask
 import steamvr
 import vector3
 import vizcam
+import view_fader
 
 # Initialize window
 viz.setMultiSample(8)
@@ -116,6 +117,10 @@ paintingsDictionary['painting_van-gogh_black'] = painting_van_gogh_black
 
 painting_warhol_soup_black = vizfx.addChild('models/painting_warhol_soup_black.osgb')
 paintingsDictionary['painting_warhol_soup_black'] = painting_warhol_soup_black
+
+#fader
+#fader = view_fader.addFader()
+#fader.fadeInTask()
 
 #Create skylight
 viz.MainView.getHeadLight().disable()
@@ -286,7 +291,8 @@ def JumpTask(controller):
 			jump_flash.runAction(vizact.fadeTo(viz.BLACK, begin=viz.WHITE, time=2.0, interpolate=vizact.easeOutStrong))
 			jump_flash.addAction(vizact.method.visible(False))
 
-			global itemIndexWithNoStimulation, paintingNames, canvasForStim, canvasWithoutStim, canvasForInitMsg, paintingsDictionary, dictionaryMappingPaintingNamesToVideoListIndex, videoPlaceholder, videoPaths
+			global itemIndexWithNoStimulation, paintingNames, canvasForStim, canvasWithoutStim, canvasForInitMsg, paintingsDictionary, dictionaryMappingPaintingNamesToVideoListIndex, videoPlaceholder, videoPaths, fader
+			global leftVideoRenderingBoard, rightVideoRenderingBoard
 
 			# Hide instruction canvasForInitMsg after first jump
 			canvasForInitMsg.visible(False)
@@ -300,6 +306,10 @@ def JumpTask(controller):
 				videoListIndex = dictionaryMappingPaintingNamesToVideoListIndex[info.name]
 				if videoListIndex > itemIndexWithNoStimulation: videoListIndex -= 1
 				print "You have arrived at the painting " + info.name + " and you can receive visual stimulation from the video file named: " + videoPaths[videoListIndex] + " and at video list index# " + str(videoListIndex)
+#				print "fading out ..."
+#				yield fader.fadeOutTask()
+#				print "now fading back in ..."
+#				yield fader.fadeInTask()
 				canvasWithoutStim.visible(False)
 				canvasForStim.visible(True)
 				canvasForStim.billboard(viz.BILLBOARD_VIEW_POS)
@@ -307,6 +317,36 @@ def JumpTask(controller):
 					jumpPos[0] + (normalizedDirectionToShiftTheCanvas[0] * separationOnHorizontalPlane),
 					verticalPosOfCanvas,
 					jumpPos[2] + (normalizedDirectionToShiftTheCanvas[2] * separationOnHorizontalPlane))
+					
+				#waiting for a keypress to play the visual stimulation
+				print "press the trackpad to play the stimulation video ..."
+#				yield viztask.waitKeyDown('t')
+				yield viztask.waitSensorDown(controller, steamvr.BUTTON_TRACKPAD)
+				
+				print "now playing the stimulation video " + videoPaths[videoListIndex]
+				
+				videoToPlay = videoPlaceholder[videoListIndex]
+				
+				#play the visual stimulation
+				leftVideoRenderingBoard.texture(videoToPlay)
+				rightVideoRenderingBoard.texture(videoToPlay)
+
+				leftVideoRenderingBoard.visible(True)
+				rightVideoRenderingBoard.visible(True)
+				
+				#rightVideoRenderingBoard.setPosition([0.0, 0.0, 0.0], mode = viz.REL_PARENT)
+				videoToPlay.loop()
+				videoToPlay.play()
+				
+				print "release the trackpad to stop playing\n"
+#				yield viztask.waitKeyUp('t')
+				yield viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)
+				videoToPlay.stop()
+
+				#hiding the video boards
+				leftVideoRenderingBoard.visible(False)
+				rightVideoRenderingBoard.visible(False)
+				
 			else:
 				#visual stimulation unavailable or already taken
 				print "You have arrived at the painting " + info.name + " but the visual stimulation here is either unavailable or has already been taken"
@@ -464,11 +504,11 @@ video = videoPlaceholder[0]
 #Adding a quad to show a movie
 leftVideoRenderingBoard = viz.addTexQuad(parent = viz.WORLD)
 rightVideoRenderingBoard = viz.addTexQuad(parent = viz.WORLD)
-leftVideoRenderingBoard.texture(video)
-rightVideoRenderingBoard.texture(video)
+#leftVideoRenderingBoard.texture(video)
+#rightVideoRenderingBoard.texture(video)
 #rightVideoRenderingBoard.setPosition([0.0, 0.0, 0.0], mode = viz.REL_PARENT)
-video.loop()
-video.play()
+#video.loop()
+#video.play()
 
 #rightVideoRenderingBoard.setTexQuadDisplayMode(viz.TEXQUAD_CORNER_FIXED)
 #rightVideoRenderingBoard.setSize([1.0830, 1.2040])
@@ -486,8 +526,11 @@ rightVideoRenderingBoard.setPosition([xShift, 0.0, zShift])
 
 #attaching the video rendering board to the head/eye
 leftVideoRenderingBoard.setReferenceFrame(viz.RF_VIEW)
-#rightVideoRenderingBoard.setReferenceFrame(viz.RF_VIEW)
+rightVideoRenderingBoard.setReferenceFrame(viz.RF_VIEW)
 
+#keeping them invisible to begin with
+leftVideoRenderingBoard.visible(False)
+rightVideoRenderingBoard.visible(False)
 
 print "rightVideoRenderingBoard.getTexQuadDisplayMode() = " + str(rightVideoRenderingBoard.getTexQuadDisplayMode())
 print "rightVideoRenderingBoard.getSize() = " + str(rightVideoRenderingBoard.getSize())
