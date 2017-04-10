@@ -292,7 +292,7 @@ def JumpTask(controller):
 			jump_flash.addAction(vizact.method.visible(False))
 
 			global itemIndexWithNoStimulation, paintingNames, canvasForStim, canvasWithoutStim, canvasForInitMsg, paintingsDictionary, dictionaryMappingPaintingNamesToVideoListIndex, videoPlaceholder, videoPaths, fader
-			global leftVideoRenderingBoard, rightVideoRenderingBoard
+			global leftVideoRenderingBoard, rightVideoRenderingBoard, totalLengthOfEachStimulationSessionInSeconds, videoLoopsRemaining, maxNumberOfVideoLoops, trackpadState
 
 			# Hide instruction canvasForInitMsg after first jump
 			canvasForInitMsg.visible(False)
@@ -304,7 +304,7 @@ def JumpTask(controller):
 			if (info.name != paintingNames[itemIndexWithNoStimulation]) and (paintingsDictionary[info.name].getVisible() == False):
 				#visual stimulation ready to be taken
 				videoListIndex = dictionaryMappingPaintingNamesToVideoListIndex[info.name]
-				if videoListIndex > itemIndexWithNoStimulation: videoListIndex -= 1
+				if videoListIndex > itemIndexWithNoStimulation: videoListIndex -= 1	#this is under the assumption that the indices of the videos associated to the canvases go up from 0 to 10, ignoring the index for the item to be ignored
 				print "You have arrived at the painting " + info.name + " and you can receive visual stimulation from the video file named: " + videoPaths[videoListIndex] + " and at video list index# " + str(videoListIndex)
 #				print "fading out ..."
 #				yield fader.fadeOutTask()
@@ -321,11 +321,19 @@ def JumpTask(controller):
 				#waiting for a keypress to play the visual stimulation
 				print "press the trackpad to play the stimulation video ..."
 #				yield viztask.waitKeyDown('t')
+				
+				#wait until the user presses the trackpad
 				yield viztask.waitSensorDown(controller, steamvr.BUTTON_TRACKPAD)
+				
+				#alter the state of the trackpad to check any deviations from this state
+				#checking against this state, which is not an pressed-down or pressed-up state,
+				#is an insurance against any unfortunate loss in tracking
+				trackpadState = 3
 				
 				print "now playing the stimulation video " + videoPaths[videoListIndex]
 				
 				videoToPlay = videoPlaceholder[videoListIndex]
+				vidLoopsRemaining = videoLoopsRemaining[videoListIndex]
 				
 				#play the visual stimulation
 				leftVideoRenderingBoard.texture(videoToPlay)
@@ -335,8 +343,19 @@ def JumpTask(controller):
 				rightVideoRenderingBoard.visible(True)
 				
 				#rightVideoRenderingBoard.setPosition([0.0, 0.0, 0.0], mode = viz.REL_PARENT)
-				videoToPlay.loop()
-				videoToPlay.play()
+#				videoToPlay.loop()
+				
+				while (vidLoopsRemaining > 0) and (trackpadState != 3):
+					videoToPlay.play()
+					vidLoopsRemaining -= 1
+					paintingsDictionary[info.name].visible(True)
+					paintingsDictionary[info.name].alpha((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
+					paintingsDictionary[info.name + '_black'].alpha(vidLoopsRemaining/maxNumberOfVideoLoops)
+					print "stimulation video loops remaining for a full discovery of this canvas: " + str(vidLoopsRemaining)
+					
+				if vidLoopsRemaining == 0: paintingsDictionary[info.name + '_black'].visible(False)
+					
+				videoLoopsRemaining[videoListIndex] = vidLoopsRemaining
 				
 				print "release the trackpad to stop playing\n"
 #				yield viztask.waitKeyUp('t')
@@ -361,6 +380,7 @@ def JumpTask(controller):
 					jumpPos[2] + (normalizedDirectionToShiftTheCanvas[2] * separationOnHorizontalPlane))
 
 # Add controllers
+theController = None
 for controller in steamvr.getControllerList():
 
 	# Create model for controller
@@ -379,6 +399,24 @@ for controller in steamvr.getControllerList():
 
 	# Setup task for triggering jumps using controller
 	viztask.schedule(JumpTask(controller))
+	theController = controller
+
+# Register callback for sensor down event
+trackpadState = 0
+
+def onSensorDown(e):
+	global theController
+	if e.object is theController:
+		trackpadState = 1
+
+viz.callback(viz.SENSOR_DOWN_EVENT,onSensorDown)
+def onSensorUp(e):
+	global theController
+	if e.object is theController:
+		trackpadState = 2
+
+viz.callback(viz.SENSOR_DOWN_EVENT,onSensorUp)
+	
 
 # Add directions to canvasForInitMsg
 canvasForInitMsg = viz.addGUICanvas(pos=[0, 3.0, 6.0])
@@ -422,9 +460,11 @@ Appreciate the art, and explore a different one.
 panelForCanvasWithoutStim = vizinfo.InfoPanel(instructions, title='ENJOY THE ART, AND MOVE ON!', key=None, icon=False, align=viz.ALIGN_CENTER, parent=canvasWithoutStim)
 
 #videos to be played
+totalLengthOfEachStimulationSessionInSeconds = 300
 numberOfVideos = 10
 videoPaths = [None] * numberOfVideos
 videoPlaceholder = [None] * numberOfVideos
+videoLoopsRemaining = [None] * numberOfVideos	#this stores the number of loops for each video remaining to be played, which is totalLengthOfEachStimulationSessionInSeconds/video.getDuration()
 
 videoPaths[0] = 'media/onParasol1.avi'
 videoPaths[1] = 'media/offParasol1.avi'
@@ -439,6 +479,10 @@ videoPaths[9] = 'media/sbc2.avi'
 
 for i in range(10):
 	videoPlaceholder[i] = viz.addVideo(videoPaths[i])
+	videoLoopsRemaining[i] = totalLengthOfEachStimulationSessionInSeconds/videoPlaceholder[i].getDuration()
+
+maxNumberOfVideoLoops = videoLoopsRemaining[0]
+
 #videoPlaceholder[0] = viz.addVideo('media/onParasol1.avi')
 #
 #videoPaths[1] = 'media/onParasol2.avi'
