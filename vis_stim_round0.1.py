@@ -325,9 +325,8 @@ def JumpTask(controller):
 				#wait until the user presses the trackpad
 				yield viztask.waitSensorDown(controller, steamvr.BUTTON_TRACKPAD)
 				
-				#alter the state of the trackpad to check any deviations from this state
-				#checking against this state, which is not an pressed-down or pressed-up state,
-				#is an insurance against any unfortunate loss in tracking
+				#Set the state of the trackpad to an odd state, to look for any deviations from this state to a pressed-down or pressed-up state
+				#this is an insurance against any unfortunate loss in tracking, which won't raise a button-press trigger by itself, but will raise an alarm if and when any button change event occurs following the loss in tracking
 				trackpadState = 3
 				
 				print "now playing the stimulation video " + videoPaths[videoListIndex]
@@ -345,10 +344,12 @@ def JumpTask(controller):
 				#rightVideoRenderingBoard.setPosition([0.0, 0.0, 0.0], mode = viz.REL_PARENT)
 #				videoToPlay.loop()
 				
-				print "vidLoopsRemaining = " + str(vidLoopsRemaining)
-				print "trackpadState = " + str(trackpadState)
-				while (vidLoopsRemaining > 0) and (trackpadState != 3):
+				while (vidLoopsRemaining > 0) and (trackpadState == 3):
+					print "vidLoopsRemaining = " + str(vidLoopsRemaining)
+					print "trackpadState = " + str(trackpadState)
+#					print "playing video with vidLoopsRemaining = " + str(vidLoopsRemaining)
 					videoToPlay.play()
+					yield viztask.waitAny([viztask.waitMediaEnd(videoToPlay), viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)])
 					vidLoopsRemaining -= 1
 					paintingsDictionary[info.name].visible(True)
 					paintingsDictionary[info.name].alpha((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
@@ -359,10 +360,10 @@ def JumpTask(controller):
 
 				videoLoopsRemaining[videoListIndex] = vidLoopsRemaining
 
-				print "release the trackpad to stop playing\n"
+#				print "release the trackpad to stop playing\n"
 #				yield viztask.waitKeyUp('t')
-				yield viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)
-				videoToPlay.stop()
+#				yield viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)
+#				videoToPlay.stop()
 
 				#hiding the video boards
 				leftVideoRenderingBoard.visible(False)
@@ -407,18 +408,24 @@ for controller in steamvr.getControllerList():
 trackpadState = 0
 
 def onSensorDown(e):
-	global theController
+	global theController, trackpadState
+	print "e.button = " + str(e.button)
 	if e.object is theController:
-		trackpadState = 1
+		if e.button == steamvr.BUTTON_TRACKPAD:
+			print "trackpad was pressed down"
+			trackpadState = 1
 
 viz.callback(viz.SENSOR_DOWN_EVENT,onSensorDown)
+
 def onSensorUp(e):
-	global theController
+	global theController, trackpadState
+	print "e.button = " + str(e.button)
 	if e.object is theController:
-		trackpadState = 2
+		if e.button == steamvr.BUTTON_TRACKPAD:
+			print "trackpad was released"
+			trackpadState = 2
 
 viz.callback(viz.SENSOR_UP_EVENT,onSensorUp)
-	
 
 # Add directions to canvasForInitMsg
 canvasForInitMsg = viz.addGUICanvas(pos=[0, 3.0, 6.0])
