@@ -345,6 +345,8 @@ def JumpTask(controller):
 				#rightVideoRenderingBoard.setPosition([0.0, 0.0, 0.0], mode = viz.REL_PARENT)
 #				videoToPlay.loop()
 				
+				print "vidLoopsRemaining = " + str(vidLoopsRemaining)
+				print "trackpadState = " + str(trackpadState)
 				while (vidLoopsRemaining > 0) and (trackpadState != 3):
 					videoToPlay.play()
 					vidLoopsRemaining -= 1
@@ -354,9 +356,9 @@ def JumpTask(controller):
 					print "stimulation video loops remaining for a full discovery of this canvas: " + str(vidLoopsRemaining)
 					
 				if vidLoopsRemaining == 0: paintingsDictionary[info.name + '_black'].visible(False)
-					
+
 				videoLoopsRemaining[videoListIndex] = vidLoopsRemaining
-				
+
 				print "release the trackpad to stop playing\n"
 #				yield viztask.waitKeyUp('t')
 				yield viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)
@@ -415,7 +417,7 @@ def onSensorUp(e):
 	if e.object is theController:
 		trackpadState = 2
 
-viz.callback(viz.SENSOR_DOWN_EVENT,onSensorUp)
+viz.callback(viz.SENSOR_UP_EVENT,onSensorUp)
 	
 
 # Add directions to canvasForInitMsg
