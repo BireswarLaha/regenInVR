@@ -40,6 +40,14 @@ gallery.disable(viz.SHADOW_CASTING)
 
 paintingsDictionary = {}
 #load paintings
+numberOfPaintings = 11
+paintings = [None] * numberOfPaintings
+backgroundBlackTex = viz.addTexture('textures/blackSquare.png')
+for i in range(numberOfPaintings):
+	paintings[i] = viz.addTexQuad()
+	textureForPainting = viz.addTexture(pathToTextureForPainting[i])
+	
+
 painting_birth_of_venus = vizfx.addChild('models/painting_birth-of-venus.osgb')
 paintingsDictionary['painting_birth-of-venus'] = painting_birth_of_venus
 
@@ -346,12 +354,14 @@ def JumpTask(controller):
 				
 				while (vidLoopsRemaining > 0) and (trackpadState == 3):
 					print "vidLoopsRemaining = " + str(vidLoopsRemaining)
+					print "maxNumberOfVideoLoops = " + str(maxNumberOfVideoLoops)
 					print "trackpadState = " + str(trackpadState)
 #					print "playing video with vidLoopsRemaining = " + str(vidLoopsRemaining)
 					videoToPlay.play()
 					yield viztask.waitAny([viztask.waitMediaEnd(videoToPlay), viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)])
 					vidLoopsRemaining -= 1
 					paintingsDictionary[info.name].visible(True)
+					print "(maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops = " + str((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
 					paintingsDictionary[info.name].alpha((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
 					paintingsDictionary[info.name + '_black'].alpha(vidLoopsRemaining/maxNumberOfVideoLoops)
 					print "stimulation video loops remaining for a full discovery of this canvas: " + str(vidLoopsRemaining)
@@ -548,6 +558,39 @@ def togglePaintingsVisibility():
 
 vizact.onkeydown('v', togglePaintingsVisibility)
 
+
+alphaOfPic = 0.0
+alphaOfBlack = 1.0
+change = 0.1
+paintingName = 'painting_starry-night'
+paintingsDictionary[paintingName].visible(True)
+paintingsDictionary[paintingName + '_black'].visible(True)
+
+paintingsDictionary[paintingName].enable(viz.BLEND)
+paintingsDictionary[paintingName + '_black'].enable(viz.BLEND)
+paintingsDictionary[paintingName].drawOrder(10,bin=viz.BIN_TRANSPARENT)
+paintingsDictionary[paintingName + '_black'].drawOrder(10,bin=viz.BIN_TRANSPARENT)
+
+def alterTheFirstPaintingsAlpha(direction = "plus"):
+	global alphaOfPic, alphaOfBlack, change, paintingsDictionary, paintingName
+	
+	print "\nalphaOfPic = " + str(alphaOfPic)
+	print "alphaOfBlack = " + str(alphaOfBlack)
+	
+	if (direction == "plus") and (alphaOfPic < 0.9):
+		print "incrementing alpha"
+		alphaOfPic += change
+		print "alphaOfPic = " + str(alphaOfPic)
+	if (direction == "minus") and (alphaOfPic > 0.1):
+		print "decrementing alpha"
+		alphaOfPic -= change
+		print "alphaOfPic = " + str(alphaOfPic)
+
+	paintingsDictionary[paintingName].alpha(alphaOfPic)
+	paintingsDictionary[paintingName + '_black'].alpha(alphaOfBlack)
+
+vizact.onkeydown('y', alterTheFirstPaintingsAlpha, "plus")
+vizact.onkeydown('t', alterTheFirstPaintingsAlpha, "minus")
 
 #using a video
 video = videoPlaceholder[0]
