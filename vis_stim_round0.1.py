@@ -42,11 +42,69 @@ paintingsDictionary = {}
 #load paintings
 numberOfPaintings = 11
 paintings = [None] * numberOfPaintings
-backgroundBlackTex = viz.addTexture('textures/blackSquare.png')
+positionOfTex = [None] * numberOfPaintings
+eulerOfTex = [None] * numberOfPaintings
+sizeOfTex = [None] * numberOfPaintings
+
+pathToTextureForPainting = [None] * numberOfPaintings
+pathToTextureForPainting[0] = 'textures/painting_picasso.png'
+pathToTextureForPainting[1] = 'textures/painting_dali-memory.png'
+pathToTextureForPainting[2] = 'textures/painting_van-gogh.png'
+pathToTextureForPainting[3] = 'textures/painting_monet-venice.png'
+pathToTextureForPainting[4] = 'textures/painting_scream.png'
+pathToTextureForPainting[5] = 'textures/painting_starry-night.png'
+pathToTextureForPainting[6] = 'textures/painting_harring-bestbuddies.png'
+pathToTextureForPainting[7] = 'textures/painting_monalisa.png'
+pathToTextureForPainting[8] = 'textures/painting_warhol_soup.png'
+pathToTextureForPainting[9] = 'textures/painting_birth-of-venus.png'
+pathToTextureForPainting[10] = 'textures/painting_magritte.png'
+
+positionOfTex[0] = [-4.90514, 1.53735, 0.3]
+positionOfTex[1] = [-4.90389, 2.24140, 1.87516]
+positionOfTex[2] = [-4.90372, 2.15444, 4.68960]
+positionOfTex[3] = [-4.89718, 2.07431, 6.71429]
+positionOfTex[4] = [-3.41761, 2.68539, 9.05103]
+positionOfTex[5] = [-0.07979, 2.38777, 9.86481]
+positionOfTex[6] = [3.11735, 2.42156, 9.11061]
+positionOfTex[7] = [4.80222, 2.76582, 6.52042]
+positionOfTex[8] = [4.80513, 2.56061, 4.72486]
+positionOfTex[9] = [4.80061, 2.69495, 2.42685]
+positionOfTex[10] = [4.79488, 2.65946, 0.17741]
+
+eulerOfTex[0] = [-90.0, 0.0, 0.0]
+eulerOfTex[1] = [-90.0, 0.0, 0.0]
+eulerOfTex[2] = [-90.0, 0.0, 0.0]
+eulerOfTex[3] = [-90.0, 0.0, 0.0]
+eulerOfTex[4] = [-45.0, 0.0, 0.0]
+eulerOfTex[5] = [0.0, 0.0, 0.0]
+eulerOfTex[6] = [45.0, 0.0, 0.0]
+eulerOfTex[7] = [90.0, 0.0, 0.0]
+eulerOfTex[8] = [90.0, 0.0, 0.0]
+eulerOfTex[9] = [90.0, 0.0, 0.0]
+eulerOfTex[10] = [90.0, 0.0, 0.0]
+
+sizeOfTex[0] = [0.81, 1.09]
+sizeOfTex[1] = [2.08, 1.37]
+sizeOfTex[2] = [0.87, 1.23]
+sizeOfTex[3] = [1.35, 0.90]
+sizeOfTex[4] = [1.42, 1.90]
+sizeOfTex[5] = [2.59, 1.63]
+sizeOfTex[6] = [2.12, 1.52]
+sizeOfTex[7] = [0.99, 1.41]
+sizeOfTex[8] = [1.07, 1.65]
+sizeOfTex[9] = [1.68, 1.21]
+sizeOfTex[10] = [1.21, 1.71]
+
+#backgroundBlackTex = viz.addTexture('textures/blackSquare.png')
+backgroundBlackTex = viz.addTexture('textures/skyBlue.png')
 for i in range(numberOfPaintings):
-	paintings[i] = viz.addTexQuad()
+	paintings[i] = viz.addTexQuad(size=sizeOfTex[i])
 	textureForPainting = viz.addTexture(pathToTextureForPainting[i])
-	
+	paintings[i].texture(backgroundBlackTex)
+	paintings[i].texture(textureForPainting,'',1)
+	paintings[i].texblend(1.0, '', 1)
+	paintings[i].setPosition(positionOfTex[i])
+	paintings[i].setEuler(eulerOfTex[i])
 
 painting_birth_of_venus = vizfx.addChild('models/painting_birth-of-venus.osgb')
 paintingsDictionary['painting_birth-of-venus'] = painting_birth_of_venus
@@ -95,36 +153,47 @@ painting_warhol_soup.visible(False)
 
 painting_birth_of_venus_black = vizfx.addChild('models/painting_birth-of-venus_black.osgb')
 paintingsDictionary['painting_birth-of-venus_black'] = painting_birth_of_venus_black
+paintingsDictionary['painting_birth-of-venus_black'].visible(False)
 
 painting_dali_memory_black = vizfx.addChild('models/painting_dali-memory_black.osgb')
 paintingsDictionary['painting_dali-memory_black'] = painting_dali_memory_black
+paintingsDictionary['painting_dali-memory_black'].visible(False)
 
 painting_harring_bestbuddies_black = vizfx.addChild('models/painting_harring-bestbuddies_black.osgb')
 paintingsDictionary['painting_harring-bestbuddies_black'] = painting_harring_bestbuddies_black
+paintingsDictionary['painting_harring-bestbuddies_black'].visible(False)
 
 painting_magritte_black = vizfx.addChild('models/painting_magritte_black.osgb')
 paintingsDictionary['painting_magritte_black'] = painting_magritte_black
+paintingsDictionary['painting_magritte_black'].visible(False)
 
 painting_monalisa_black = vizfx.addChild('models/painting_monalisa_black.osgb')
 paintingsDictionary['painting_monalisa_black'] = painting_monalisa_black
+paintingsDictionary['painting_monalisa_black'].visible(False)
 
 painting_monet_venice_black = vizfx.addChild('models/painting_monet-venice_black.osgb')
 paintingsDictionary['painting_monet-venice_black'] = painting_monet_venice_black
+paintingsDictionary['painting_monet-venice_black'].visible(False)
 
 painting_picasso_black = vizfx.addChild('models/painting_picasso_black.osgb')
 paintingsDictionary['painting_picasso_black'] = painting_picasso_black
+paintingsDictionary['painting_picasso_black'].visible(False)
 
 painting_scream_black = vizfx.addChild('models/painting_scream_black.osgb')
 paintingsDictionary['painting_scream_black'] = painting_scream_black
+paintingsDictionary['painting_scream_black'].visible(False)
 
 painting_starry_night_black = vizfx.addChild('models/painting_starry-night_black.osgb')
 paintingsDictionary['painting_starry-night_black'] = painting_starry_night_black
+paintingsDictionary['painting_starry-night_black'].visible(False)
 
 painting_van_gogh_black = vizfx.addChild('models/painting_van-gogh_black.osgb')
 paintingsDictionary['painting_van-gogh_black'] = painting_van_gogh_black
+paintingsDictionary['painting_van-gogh_black'].visible(False)
 
 painting_warhol_soup_black = vizfx.addChild('models/painting_warhol_soup_black.osgb')
 paintingsDictionary['painting_warhol_soup_black'] = painting_warhol_soup_black
+paintingsDictionary['painting_warhol_soup_black'].visible(False)
 
 #fader
 #fader = view_fader.addFader()
@@ -360,7 +429,7 @@ def JumpTask(controller):
 					videoToPlay.play()
 					yield viztask.waitAny([viztask.waitMediaEnd(videoToPlay), viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)])
 					vidLoopsRemaining -= 1
-					paintingsDictionary[info.name].visible(True)
+#					paintingsDictionary[info.name].visible(True)
 					print "(maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops = " + str((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
 					paintingsDictionary[info.name].alpha((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
 					paintingsDictionary[info.name + '_black'].alpha(vidLoopsRemaining/maxNumberOfVideoLoops)
@@ -383,7 +452,7 @@ def JumpTask(controller):
 				#visual stimulation unavailable or already taken
 				print "You have arrived at the painting " + info.name + " but the visual stimulation here is either unavailable or has already been taken"
 				paintingsDictionary[info.name + '_black'].visible(False)
-				paintingsDictionary[info.name].visible(True)
+#				paintingsDictionary[info.name].visible(True)
 				canvasForStim.visible(False)
 				canvasWithoutStim.visible(True)
 				canvasWithoutStim.billboard(viz.BILLBOARD_VIEW_POS)
@@ -563,13 +632,13 @@ alphaOfPic = 0.0
 alphaOfBlack = 1.0
 change = 0.1
 paintingName = 'painting_starry-night'
-paintingsDictionary[paintingName].visible(True)
-paintingsDictionary[paintingName + '_black'].visible(True)
-
-paintingsDictionary[paintingName].enable(viz.BLEND)
-paintingsDictionary[paintingName + '_black'].enable(viz.BLEND)
-paintingsDictionary[paintingName].drawOrder(10,bin=viz.BIN_TRANSPARENT)
-paintingsDictionary[paintingName + '_black'].drawOrder(10,bin=viz.BIN_TRANSPARENT)
+#paintingsDictionary[paintingName].visible(True)
+#paintingsDictionary[paintingName + '_black'].visible(True)
+#
+#paintingsDictionary[paintingName].enable(viz.BLEND)
+#paintingsDictionary[paintingName + '_black'].enable(viz.BLEND)
+#paintingsDictionary[paintingName].drawOrder(10,bin=viz.BIN_TRANSPARENT)
+#paintingsDictionary[paintingName + '_black'].drawOrder(10,bin=viz.BIN_TRANSPARENT)
 
 def alterTheFirstPaintingsAlpha(direction = "plus"):
 	global alphaOfPic, alphaOfBlack, change, paintingsDictionary, paintingName
@@ -589,8 +658,8 @@ def alterTheFirstPaintingsAlpha(direction = "plus"):
 	paintingsDictionary[paintingName].alpha(alphaOfPic)
 	paintingsDictionary[paintingName + '_black'].alpha(alphaOfBlack)
 
-vizact.onkeydown('y', alterTheFirstPaintingsAlpha, "plus")
-vizact.onkeydown('t', alterTheFirstPaintingsAlpha, "minus")
+#vizact.onkeydown('y', alterTheFirstPaintingsAlpha, "plus")
+#vizact.onkeydown('t', alterTheFirstPaintingsAlpha, "minus")
 
 #using a video
 video = videoPlaceholder[0]

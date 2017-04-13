@@ -1,0 +1,40 @@
+pathToTextureForPainting[0] = 'textures/painting_picasso.png'
+pathToTextureForPainting[1] = 'textures/painting_dali-memory.png'
+pathToTextureForPainting[2] = 'textures/painting_van-gogh.png'
+pathToTextureForPainting[3] = 'textures/painting_monet-venice.png'
+pathToTextureForPainting[4] = 'textures/painting_scream.png'
+pathToTextureForPainting[5] = 'textures/painting_starry-night.png'
+pathToTextureForPainting[6] = 'textures/painting_harring-bestbuddies.png'
+pathToTextureForPainting[7] = 'textures/painting_monalisa.png'
+pathToTextureForPainting[8] = 'textures/painting_warhol_soup.png'
+pathToTextureForPainting[9] = 'textures/painting_birth-of-venus.png'
+pathToTextureForPainting[10] = 'textures/painting_magritte.png'
+
+
+3D position:
+pathToTextureForPainting[0] = 'textures/painting_picasso.png' - [-4.90514, 1.93735, 0.01555]
+pathToTextureForPainting[1] = 'textures/painting_dali-memory.png' - [-4.90389, 2.24140, 1.87516]
+pathToTextureForPainting[2] = 'textures/painting_van-gogh.png' - [-4.90372, 2.15444, 4.68960]
+pathToTextureForPainting[3] = 'textures/painting_monet-venice.png' - [-4.89718, 2.07431, 6.71429]
+pathToTextureForPainting[4] = 'textures/painting_scream.png' - [-3.41761, 2.68539, 9.05103]
+pathToTextureForPainting[5] = 'textures/painting_starry-night.png' - [-0.07979, 2.38777, 9.86481]
+pathToTextureForPainting[6] = 'textures/painting_harring-bestbuddies.png' - [3.11735, 2.42156, 9.11061]
+pathToTextureForPainting[7] = 'textures/painting_monalisa.png' - [4.80222, 2.76582, 6.52042]
+pathToTextureForPainting[8] = 'textures/painting_warhol_soup.png' - [4.80513, 2.56061, 4.72486]
+pathToTextureForPainting[9] = 'textures/painting_birth-of-venus.png' - [4.80061, 2.69495, 2.42685]
+pathToTextureForPainting[10] = 'textures/painting_magritte.png' - [4.79488, 2.65946, 0.17741]
+
+
+Size:
+pathToTextureForPainting[0] = 'textures/painting_picasso.png' - [0.00, 1.09, 0.81]
+pathToTextureForPainting[1] = 'textures/painting_dali-memory.png' - [0.00, 1.37, 2.08]
+pathToTextureForPainting[2] = 'textures/painting_van-gogh.png' - [0.00, 1.23, 0.87]
+pathToTextureForPainting[3] = 'textures/painting_monet-venice.png' - [0.00, 0.90, 1.35]
+pathToTextureForPainting[4] = 'textures/painting_scream.png' - [0.00, 1.90, 1.42]
+pathToTextureForPainting[5] = 'textures/painting_starry-night.png' - [2.59, 1.63, 0.00]
+pathToTextureForPainting[6] = 'textures/painting_harring-bestbuddies.png' - [0.00, 1.52, 2.12]
+pathToTextureForPainting[7] = 'textures/painting_monalisa.png' - [0.00, 1.41, 0.99]
+pathToTextureForPainting[8] = 'textures/painting_warhol_soup.png' - [0.00, 1.65, 1.07]
+pathToTextureForPainting[9] = 'textures/painting_birth-of-venus.png' - [0.00, 1.21, 1.68]
+pathToTextureForPainting[10] = 'textures/painting_magritte.png' - [0.00, 1.71, 1.21]
+
