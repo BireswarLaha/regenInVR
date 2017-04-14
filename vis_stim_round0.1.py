@@ -64,7 +64,7 @@ positionOfTex[1] = [-4.90389, 1.65, 2.53]
 positionOfTex[2] = [-4.90372, 1.75, 4.8]
 positionOfTex[3] = [-4.89718, 1.8, 6.71429]
 positionOfTex[4] = [-3.3, 2.2, 9.05103]
-positionOfTex[5] = [-0.07979, 2.1, 10.0]
+positionOfTex[5] = [0.0, 2.1, 9.9]
 positionOfTex[6] = [3.11735, 2.27, 9.2]
 positionOfTex[7] = [4.80222, 2.3, 6.75]
 positionOfTex[8] = [4.80513, 2.2, 4.65]
@@ -96,7 +96,8 @@ sizeOfTex[9] = [1.68, 1.21]
 sizeOfTex[10] = [1.21, 1.71]
 
 #backgroundBlackTex = viz.addTexture('textures/blackSquare.png')
-backgroundBlackTex = viz.addTexture('textures/skyBlue.png')
+#backgroundBlackTex = viz.addTexture('textures/skyBlue.png')
+backgroundBlackTex = viz.addTexture('textures/blackSquare.png')
 for i in range(numberOfPaintings):
 	paintings[i] = viz.addTexQuad(size=sizeOfTex[i])
 	textureForPainting = viz.addTexture(pathToTextureForPainting[i])
@@ -106,94 +107,94 @@ for i in range(numberOfPaintings):
 	paintings[i].setPosition(positionOfTex[i])
 	paintings[i].setEuler(eulerOfTex[i])
 
-painting_birth_of_venus = vizfx.addChild('models/painting_birth-of-venus.osgb')
-paintingsDictionary['painting_birth-of-venus'] = painting_birth_of_venus
+#painting_birth_of_venus = vizfx.addChild('models/painting_birth-of-venus.osgb')
+#paintingsDictionary['painting_birth-of-venus'] = painting_birth_of_venus
+#
+#painting_dali_memory = vizfx.addChild('models/painting_dali-memory.osgb')
+#paintingsDictionary['painting_dali-memory'] = painting_dali_memory
+#
+#painting_harring_bestbuddies = vizfx.addChild('models/painting_harring-bestbuddies.osgb')
+#paintingsDictionary['painting_harring-bestbuddies'] = painting_harring_bestbuddies
+#
+#painting_magritte = vizfx.addChild('models/painting_magritte.osgb')
+#paintingsDictionary['painting_magritte'] = painting_magritte
+#
+#painting_monalisa = vizfx.addChild('models/painting_monalisa.osgb')
+#paintingsDictionary['painting_monalisa'] = painting_monalisa
+#
+#painting_monet_venice = vizfx.addChild('models/painting_monet-venice.osgb')
+#paintingsDictionary['painting_monet-venice'] = painting_monet_venice
+#
+#painting_picasso = vizfx.addChild('models/painting_picasso.osgb')
+#paintingsDictionary['painting_picasso'] = painting_picasso
+#
+#painting_scream = vizfx.addChild('models/painting_scream.osgb')
+#paintingsDictionary['painting_scream'] = painting_scream
+#
+#painting_starry_night = vizfx.addChild('models/painting_starry-night.osgb')
+#paintingsDictionary['painting_starry-night'] = painting_starry_night
+#
+#painting_van_gogh = vizfx.addChild('models/painting_van-gogh.osgb')
+#paintingsDictionary['painting_van-gogh'] = painting_van_gogh
+#
+#painting_warhol_soup = vizfx.addChild('models/painting_warhol_soup.osgb')
+#paintingsDictionary['painting_warhol_soup'] = painting_warhol_soup
 
-painting_dali_memory = vizfx.addChild('models/painting_dali-memory.osgb')
-paintingsDictionary['painting_dali-memory'] = painting_dali_memory
-
-painting_harring_bestbuddies = vizfx.addChild('models/painting_harring-bestbuddies.osgb')
-paintingsDictionary['painting_harring-bestbuddies'] = painting_harring_bestbuddies
-
-painting_magritte = vizfx.addChild('models/painting_magritte.osgb')
-paintingsDictionary['painting_magritte'] = painting_magritte
-
-painting_monalisa = vizfx.addChild('models/painting_monalisa.osgb')
-paintingsDictionary['painting_monalisa'] = painting_monalisa
-
-painting_monet_venice = vizfx.addChild('models/painting_monet-venice.osgb')
-paintingsDictionary['painting_monet-venice'] = painting_monet_venice
-
-painting_picasso = vizfx.addChild('models/painting_picasso.osgb')
-paintingsDictionary['painting_picasso'] = painting_picasso
-
-painting_scream = vizfx.addChild('models/painting_scream.osgb')
-paintingsDictionary['painting_scream'] = painting_scream
-
-painting_starry_night = vizfx.addChild('models/painting_starry-night.osgb')
-paintingsDictionary['painting_starry-night'] = painting_starry_night
-
-painting_van_gogh = vizfx.addChild('models/painting_van-gogh.osgb')
-paintingsDictionary['painting_van-gogh'] = painting_van_gogh
-
-painting_warhol_soup = vizfx.addChild('models/painting_warhol_soup.osgb')
-paintingsDictionary['painting_warhol_soup'] = painting_warhol_soup
-
-painting_birth_of_venus.visible(False)
-painting_dali_memory.visible(False)
-painting_harring_bestbuddies.visible(False)
-painting_magritte.visible(False)
-painting_monalisa.visible(False)
-painting_monet_venice.visible(False)
-painting_picasso.visible(False)
-painting_scream.visible(False)
-painting_starry_night.visible(False)
-painting_van_gogh.visible(False)
-painting_warhol_soup.visible(False)
-
+#painting_birth_of_venus.visible(False)
+#painting_dali_memory.visible(False)
+#painting_harring_bestbuddies.visible(False)
+#painting_magritte.visible(False)
+#painting_monalisa.visible(False)
+#painting_monet_venice.visible(False)
+#painting_picasso.visible(False)
+#painting_scream.visible(False)
+#painting_starry_night.visible(False)
+#painting_van_gogh.visible(False)
+#painting_warhol_soup.visible(False)
+#
 painting_birth_of_venus_black = vizfx.addChild('models/painting_birth-of-venus_black.osgb')
 paintingsDictionary['painting_birth-of-venus_black'] = painting_birth_of_venus_black
-paintingsDictionary['painting_birth-of-venus_black'].visible(False)
+#paintingsDictionary['painting_birth-of-venus_black'].visible(False)
 
 painting_dali_memory_black = vizfx.addChild('models/painting_dali-memory_black.osgb')
 paintingsDictionary['painting_dali-memory_black'] = painting_dali_memory_black
-paintingsDictionary['painting_dali-memory_black'].visible(False)
+#paintingsDictionary['painting_dali-memory_black'].visible(False)
 
 painting_harring_bestbuddies_black = vizfx.addChild('models/painting_harring-bestbuddies_black.osgb')
 paintingsDictionary['painting_harring-bestbuddies_black'] = painting_harring_bestbuddies_black
-paintingsDictionary['painting_harring-bestbuddies_black'].visible(False)
+#paintingsDictionary['painting_harring-bestbuddies_black'].visible(False)
 
 painting_magritte_black = vizfx.addChild('models/painting_magritte_black.osgb')
 paintingsDictionary['painting_magritte_black'] = painting_magritte_black
-paintingsDictionary['painting_magritte_black'].visible(False)
+#paintingsDictionary['painting_magritte_black'].visible(False)
 
 painting_monalisa_black = vizfx.addChild('models/painting_monalisa_black.osgb')
 paintingsDictionary['painting_monalisa_black'] = painting_monalisa_black
-paintingsDictionary['painting_monalisa_black'].visible(False)
+#paintingsDictionary['painting_monalisa_black'].visible(False)
 
 painting_monet_venice_black = vizfx.addChild('models/painting_monet-venice_black.osgb')
 paintingsDictionary['painting_monet-venice_black'] = painting_monet_venice_black
-paintingsDictionary['painting_monet-venice_black'].visible(False)
+#paintingsDictionary['painting_monet-venice_black'].visible(False)
 
 painting_picasso_black = vizfx.addChild('models/painting_picasso_black.osgb')
 paintingsDictionary['painting_picasso_black'] = painting_picasso_black
-paintingsDictionary['painting_picasso_black'].visible(False)
+#paintingsDictionary['painting_picasso_black'].visible(False)
 
 painting_scream_black = vizfx.addChild('models/painting_scream_black.osgb')
 paintingsDictionary['painting_scream_black'] = painting_scream_black
-paintingsDictionary['painting_scream_black'].visible(False)
+#paintingsDictionary['painting_scream_black'].visible(False)
 
 painting_starry_night_black = vizfx.addChild('models/painting_starry-night_black.osgb')
 paintingsDictionary['painting_starry-night_black'] = painting_starry_night_black
-paintingsDictionary['painting_starry-night_black'].visible(False)
+#paintingsDictionary['painting_starry-night_black'].visible(False)
 
 painting_van_gogh_black = vizfx.addChild('models/painting_van-gogh_black.osgb')
 paintingsDictionary['painting_van-gogh_black'] = painting_van_gogh_black
-paintingsDictionary['painting_van-gogh_black'].visible(False)
+#paintingsDictionary['painting_van-gogh_black'].visible(False)
 
 painting_warhol_soup_black = vizfx.addChild('models/painting_warhol_soup_black.osgb')
 paintingsDictionary['painting_warhol_soup_black'] = painting_warhol_soup_black
-paintingsDictionary['painting_warhol_soup_black'].visible(False)
+#paintingsDictionary['painting_warhol_soup_black'].visible(False)
 
 #fader
 #fader = view_fader.addFader()
@@ -232,6 +233,7 @@ JUMP_LOCATIONS = {   'painting_picasso': [-3.4, -0.00000, 0.42632]
 }
 paintingNames = []
 dictionaryMappingPaintingNamesToVideoListIndex = {}
+
 paintingNames.append('painting_picasso')
 dictionaryMappingPaintingNamesToVideoListIndex['painting_picasso'] = 0
 
@@ -286,6 +288,7 @@ def IntersectController(controller):
 def HighlightPainting(name, mode):
 	"""Apply/Unapply highlight effect from specified painting"""
 	if name:
+		
 		nameNew = name
 		splitNames = nameNew.split("-")
 		global paintingsDictionary
@@ -313,6 +316,9 @@ def HighlightTask(controller):
 
 			# Intersect pointer with scene
 			info = IntersectController(controller)
+			
+			if ((info.name != "drawable") and (info.name != "whitewall") and (info.name != "frame")):
+				print "name of object intersected with = " + str(info.name)
 			
 			# Check if name is a jump location painting
 			node_name = info.name if info.name in JUMP_LOCATIONS else ''
@@ -519,6 +525,9 @@ instructions ="""1. 10 out of the 11 frames pack unique visual stimulation.
 TODO: Use the trigger to select and jump to a painting. GO GET THEM!!"""
 panel = vizinfo.InfoPanel(instructions, title='NON-INVASIVE STIMULATION FOR VISION RESTORATION', key=None, icon=False, align=viz.ALIGN_CENTER, parent=canvasForInitMsg)
 
+#hiding all text canvases
+canvasForInitMsg.visible(False)
+
 # Add directions to canvasForStim
 canvasForStim = viz.addGUICanvas(pos=[0, 3.0, 6.0])
 canvasForStim.setMouseStyle(0)
@@ -533,6 +542,9 @@ instructions ="""1. Pull the trigger to START the stimulation
 """
 panelForStimInstructions = vizinfo.InfoPanel(instructions, title='VISUAL STIMULATION IN STORE FOR YOU!', key=None, icon=False, align=viz.ALIGN_CENTER, parent=canvasForStim)
 
+#hiding all text canvases
+canvasForStim.visible(False)
+
 # Add directions to canvasWithoutStim
 canvasWithoutStim = viz.addGUICanvas(pos=[0, 3.0, 6.0])
 canvasWithoutStim.setMouseStyle(0)
@@ -546,6 +558,9 @@ OR you got it already!
 Appreciate the art, and explore a different one.
 """
 panelForCanvasWithoutStim = vizinfo.InfoPanel(instructions, title='ENJOY THE ART, AND MOVE ON!', key=None, icon=False, align=viz.ALIGN_CENTER, parent=canvasWithoutStim)
+
+#hiding all text canvases
+canvasWithoutStim.visible(False)
 
 #videos to be played
 totalLengthOfEachStimulationSessionInSeconds = 300
