@@ -13,6 +13,8 @@ import vector3
 import vizcam
 import view_fader
 
+totalLengthOfEachStimulationSessionInSeconds = 60 #the length of each stimulation session in seconds
+
 # Initialize window
 viz.setMultiSample(8)
 viz.go()
@@ -59,7 +61,7 @@ pathToTextureForPainting[8] = 'textures/painting_warhol_soup.png'
 pathToTextureForPainting[9] = 'textures/painting_birth-of-venus.png'
 pathToTextureForPainting[10] = 'textures/painting_magritte.png'
 
-positionOfTex[0] = [-4.90514, 1.53735, 0.3]
+positionOfTex[0] = [-4.90514, 1.55, 0.32]
 positionOfTex[1] = [-4.90389, 1.65, 2.53]
 positionOfTex[2] = [-4.90372, 1.75, 4.8]
 positionOfTex[3] = [-4.89718, 1.8, 6.71429]
@@ -103,7 +105,7 @@ for i in range(numberOfPaintings):
 	textureForPainting = viz.addTexture(pathToTextureForPainting[i])
 	paintings[i].texture(backgroundBlackTex)
 	paintings[i].texture(textureForPainting,'',1)
-	paintings[i].texblend(1.0, '', 1)
+	paintings[i].texblend(0.0, '', 1)
 	paintings[i].setPosition(positionOfTex[i])
 	paintings[i].setEuler(eulerOfTex[i])
 
@@ -154,27 +156,27 @@ for i in range(numberOfPaintings):
 #
 painting_birth_of_venus_black = vizfx.addChild('models/painting_birth-of-venus_black.osgb')
 paintingsDictionary['painting_birth-of-venus_black'] = painting_birth_of_venus_black
-#paintingsDictionary['painting_birth-of-venus_black'].visible(False)
+paintingsDictionary['painting_birth-of-venus_black'].visible(False)
 
 painting_dali_memory_black = vizfx.addChild('models/painting_dali-memory_black.osgb')
 paintingsDictionary['painting_dali-memory_black'] = painting_dali_memory_black
-#paintingsDictionary['painting_dali-memory_black'].visible(False)
+paintingsDictionary['painting_dali-memory_black'].visible(False)
 
 painting_harring_bestbuddies_black = vizfx.addChild('models/painting_harring-bestbuddies_black.osgb')
 paintingsDictionary['painting_harring-bestbuddies_black'] = painting_harring_bestbuddies_black
-#paintingsDictionary['painting_harring-bestbuddies_black'].visible(False)
+paintingsDictionary['painting_harring-bestbuddies_black'].visible(False)
 
 painting_magritte_black = vizfx.addChild('models/painting_magritte_black.osgb')
 paintingsDictionary['painting_magritte_black'] = painting_magritte_black
-#paintingsDictionary['painting_magritte_black'].visible(False)
+paintingsDictionary['painting_magritte_black'].visible(False)
 
 painting_monalisa_black = vizfx.addChild('models/painting_monalisa_black.osgb')
 paintingsDictionary['painting_monalisa_black'] = painting_monalisa_black
-#paintingsDictionary['painting_monalisa_black'].visible(False)
+paintingsDictionary['painting_monalisa_black'].visible(False)
 
 painting_monet_venice_black = vizfx.addChild('models/painting_monet-venice_black.osgb')
 paintingsDictionary['painting_monet-venice_black'] = painting_monet_venice_black
-#paintingsDictionary['painting_monet-venice_black'].visible(False)
+paintingsDictionary['painting_monet-venice_black'].visible(False)
 
 painting_picasso_black = vizfx.addChild('models/painting_picasso_black.osgb')
 paintingsDictionary['painting_picasso_black'] = painting_picasso_black
@@ -182,19 +184,19 @@ paintingsDictionary['painting_picasso_black'] = painting_picasso_black
 
 painting_scream_black = vizfx.addChild('models/painting_scream_black.osgb')
 paintingsDictionary['painting_scream_black'] = painting_scream_black
-#paintingsDictionary['painting_scream_black'].visible(False)
+paintingsDictionary['painting_scream_black'].visible(False)
 
 painting_starry_night_black = vizfx.addChild('models/painting_starry-night_black.osgb')
 paintingsDictionary['painting_starry-night_black'] = painting_starry_night_black
-#paintingsDictionary['painting_starry-night_black'].visible(False)
+paintingsDictionary['painting_starry-night_black'].visible(False)
 
 painting_van_gogh_black = vizfx.addChild('models/painting_van-gogh_black.osgb')
 paintingsDictionary['painting_van-gogh_black'] = painting_van_gogh_black
-#paintingsDictionary['painting_van-gogh_black'].visible(False)
+paintingsDictionary['painting_van-gogh_black'].visible(False)
 
 painting_warhol_soup_black = vizfx.addChild('models/painting_warhol_soup_black.osgb')
 paintingsDictionary['painting_warhol_soup_black'] = painting_warhol_soup_black
-#paintingsDictionary['painting_warhol_soup_black'].visible(False)
+paintingsDictionary['painting_warhol_soup_black'].visible(False)
 
 #fader
 #fader = view_fader.addFader()
@@ -289,13 +291,16 @@ def HighlightPainting(name, mode):
 	"""Apply/Unapply highlight effect from specified painting"""
 	if name:
 		
-		nameNew = name
+		nameNew = name + "_black"
 		splitNames = nameNew.split("-")
+		
+		print "name = " + name
+		
 		global paintingsDictionary
 
-		if paintingsDictionary[nameNew].getVisible() == False:
-			nameNew = nameNew + "_black"
-		
+#		if paintingsDictionary[nameNew].getVisible() == False:
+#			nameNew = nameNew + "_black"
+
 		if mode:
 #			gallery.apply(highlightEffect, node=name)
 			paintingsDictionary[nameNew].apply(highlightEffect, node=name)
@@ -360,6 +365,8 @@ def JumpTask(controller):
 		# Intersect pointer with scene
 		info = IntersectController(controller)
 		if info.name in JUMP_LOCATIONS:
+			
+			nameToTest = info.name
 
 			# Move navigation node to jump location
 			jumpPos = list(JUMP_LOCATIONS[info.name])
@@ -375,7 +382,7 @@ def JumpTask(controller):
 			jump_flash.addAction(vizact.method.visible(False))
 
 			global itemIndexWithNoStimulation, paintingNames, canvasForStim, canvasWithoutStim, canvasForInitMsg, paintingsDictionary, dictionaryMappingPaintingNamesToVideoListIndex, videoPlaceholder, videoPaths, fader
-			global leftVideoRenderingBoard, rightVideoRenderingBoard, totalLengthOfEachStimulationSessionInSeconds, videoLoopsRemaining, maxNumberOfVideoLoops, trackpadState
+			global leftVideoRenderingBoard, rightVideoRenderingBoard, totalLengthOfEachStimulationSessionInSeconds, videoLoopsRemaining, maxNumberOfVideoLoops, trackpadState, paintings, stimulate, videoListIndex, paintingIndex
 
 			# Hide instruction canvasForInitMsg after first jump
 			canvasForInitMsg.visible(False)
@@ -384,9 +391,14 @@ def JumpTask(controller):
 			verticalPosOfCanvas = 0.6
 			normalizedDirectionToShiftTheCanvas = vector3.Vec3ToVizardFloatList(vector3.vizardFloatListToVec3([-info.normal[0], 0.0, -info.normal[2]]).normalize())
 			
-			if (info.name != paintingNames[itemIndexWithNoStimulation]) and (paintingsDictionary[info.name].getVisible() == False):
+#			if (info.name != paintingNames[itemIndexWithNoStimulation]) and (paintingsDictionary[info.name].getVisible() == False):
+			if (info.name != paintingNames[itemIndexWithNoStimulation]):
+				
+				paintingsDictionary[info.name + "_black"].visible(False)
+				
 				#visual stimulation ready to be taken
 				videoListIndex = dictionaryMappingPaintingNamesToVideoListIndex[info.name]
+				paintingIndex = dictionaryMappingPaintingNamesToVideoListIndex[info.name]
 				if videoListIndex > itemIndexWithNoStimulation: videoListIndex -= 1	#this is under the assumption that the indices of the videos associated to the canvases go up from 0 to 10, ignoring the index for the item to be ignored
 				print "You have arrived at the painting " + info.name + " and you can receive visual stimulation from the video file named: " + videoPaths[videoListIndex] + " and at video list index# " + str(videoListIndex)
 #				print "fading out ..."
@@ -437,9 +449,11 @@ def JumpTask(controller):
 					vidLoopsRemaining -= 1
 #					paintingsDictionary[info.name].visible(True)
 					print "(maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops = " + str((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
-					paintingsDictionary[info.name].alpha((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
-					paintingsDictionary[info.name + '_black'].alpha(vidLoopsRemaining/maxNumberOfVideoLoops)
+#					paintingsDictionary[info.name].alpha((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
+#					paintingsDictionary[info.name + '_black'].alpha(vidLoopsRemaining/maxNumberOfVideoLoops)
 					print "stimulation video loops remaining for a full discovery of this canvas: " + str(vidLoopsRemaining)
+					
+					paintings[paintingIndex].texblend((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops, '', 1)
 					
 				if vidLoopsRemaining == 0: paintingsDictionary[info.name + '_black'].visible(False)
 
@@ -491,14 +505,31 @@ for controller in steamvr.getControllerList():
 
 # Register callback for sensor down event
 trackpadState = 0
-
+stimulate = False
 def onSensorDown(e):
-	global theController, trackpadState
+	global theController, trackpadState, stimulate, videoListIndex, paintingIndex
 	print "e.button = " + str(e.button)
 	if e.object is theController:
-		if e.button == steamvr.BUTTON_TRACKPAD:
+		if (e.button == steamvr.BUTTON_TRACKPAD) and (stimulate):
 			print "trackpad was pressed down"
 			trackpadState = 1
+			
+			#stimulation code below:
+			while vidLoopsRemaining > 0:
+				print "vidLoopsRemaining = " + str(vidLoopsRemaining)
+				print "maxNumberOfVideoLoops = " + str(maxNumberOfVideoLoops)
+				print "trackpadState = " + str(trackpadState)
+	#					print "playing video with vidLoopsRemaining = " + str(vidLoopsRemaining)
+				videoToPlay.play()
+				yield viztask.waitAny([viztask.waitMediaEnd(videoToPlay), viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)])
+				vidLoopsRemaining -= 1
+	#					paintingsDictionary[info.name].visible(True)
+				print "(maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops = " + str((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
+	#					paintingsDictionary[info.name].alpha((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
+	#					paintingsDictionary[info.name + '_black'].alpha(vidLoopsRemaining/maxNumberOfVideoLoops)
+				print "stimulation video loops remaining for a full discovery of this canvas: " + str(vidLoopsRemaining)
+				
+				paintings[paintingIndex].texblend((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops, '', 1)
 
 viz.callback(viz.SENSOR_DOWN_EVENT,onSensorDown)
 
@@ -563,7 +594,6 @@ panelForCanvasWithoutStim = vizinfo.InfoPanel(instructions, title='ENJOY THE ART
 canvasWithoutStim.visible(False)
 
 #videos to be played
-totalLengthOfEachStimulationSessionInSeconds = 300
 numberOfVideos = 10
 videoPaths = [None] * numberOfVideos
 videoPlaceholder = [None] * numberOfVideos
