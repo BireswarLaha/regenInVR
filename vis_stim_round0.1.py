@@ -156,27 +156,27 @@ for i in range(numberOfPaintings):
 #
 painting_birth_of_venus_black = vizfx.addChild('models/painting_birth-of-venus_black.osgb')
 paintingsDictionary['painting_birth-of-venus_black'] = painting_birth_of_venus_black
-paintingsDictionary['painting_birth-of-venus_black'].visible(False)
+#paintingsDictionary['painting_birth-of-venus_black'].visible(False)
 
 painting_dali_memory_black = vizfx.addChild('models/painting_dali-memory_black.osgb')
 paintingsDictionary['painting_dali-memory_black'] = painting_dali_memory_black
-paintingsDictionary['painting_dali-memory_black'].visible(False)
+#paintingsDictionary['painting_dali-memory_black'].visible(False)
 
 painting_harring_bestbuddies_black = vizfx.addChild('models/painting_harring-bestbuddies_black.osgb')
 paintingsDictionary['painting_harring-bestbuddies_black'] = painting_harring_bestbuddies_black
-paintingsDictionary['painting_harring-bestbuddies_black'].visible(False)
+#paintingsDictionary['painting_harring-bestbuddies_black'].visible(False)
 
 painting_magritte_black = vizfx.addChild('models/painting_magritte_black.osgb')
 paintingsDictionary['painting_magritte_black'] = painting_magritte_black
-paintingsDictionary['painting_magritte_black'].visible(False)
+#paintingsDictionary['painting_magritte_black'].visible(False)
 
 painting_monalisa_black = vizfx.addChild('models/painting_monalisa_black.osgb')
 paintingsDictionary['painting_monalisa_black'] = painting_monalisa_black
-paintingsDictionary['painting_monalisa_black'].visible(False)
+#paintingsDictionary['painting_monalisa_black'].visible(False)
 
 painting_monet_venice_black = vizfx.addChild('models/painting_monet-venice_black.osgb')
 paintingsDictionary['painting_monet-venice_black'] = painting_monet_venice_black
-paintingsDictionary['painting_monet-venice_black'].visible(False)
+#paintingsDictionary['painting_monet-venice_black'].visible(False)
 
 painting_picasso_black = vizfx.addChild('models/painting_picasso_black.osgb')
 paintingsDictionary['painting_picasso_black'] = painting_picasso_black
@@ -184,19 +184,19 @@ paintingsDictionary['painting_picasso_black'] = painting_picasso_black
 
 painting_scream_black = vizfx.addChild('models/painting_scream_black.osgb')
 paintingsDictionary['painting_scream_black'] = painting_scream_black
-paintingsDictionary['painting_scream_black'].visible(False)
+#paintingsDictionary['painting_scream_black'].visible(False)
 
 painting_starry_night_black = vizfx.addChild('models/painting_starry-night_black.osgb')
 paintingsDictionary['painting_starry-night_black'] = painting_starry_night_black
-paintingsDictionary['painting_starry-night_black'].visible(False)
+#paintingsDictionary['painting_starry-night_black'].visible(False)
 
 painting_van_gogh_black = vizfx.addChild('models/painting_van-gogh_black.osgb')
 paintingsDictionary['painting_van-gogh_black'] = painting_van_gogh_black
-paintingsDictionary['painting_van-gogh_black'].visible(False)
+#paintingsDictionary['painting_van-gogh_black'].visible(False)
 
 painting_warhol_soup_black = vizfx.addChild('models/painting_warhol_soup_black.osgb')
 paintingsDictionary['painting_warhol_soup_black'] = painting_warhol_soup_black
-paintingsDictionary['painting_warhol_soup_black'].visible(False)
+#paintingsDictionary['painting_warhol_soup_black'].visible(False)
 
 #fader
 #fader = view_fader.addFader()
@@ -322,8 +322,8 @@ def HighlightTask(controller):
 			# Intersect pointer with scene
 			info = IntersectController(controller)
 			
-			if ((info.name != "drawable") and (info.name != "whitewall") and (info.name != "frame")):
-				print "name of object intersected with = " + str(info.name)
+#			if ((info.name != "drawable") and (info.name != "whitewall") and (info.name != "frame")):
+#				print "name of object intersected with = " + str(info.name)
 			
 			# Check if name is a jump location painting
 			node_name = info.name if info.name in JUMP_LOCATIONS else ''
@@ -479,6 +479,9 @@ def JumpTask(controller):
 			else:
 				#visual stimulation unavailable or already taken
 				print "You have arrived at the painting " + info.name + " but the visual stimulation here is either unavailable or has already been taken"
+				paintingsDictionary[info.name + "_black"].visible(False)
+				paintingIndex = dictionaryMappingPaintingNamesToVideoListIndex[info.name]
+				paintings[paintingIndex].texblend(1.0, '', 1)
 #				paintingsDictionary[info.name + '_black'].visible(False)
 #				paintingsDictionary[info.name].visible(True)
 #				canvasForStim.visible(False)
