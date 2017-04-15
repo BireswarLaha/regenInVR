@@ -346,6 +346,8 @@ def HighlightTask(controller):
 		# Hide controller pointer
 		controller.line.visible(False)
 
+currentPaintingName = None
+previousPaintingName = None
 def JumpTask(controller):
 	"""Task that users trigger button press/release to jump to painting locations"""
 	while True:
@@ -361,6 +363,10 @@ def JumpTask(controller):
 
 		# Stop highlighting task
 		highlightTask.remove()
+		
+		#set previousPaintingName
+		global currentPaintingName, previousPaintingName
+		previousPaintingName = currentPaintingName
 
 		# Intersect pointer with scene
 		info = IntersectController(controller)
@@ -382,7 +388,8 @@ def JumpTask(controller):
 			jump_flash.addAction(vizact.method.visible(False))
 
 			global itemIndexWithNoStimulation, paintingNames, canvasForStim, canvasWithoutStim, canvasForInitMsg, paintingsDictionary, dictionaryMappingPaintingNamesToVideoListIndex, videoPlaceholder, videoPaths, fader
-			global leftVideoRenderingBoard, rightVideoRenderingBoard, totalLengthOfEachStimulationSessionInSeconds, videoLoopsRemaining, maxNumberOfVideoLoops, trackpadState, paintings, stimulate, videoListIndex, paintingIndex
+			global leftVideoRenderingBoard, rightVideoRenderingBoard, totalLengthOfEachStimulationSessionInSeconds, videoLoopsRemaining, maxNumberOfVideoLoops, trackpadState
+			global paintings, stimulate, videoListIndex, paintingIndex
 
 			# Hide instruction canvasForInitMsg after first jump
 			canvasForInitMsg.visible(False)
@@ -401,63 +408,64 @@ def JumpTask(controller):
 				paintingIndex = dictionaryMappingPaintingNamesToVideoListIndex[info.name]
 				if videoListIndex > itemIndexWithNoStimulation: videoListIndex -= 1	#this is under the assumption that the indices of the videos associated to the canvases go up from 0 to 10, ignoring the index for the item to be ignored
 				print "You have arrived at the painting " + info.name + " and you can receive visual stimulation from the video file named: " + videoPaths[videoListIndex] + " and at video list index# " + str(videoListIndex)
+				stimulate = True
 #				print "fading out ..."
 #				yield fader.fadeOutTask()
 #				print "now fading back in ..."
 #				yield fader.fadeInTask()
-				canvasWithoutStim.visible(False)
-				canvasForStim.visible(True)
-				canvasForStim.billboard(viz.BILLBOARD_VIEW_POS)
-				canvasForStim.setPosition(
-					jumpPos[0] + (normalizedDirectionToShiftTheCanvas[0] * separationOnHorizontalPlane),
-					verticalPosOfCanvas,
-					jumpPos[2] + (normalizedDirectionToShiftTheCanvas[2] * separationOnHorizontalPlane))
+#				canvasWithoutStim.visible(False)
+#				canvasForStim.visible(True)
+#				canvasForStim.billboard(viz.BILLBOARD_VIEW_POS)
+#				canvasForStim.setPosition(
+#					jumpPos[0] + (normalizedDirectionToShiftTheCanvas[0] * separationOnHorizontalPlane),
+#					verticalPosOfCanvas,
+#					jumpPos[2] + (normalizedDirectionToShiftTheCanvas[2] * separationOnHorizontalPlane))
 					
-				#waiting for a keypress to play the visual stimulation
+				#wait for the trackpad press to play the visual stimulation
 				print "press the trackpad to play the stimulation video ..."
 #				yield viztask.waitKeyDown('t')
 				
 				#wait until the user presses the trackpad
-				yield viztask.waitSensorDown(controller, steamvr.BUTTON_TRACKPAD)
+#				yield viztask.waitSensorDown(controller, steamvr.BUTTON_TRACKPAD)
 				
 				#Set the state of the trackpad to an odd state, to look for any deviations from this state to a pressed-down or pressed-up state
 				#this is an insurance against any unfortunate loss in tracking, which won't raise a button-press trigger by itself, but will raise an alarm if and when any button change event occurs following the loss in tracking
-				trackpadState = 3
+#				trackpadState = 3
 				
-				print "now playing the stimulation video " + videoPaths[videoListIndex]
+#				print "now playing the stimulation video " + videoPaths[videoListIndex]
 				
-				videoToPlay = videoPlaceholder[videoListIndex]
-				vidLoopsRemaining = videoLoopsRemaining[videoListIndex]
+#				videoToPlay = videoPlaceholder[videoListIndex]
+#				vidLoopsRemaining = videoLoopsRemaining[videoListIndex]
 				
-				#play the visual stimulation
-				leftVideoRenderingBoard.texture(videoToPlay)
-				rightVideoRenderingBoard.texture(videoToPlay)
-
-				leftVideoRenderingBoard.visible(True)
-				rightVideoRenderingBoard.visible(True)
+#				#play the visual stimulation
+#				leftVideoRenderingBoard.texture(videoToPlay)
+#				rightVideoRenderingBoard.texture(videoToPlay)
+#
+#				leftVideoRenderingBoard.visible(True)
+#				rightVideoRenderingBoard.visible(True)
 				
 				#rightVideoRenderingBoard.setPosition([0.0, 0.0, 0.0], mode = viz.REL_PARENT)
 #				videoToPlay.loop()
 				
-				while (vidLoopsRemaining > 0) and (trackpadState == 3):
-					print "vidLoopsRemaining = " + str(vidLoopsRemaining)
-					print "maxNumberOfVideoLoops = " + str(maxNumberOfVideoLoops)
-					print "trackpadState = " + str(trackpadState)
-#					print "playing video with vidLoopsRemaining = " + str(vidLoopsRemaining)
-					videoToPlay.play()
-					yield viztask.waitAny([viztask.waitMediaEnd(videoToPlay), viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)])
-					vidLoopsRemaining -= 1
-#					paintingsDictionary[info.name].visible(True)
-					print "(maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops = " + str((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
-#					paintingsDictionary[info.name].alpha((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
-#					paintingsDictionary[info.name + '_black'].alpha(vidLoopsRemaining/maxNumberOfVideoLoops)
-					print "stimulation video loops remaining for a full discovery of this canvas: " + str(vidLoopsRemaining)
+#				while (vidLoopsRemaining > 0) and (trackpadState == 3):
+#					print "vidLoopsRemaining = " + str(vidLoopsRemaining)
+#					print "maxNumberOfVideoLoops = " + str(maxNumberOfVideoLoops)
+#					print "trackpadState = " + str(trackpadState)
+##					print "playing video with vidLoopsRemaining = " + str(vidLoopsRemaining)
+#					videoToPlay.play()
+#					yield viztask.waitAny([viztask.waitMediaEnd(videoToPlay), viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)])
+#					vidLoopsRemaining -= 1
+##					paintingsDictionary[info.name].visible(True)
+#					print "(maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops = " + str((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
+##					paintingsDictionary[info.name].alpha((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
+##					paintingsDictionary[info.name + '_black'].alpha(vidLoopsRemaining/maxNumberOfVideoLoops)
+#					print "stimulation video loops remaining for a full discovery of this canvas: " + str(vidLoopsRemaining)
 					
-					paintings[paintingIndex].texblend((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops, '', 1)
+#					paintings[paintingIndex].texblend((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops, '', 1)
 					
-				if vidLoopsRemaining == 0: paintingsDictionary[info.name + '_black'].visible(False)
+#				if vidLoopsRemaining == 0: paintingsDictionary[info.name + '_black'].visible(False)
 
-				videoLoopsRemaining[videoListIndex] = vidLoopsRemaining
+#				videoLoopsRemaining[videoListIndex] = vidLoopsRemaining
 
 #				print "release the trackpad to stop playing\n"
 #				yield viztask.waitKeyUp('t')
@@ -465,21 +473,21 @@ def JumpTask(controller):
 #				videoToPlay.stop()
 
 				#hiding the video boards
-				leftVideoRenderingBoard.visible(False)
-				rightVideoRenderingBoard.visible(False)
+#				leftVideoRenderingBoard.visible(False)
+#				rightVideoRenderingBoard.visible(False)
 				
 			else:
 				#visual stimulation unavailable or already taken
 				print "You have arrived at the painting " + info.name + " but the visual stimulation here is either unavailable or has already been taken"
-				paintingsDictionary[info.name + '_black'].visible(False)
+#				paintingsDictionary[info.name + '_black'].visible(False)
 #				paintingsDictionary[info.name].visible(True)
-				canvasForStim.visible(False)
-				canvasWithoutStim.visible(True)
-				canvasWithoutStim.billboard(viz.BILLBOARD_VIEW_POS)
-				canvasWithoutStim.setPosition(
-					jumpPos[0] + (normalizedDirectionToShiftTheCanvas[0] * separationOnHorizontalPlane),
-					verticalPosOfCanvas,
-					jumpPos[2] + (normalizedDirectionToShiftTheCanvas[2] * separationOnHorizontalPlane))
+#				canvasForStim.visible(False)
+#				canvasWithoutStim.visible(True)
+#				canvasWithoutStim.billboard(viz.BILLBOARD_VIEW_POS)
+#				canvasWithoutStim.setPosition(
+#					jumpPos[0] + (normalizedDirectionToShiftTheCanvas[0] * separationOnHorizontalPlane),
+#					verticalPosOfCanvas,
+#					jumpPos[2] + (normalizedDirectionToShiftTheCanvas[2] * separationOnHorizontalPlane))
 
 # Add controllers
 theController = None
@@ -506,42 +514,90 @@ for controller in steamvr.getControllerList():
 # Register callback for sensor down event
 trackpadState = 0
 stimulate = False
-def onSensorDown(e):
-	global theController, trackpadState, stimulate, videoListIndex, paintingIndex
-	print "e.button = " + str(e.button)
-	if e.object is theController:
-		if (e.button == steamvr.BUTTON_TRACKPAD) and (stimulate):
-			print "trackpad was pressed down"
-			trackpadState = 1
-			
-			#stimulation code below:
-			while vidLoopsRemaining > 0:
-				print "vidLoopsRemaining = " + str(vidLoopsRemaining)
-				print "maxNumberOfVideoLoops = " + str(maxNumberOfVideoLoops)
-				print "trackpadState = " + str(trackpadState)
-	#					print "playing video with vidLoopsRemaining = " + str(vidLoopsRemaining)
-				videoToPlay.play()
-				yield viztask.waitAny([viztask.waitMediaEnd(videoToPlay), viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)])
-				vidLoopsRemaining -= 1
-	#					paintingsDictionary[info.name].visible(True)
-				print "(maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops = " + str((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
-	#					paintingsDictionary[info.name].alpha((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
-	#					paintingsDictionary[info.name + '_black'].alpha(vidLoopsRemaining/maxNumberOfVideoLoops)
-				print "stimulation video loops remaining for a full discovery of this canvas: " + str(vidLoopsRemaining)
-				
-				paintings[paintingIndex].texblend((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops, '', 1)
+vidLoopsRemaining = -1
 
-viz.callback(viz.SENSOR_DOWN_EVENT,onSensorDown)
+#def onSensorDown(e):
+#	global theController, trackpadState, stimulate, videoListIndex, paintingIndex, videoPlaceholder, videoLoopsRemaining, leftVideoRenderingBoard, rightVideoRenderingBoard, vidLoopsRemaining
+##	print "e.button = " + str(e.button)
+#	if e.object is theController:
+#		if (e.button == steamvr.BUTTON_TRACKPAD) and (stimulate):
+#			#stimulation code below:
+#			leftVideoRenderingBoard.texture(videoToPlay)
+#			rightVideoRenderingBoard.texture(videoToPlay)
+#
+#			leftVideoRenderingBoard.visible(True)
+#			rightVideoRenderingBoard.visible(True)
+#
+#			videoToPlay = videoPlaceholder[videoListIndex]
+#			vidLoopsRemaining = videoLoopsRemaining[videoListIndex]
+#			
+#			while vidLoopsRemaining > 0:
+#				videoToPlay.play()
+#				yield viztask.waitAny([viztask.waitMediaEnd(videoToPlay), viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)])
+#				if (videoToPlay.getState() == viz.MEDIA_RUNNING): videoToPlay.stop()
+#				vidLoopsRemaining -= 1
+#				print "(maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops = " + str((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
+#				print "stimulation video loops remaining for a full discovery of this canvas: " + str(vidLoopsRemaining)
+#				
+#				paintings[paintingIndex].texblend((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops, '', 1)
+#
+#viz.callback(viz.SENSOR_DOWN_EVENT,onSensorDown)
 
+videoToPlay = None
 def onSensorUp(e):
-	global theController, trackpadState
-	print "e.button = " + str(e.button)
+	global theController, trackpadState, stimulate, leftVideoRenderingBoard, rightVideoRenderingBoard, videoLoopsRemaining, vidLoopsRemaining, videoToPlay
+#	print "e.button = " + str(e.button)
 	if e.object is theController:
 		if e.button == steamvr.BUTTON_TRACKPAD:
-			print "trackpad was released"
-			trackpadState = 2
+#			stimulate = False
+			leftVideoRenderingBoard.visible(False)
+			rightVideoRenderingBoard.visible(False)
+			
+#			if videoToPlay is not None:
+#				if (videoToPlay.getState() == viz.MEDIA_RUNNING): videoToPlay.stop()
 
 viz.callback(viz.SENSOR_UP_EVENT,onSensorUp)
+
+def visualStim(controller):
+	global theController, trackpadState, stimulate, videoListIndex, paintingIndex, videoPlaceholder, videoLoopsRemaining, leftVideoRenderingBoard, rightVideoRenderingBoard, vidLoopsRemaining, videoToPlay
+
+#	while vidLoopsRemaining > 0:
+	print "initiating a cycle of stimulation now ..."
+	videoToPlay.play()
+	yield viztask.waitAny([viztask.waitMediaEnd(videoToPlay), viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)])
+	vidLoopsRemaining -= 1
+	paintings[paintingIndex].texblend((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops, '', 1)
+	print "(maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops = " + str((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
+	print "stimulation video loops remaining for a full discovery of this canvas: " + str(vidLoopsRemaining)	
+
+	if (videoToPlay.getState() == viz.MEDIA_RUNNING):
+		print "task interrupted through waitSensorUp, so stopping the stimulation video now ..."
+		videoToPlay.stop()
+		if vidLoopsRemaining > -1: videoLoopsRemaining[videoListIndex] = vidLoopsRemaining
+	else:
+		viztask.schedule(visualStim(controller))
+
+def onSensorDown(e):
+#	print "e.button1 = " + str(e.button)
+	global theController, trackpadState, stimulate, videoListIndex, paintingIndex, videoPlaceholder, videoLoopsRemaining, leftVideoRenderingBoard, rightVideoRenderingBoard, vidLoopsRemaining, videoToPlay
+	if e.object is theController:
+		if (e.button == steamvr.BUTTON_TRACKPAD) and (stimulate):
+			#stimulation code below:
+			videoToPlay = videoPlaceholder[videoListIndex]
+			vidLoopsRemaining = videoLoopsRemaining[videoListIndex]
+			
+			if vidLoopsRemaining > 0:
+				leftVideoRenderingBoard.visible(True)
+				rightVideoRenderingBoard.visible(True)
+
+				leftVideoRenderingBoard.texture(videoToPlay)
+				rightVideoRenderingBoard.texture(videoToPlay)
+				
+				viztask.schedule(visualStim(theController))
+			else:
+				print "All cycles of visual stimulation are complete at this canvas. Please check if there's any left at other canvases!"
+
+viz.callback(viz.SENSOR_DOWN_EVENT,onSensorDown)
 
 # Add directions to canvasForInitMsg
 canvasForInitMsg = viz.addGUICanvas(pos=[0, 3.0, 6.0])
