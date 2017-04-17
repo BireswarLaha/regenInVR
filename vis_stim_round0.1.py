@@ -479,7 +479,7 @@ def JumpTask(controller):
 				
 			else:
 				#visual stimulation unavailable or already taken
-				print "\n==========================\nPainting: " + info.name + ". The visual stimulation here is either unavailable, or is complete for this round. Please check other canvases."
+				print "\n=========================\nPainting: " + info.name + ". The visual stimulation here is either unavailable, or is complete for this round. Please check other canvases."
 				paintingsDictionary[info.name + "_black"].visible(False)
 				paintingIndex = dictionaryMappingPaintingNamesToVideoListIndex[info.name]
 				paintings[paintingIndex].texblend(1.0, '', 1)
