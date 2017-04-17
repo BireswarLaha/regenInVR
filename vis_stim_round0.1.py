@@ -271,8 +271,9 @@ dictionaryMappingPaintingNamesToVideoListIndex['painting_magritte'] = 10
 
 from random import randint
 itemIndexWithNoStimulation = randint(0,10)
-print "itemIndexWithNoStimulation = " + str(itemIndexWithNoStimulation)
-print "painting without stimulation for this round is " + str(paintingNames[itemIndexWithNoStimulation])
+#print "itemIndexWithNoStimulation = " + str(itemIndexWithNoStimulation)
+#print "painting without stimulation for this round is " + str(paintingNames[itemIndexWithNoStimulation])
+print "\nPainting without stimulation is " + str(itemIndexWithNoStimulation) + "." + str(paintingNames[itemIndexWithNoStimulation])
 
 # Create quad for flashing screen during jump
 jump_flash = viz.addTexQuad(size=100, pos=[0,0,1], color=viz.BLACK)
@@ -294,7 +295,7 @@ def HighlightPainting(name, mode):
 		nameNew = name + "_black"
 		splitNames = nameNew.split("-")
 		
-		print "name = " + name
+#		print "name = " + name
 		
 		global paintingsDictionary
 
@@ -407,7 +408,7 @@ def JumpTask(controller):
 				videoListIndex = dictionaryMappingPaintingNamesToVideoListIndex[info.name]
 				paintingIndex = dictionaryMappingPaintingNamesToVideoListIndex[info.name]
 				if videoListIndex > itemIndexWithNoStimulation: videoListIndex -= 1	#this is under the assumption that the indices of the videos associated to the canvases go up from 0 to 10, ignoring the index for the item to be ignored
-				print "You have arrived at the painting " + info.name + " and you can receive visual stimulation from the video file named: " + videoPaths[videoListIndex] + " and at video list index# " + str(videoListIndex)
+				print "\n==========================\nPainting: " + info.name + ". Video: " + videoPaths[videoListIndex] + ". Index# " + str(videoListIndex)
 				stimulate = True
 #				print "fading out ..."
 #				yield fader.fadeOutTask()
@@ -422,7 +423,7 @@ def JumpTask(controller):
 #					jumpPos[2] + (normalizedDirectionToShiftTheCanvas[2] * separationOnHorizontalPlane))
 					
 				#wait for the trackpad press to play the visual stimulation
-				print "press the trackpad to play the stimulation video ..."
+				print "Press the trackpad to play the stimulation video ..."
 #				yield viztask.waitKeyDown('t')
 				
 				#wait until the user presses the trackpad
@@ -478,7 +479,7 @@ def JumpTask(controller):
 				
 			else:
 				#visual stimulation unavailable or already taken
-				print "You have arrived at the painting " + info.name + " but the visual stimulation here is either unavailable or has already been taken"
+				print "\n==========================\nPainting: " + info.name + ". The visual stimulation here is either unavailable, or is complete for this round. Please check other canvases."
 				paintingsDictionary[info.name + "_black"].visible(False)
 				paintingIndex = dictionaryMappingPaintingNamesToVideoListIndex[info.name]
 				paintings[paintingIndex].texblend(1.0, '', 1)
@@ -565,20 +566,24 @@ def visualStim(controller):
 	global theController, trackpadState, stimulate, videoListIndex, paintingIndex, videoPlaceholder, videoLoopsRemaining, leftVideoRenderingBoard, rightVideoRenderingBoard, vidLoopsRemaining, videoToPlay
 
 #	while vidLoopsRemaining > 0:
-	print "initiating a cycle of stimulation now ..."
+	print "\ninitiating a stimulation cycle ..."
 	videoToPlay.play()
 	yield viztask.waitAny([viztask.waitMediaEnd(videoToPlay), viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)])
 	vidLoopsRemaining -= 1
+	videoLoopsRemaining[videoListIndex] = vidLoopsRemaining
 	paintings[paintingIndex].texblend((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops, '', 1)
-	print "(maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops = " + str((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops)
-	print "stimulation video loops remaining for a full discovery of this canvas: " + str(vidLoopsRemaining)	
+	print "Completion: " + str((maxNumberOfVideoLoops - vidLoopsRemaining)*100.0/maxNumberOfVideoLoops) + "%"
+	print "Loops remaining: " + str(vidLoopsRemaining)
 
 	if (videoToPlay.getState() == viz.MEDIA_RUNNING):
-		print "task interrupted through waitSensorUp, so stopping the stimulation video now ..."
 		videoToPlay.stop()
-		if vidLoopsRemaining > -1: videoLoopsRemaining[videoListIndex] = vidLoopsRemaining
+		print "Trackpad released."
+		if vidLoopsRemaining > 0: print "\nPress the trackpad to play the stimulation video ..."
 	else:
-		viztask.schedule(visualStim(controller))
+		if vidLoopsRemaining > 0:
+			viztask.schedule(visualStim(controller))
+		else:
+			print "Visual stimulation is complete for this round. Please check other canvases.\n"
 
 def onSensorDown(e):
 #	print "e.button1 = " + str(e.button)
@@ -598,7 +603,7 @@ def onSensorDown(e):
 				
 				viztask.schedule(visualStim(theController))
 			else:
-				print "All cycles of visual stimulation are complete at this canvas. Please check if there's any left at other canvases!"
+				print "Visual stimulation is complete for this round. Please check other canvases.\n"
 
 viz.callback(viz.SENSOR_DOWN_EVENT,onSensorDown)
 
@@ -801,11 +806,11 @@ rightVideoRenderingBoard.setReferenceFrame(viz.RF_VIEW)
 leftVideoRenderingBoard.visible(False)
 rightVideoRenderingBoard.visible(False)
 
-print "rightVideoRenderingBoard.getTexQuadDisplayMode() = " + str(rightVideoRenderingBoard.getTexQuadDisplayMode())
-print "rightVideoRenderingBoard.getSize() = " + str(rightVideoRenderingBoard.getSize())
-print "video.getFrameCount() = " + str(video.getFrameCount())
-print "video.getDuration() = " + str(video.getDuration())
-print "Video frame rate: video.getFrameCount()/video.getDuration() = " + str(video.getFrameCount()/video.getDuration()) + " FPS"
+#print "rightVideoRenderingBoard.getTexQuadDisplayMode() = " + str(rightVideoRenderingBoard.getTexQuadDisplayMode())
+#print "rightVideoRenderingBoard.getSize() = " + str(rightVideoRenderingBoard.getSize())
+#print "video.getFrameCount() = " + str(video.getFrameCount())
+#print "video.getDuration() = " + str(video.getDuration())
+print "Visual stimulation will be running at: " + str(video.getFrameCount()/video.getDuration()) + " FPS\n"
 
 
 # a canvas for the visual stimulation
