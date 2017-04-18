@@ -19,6 +19,10 @@ totalLengthOfEachStimulationSessionInSeconds = 60 #the length of each stimulatio
 viz.setMultiSample(8)
 viz.go()
 
+choices = ['experimental condition', 'control condition']
+favoriteColor = viz.choose('Choose the condition for this run: ', choices)
+print 'You choice:',choices[favoriteColor]
+
 # Setup SteamVR HMD
 hmd = None
 hmd = steamvr.HMD()
@@ -34,7 +38,7 @@ else:
 	tracker = vizcam.addKeyboard6DOF()
 	tracker.setPosition([0,1.8,0])
 	viz.link(tracker, viz.MainView)
-
+	
 # Load environment
 gallery = vizfx.addChild('models/galleryWithoutPaintings.osgb')
 gallery.hint(viz.OPTIMIZE_INTERSECT_HINT)
@@ -809,7 +813,7 @@ leftVideoRenderingBoard.setPosition([-xShift, 0.0, zShift])
 rightVideoRenderingBoard.setSize([sideLength, sideLength])
 rightVideoRenderingBoard.setPosition([xShift, 0.0, zShift])
 
-videoRenderingBoard.setSize([width, height])
+videoRenderingBoard.setSize([width*scale, height*scale])
 videoRenderingBoard.setPosition([0.0, 0.0, gapFromViveScreens])
 
 #attaching the video rendering board to the head/eye
