@@ -20,8 +20,8 @@ viz.setMultiSample(8)
 viz.go()
 
 choices = ['experimental condition', 'control condition']
-favoriteColor = viz.choose('Choose the condition for this run: ', choices)
-print 'You choice:',choices[favoriteColor]
+conditionChosen = viz.choose('Choose the condition for this run: ', choices)
+print 'Your choice:',choices[conditionChosen]
 
 # Setup SteamVR HMD
 hmd = None
@@ -393,7 +393,7 @@ def JumpTask(controller):
 			jump_flash.addAction(vizact.method.visible(False))
 
 			global itemIndexWithNoStimulation, paintingNames, canvasForStim, canvasWithoutStim, canvasForInitMsg, paintingsDictionary, dictionaryMappingPaintingNamesToVideoListIndex, videoPlaceholder, videoPaths, fader
-			global leftVideoRenderingBoard, rightVideoRenderingBoard, totalLengthOfEachStimulationSessionInSeconds, videoLoopsRemaining, maxNumberOfVideoLoops, trackpadState
+			global leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, totalLengthOfEachStimulationSessionInSeconds, videoLoopsRemaining, maxNumberOfVideoLoops, trackpadState
 			global paintings, stimulate, videoListIndex, paintingIndex
 
 			# Hide instruction canvasForInitMsg after first jump
@@ -553,13 +553,14 @@ vidLoopsRemaining = -1
 
 videoToPlay = None
 def onSensorUp(e):
-	global theController, trackpadState, stimulate, leftVideoRenderingBoard, rightVideoRenderingBoard, videoLoopsRemaining, vidLoopsRemaining, videoToPlay
+	global theController, trackpadState, stimulate, leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, videoLoopsRemaining, vidLoopsRemaining, videoToPlay
 #	print "e.button = " + str(e.button)
 	if e.object is theController:
 		if e.button == steamvr.BUTTON_TRACKPAD:
 #			stimulate = False
 			leftVideoRenderingBoard.visible(False)
 			rightVideoRenderingBoard.visible(False)
+			videoRenderingBoard.visible(False)
 			
 #			if videoToPlay is not None:
 #				if (videoToPlay.getState() == viz.MEDIA_RUNNING): videoToPlay.stop()
@@ -567,7 +568,7 @@ def onSensorUp(e):
 viz.callback(viz.SENSOR_UP_EVENT,onSensorUp)
 
 def visualStim(controller):
-	global theController, trackpadState, stimulate, videoListIndex, paintingIndex, videoPlaceholder, videoLoopsRemaining, leftVideoRenderingBoard, rightVideoRenderingBoard, vidLoopsRemaining, videoToPlay
+	global theController, trackpadState, stimulate, videoListIndex, paintingIndex, videoPlaceholder, videoLoopsRemaining, leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, vidLoopsRemaining, videoToPlay
 
 #	while vidLoopsRemaining > 0:
 	print "\ninitiating a stimulation cycle ..."
@@ -591,7 +592,7 @@ def visualStim(controller):
 
 def onSensorDown(e):
 #	print "e.button1 = " + str(e.button)
-	global theController, trackpadState, stimulate, videoListIndex, paintingIndex, videoPlaceholder, videoLoopsRemaining, leftVideoRenderingBoard, rightVideoRenderingBoard, vidLoopsRemaining, videoToPlay
+	global theController, trackpadState, stimulate, videoListIndex, paintingIndex, videoPlaceholder, videoLoopsRemaining, leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, vidLoopsRemaining, videoToPlay
 	if e.object is theController:
 		if (e.button == steamvr.BUTTON_TRACKPAD) and (stimulate):
 			#stimulation code below:
@@ -599,11 +600,13 @@ def onSensorDown(e):
 			vidLoopsRemaining = videoLoopsRemaining[videoListIndex]
 			
 			if vidLoopsRemaining > 0:
-				leftVideoRenderingBoard.visible(True)
-				rightVideoRenderingBoard.visible(True)
+#				leftVideoRenderingBoard.visible(True)
+#				rightVideoRenderingBoard.visible(True)
+				videoRenderingBoard.visible(True)
 
-				leftVideoRenderingBoard.texture(videoToPlay)
-				rightVideoRenderingBoard.texture(videoToPlay)
+#				leftVideoRenderingBoard.texture(videoToPlay)
+#				rightVideoRenderingBoard.texture(videoToPlay)
+				videoRenderingBoard.texture(videoToPlay)
 				
 				viztask.schedule(visualStim(theController))
 			else:
@@ -803,9 +806,9 @@ sideLength = 0.05
 xShift = 0.031 	#meters
 zShift = 0.005 	#meters
 
-width = 0.10	#http://doc-ok.org/?p=1414 - Vive has approximately 110 VFOV and 100 HFOV at 10 mm screen separation from the eyes
-height = 0.11
-scale = 3.81
+width = 0.10	#http://doc-ok.org/?p=1414 - Vive has approximately 100 degrees HFOV at 10 mm screen separation from the eyes
+height = 0.11	#http://doc-ok.org/?p=1414 - Vive has approximately 110 degrees VFOV at 10 mm screen separation from the eyes
+scale = 5.25
 gapFromViveScreens = 0.2
 
 leftVideoRenderingBoard.setSize([sideLength, sideLength])
@@ -815,6 +818,8 @@ rightVideoRenderingBoard.setPosition([xShift, 0.0, zShift])
 
 videoRenderingBoard.setSize([width*scale, height*scale])
 videoRenderingBoard.setPosition([0.0, 0.0, gapFromViveScreens])
+
+videoRenderingBoard.visible(False)
 
 #attaching the video rendering board to the head/eye
 leftVideoRenderingBoard.setReferenceFrame(viz.RF_VIEW)
@@ -860,7 +865,6 @@ def reposition(direction="forward"):
 vizact.onkeydown('m', reposition, "forward")
 vizact.onkeydown('n', reposition, "backward")
 
-scale = 1.0
 def resize(direction="scaleUp"):
 	global videoRenderingBoard, width, height, scale
 	
