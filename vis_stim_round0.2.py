@@ -408,7 +408,7 @@ def JumpTask(controller):
 				#visual stimulation ready to be taken
 				stimulate = True
 				print "\n==========================\nPainting: " + info.name + ". Video: " + videoPaths[videoListIndex] + ". Index# " + str(videoListIndex)
-				print "Press the trackpad to play the stimulation video ..."
+				messageAtTheStartOfCycle()
 			else:
 				#visual stimulation unavailable or already taken
 				print "\n=========================\nPainting: " + info.name + ". The visual stimulation here is either unavailable, or is complete for this round. Please check other canvases."
@@ -464,23 +464,41 @@ def onSensorUp(e):
 
 viz.callback(viz.SENSOR_UP_EVENT,onSensorUp)
 
-def visualStim(controller):
-	global theController, trackpadState, stimulate, videoListIndex, paintingIndex, videoPlaceholder, videoLoopsRemaining, leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, vidLoopsRemaining, videoToPlay
+lowerTimeThresholdForStimCycleCompletion = 0.8
 
-	print "\ninitiating a stimulation cycle ..."
+def messageAtTheStartOfCycle():
+	global videoLoopsRemaining, videoListIndex, videoPlaceholder
+
+	print "\nStimulation cycles remaining: " + str(videoLoopsRemaining[videoListIndex]) + "; each of duration:" + str((videoPlaceholder[videoListIndex]).getDuration())
+	print "Press the trackpad to play the stimulation video ..."
+
+def visualStim(controller):
+	global theController, trackpadState, stimulate, videoListIndex, paintingIndex, videoPlaceholder, videoLoopsRemaining
+	global leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, vidLoopsRemaining, videoToPlay, lowerTimeThresholdForStimCycleCompletion
+
+	print "Initiating a stimulation cycle ..."
 	videoToPlay.play()
 	yield viztask.waitAny([viztask.waitMediaEnd(videoToPlay), viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)])
-	vidLoopsRemaining -= 1
-	videoLoopsRemaining[videoListIndex] = vidLoopsRemaining
+	
 	paintings[paintingIndex].texblend((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops, '', 1)
 	print "Completion: " + str((maxNumberOfVideoLoops - vidLoopsRemaining)*100.0/maxNumberOfVideoLoops) + "%"
 	print "Loops remaining: " + str(vidLoopsRemaining)
 
 	if (videoToPlay.getState() == viz.MEDIA_RUNNING):
+		durationPlayed = videoToPlay.getTime()
+		print "Trackpad released. durationPlayed = " + str(durationPlayed)
+		totalDuration = videoToPlay.getDuration()
+		print "durationPlayed = " + str(durationPlayed) + "; totalDuration = " + str(totalDuration)
+		if (float(durationPlayed/totalDuration) > lowerTimeThresholdForStimCycleCompletion):
+			vidLoopsRemaining -= 1
+			videoLoopsRemaining[videoListIndex] = vidLoopsRemaining
+		else:
+			print "Stimulation completed in this cycle: " + str(float((durationPlayed*100.0)/totalDuration)) + "% only. So this cycle will be repeated."
 		videoToPlay.stop()
-		print "Trackpad released."
-		if vidLoopsRemaining > 0: print "\nPress the trackpad to play the stimulation video ..."
+		if vidLoopsRemaining > 0: messageAtTheStartOfCycle()
 	else:
+		vidLoopsRemaining -= 1
+		videoLoopsRemaining[videoListIndex] = vidLoopsRemaining
 		if vidLoopsRemaining > 0:
 			viztask.schedule(visualStim(controller))
 		else:
