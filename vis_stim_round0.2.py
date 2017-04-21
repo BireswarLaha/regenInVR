@@ -14,6 +14,10 @@ import vizcam
 import view_fader
 
 totalLengthOfEachStimulationSessionInSeconds = 60 #the length of each stimulation session in seconds
+width = 0.11	#http://doc-ok.org/?p=1414 - Vive has approximately 100 degrees HFOV at 10 mm screen separation from the eyes
+height = 0.11	#http://doc-ok.org/?p=1414 - Vive has approximately 110 degrees VFOV at 10 mm screen separation from the eyes
+scale = 5.25
+gapFromViveScreens = 0.2
 
 # Initialize window
 viz.setMultiSample(8)
@@ -470,7 +474,7 @@ def messageAtTheStartOfCycle():
 	global videoLoopsRemaining, videoListIndex, videoPlaceholder
 
 	print "\nStimulation cycles remaining: " + str(videoLoopsRemaining[videoListIndex]) + "; each of duration:" + str((videoPlaceholder[videoListIndex]).getDuration())
-	print "Press the trackpad to play the stimulation video ..."
+	print "Press the trackpad to play the stimulation video: " + videoPaths[videoListIndex]
 
 def visualStim(controller):
 	global theController, trackpadState, stimulate, videoListIndex, paintingIndex, videoPlaceholder, videoLoopsRemaining
@@ -584,16 +588,28 @@ videoPaths = [None] * numberOfVideos
 videoPlaceholder = [None] * numberOfVideos
 videoLoopsRemaining = [None] * numberOfVideos	#this stores the number of loops for each video remaining to be played, which is totalLengthOfEachStimulationSessionInSeconds/video.getDuration()
 
-videoPaths[0] = 'media/onParasol1.avi'
-videoPaths[1] = 'media/offParasol1.avi'
-videoPaths[2] = 'media/onMidget1.avi'
-videoPaths[3] = 'media/offMidget1.avi'
-videoPaths[4] = 'media/sbc1.avi'
-videoPaths[5] = 'media/onParasol2.avi'
-videoPaths[6] = 'media/offParasol2.avi'
-videoPaths[7] = 'media/onMidget2.avi'
-videoPaths[8] = 'media/offMidget2.avi'
-videoPaths[9] = 'media/sbc2.avi'
+if 'experimental condition' == choices[conditionChosen]:
+	videoPaths[0] = 'media/onParasol1.avi'
+	videoPaths[1] = 'media/offParasol1.avi'
+	videoPaths[2] = 'media/onMidget1.avi'
+	videoPaths[3] = 'media/offMidget1.avi'
+	videoPaths[4] = 'media/sbc1.avi'
+	videoPaths[5] = 'media/onParasol2.avi'
+	videoPaths[6] = 'media/offParasol2.avi'
+	videoPaths[7] = 'media/onMidget2.avi'
+	videoPaths[8] = 'media/offMidget2.avi'
+	videoPaths[9] = 'media/sbc2.avi'
+else:
+	videoPaths[0] = 'media/whiteNoise.avi'
+	videoPaths[1] = 'media/whiteNoise.avi'
+	videoPaths[2] = 'media/whiteNoise.avi'
+	videoPaths[3] = 'media/whiteNoise.avi'
+	videoPaths[4] = 'media/whiteNoise.avi'
+	videoPaths[5] = 'media/whiteNoise.avi'
+	videoPaths[6] = 'media/whiteNoise.avi'
+	videoPaths[7] = 'media/whiteNoise.avi'
+	videoPaths[8] = 'media/whiteNoise.avi'
+	videoPaths[9] = 'media/whiteNoise.avi'
 
 for i in range(10):
 	videoPlaceholder[i] = viz.addVideo(videoPaths[i])
@@ -719,11 +735,6 @@ sideLength = 0.05
 
 xShift = 0.031 	#meters
 zShift = 0.005 	#meters
-
-width = 0.10	#http://doc-ok.org/?p=1414 - Vive has approximately 100 degrees HFOV at 10 mm screen separation from the eyes
-height = 0.11	#http://doc-ok.org/?p=1414 - Vive has approximately 110 degrees VFOV at 10 mm screen separation from the eyes
-scale = 5.25
-gapFromViveScreens = 0.2
 
 leftVideoRenderingBoard.setSize([sideLength, sideLength])
 leftVideoRenderingBoard.setPosition([-xShift, 0.0, zShift])
