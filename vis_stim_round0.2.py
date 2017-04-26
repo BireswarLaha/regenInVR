@@ -613,6 +613,8 @@ else:
 
 for i in range(10):
 	videoPlaceholder[i] = viz.addVideo(videoPaths[i])
+	print "totalLengthOfEachStimulationSessionInSeconds = " + str(totalLengthOfEachStimulationSessionInSeconds)
+	print "videoPlaceholder[" + str(i) + "].getDuration() = " + str(videoPlaceholder[i].getDuration())
 	videoLoopsRemaining[i] = totalLengthOfEachStimulationSessionInSeconds/videoPlaceholder[i].getDuration()
 
 maxNumberOfVideoLoops = videoLoopsRemaining[0]
