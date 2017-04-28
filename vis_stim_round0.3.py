@@ -17,7 +17,7 @@ totalLengthOfEachStimulationSessionInSeconds = 60 #the length of each stimulatio
 width = 0.11	#http://doc-ok.org/?p=1414 - Vive has approximately 100 degrees HFOV at 10 mm screen separation from the eyes
 height = 0.11	#http://doc-ok.org/?p=1414 - Vive has approximately 110 degrees VFOV at 10 mm screen separation from the eyes
 scale = 5.25
-gapFromViveScreens = 0.2
+gapFromViveScreens = 0.34
 
 # Initialize window
 viz.setMultiSample(8)
@@ -613,6 +613,8 @@ else:
 
 for i in range(10):
 	videoPlaceholder[i] = viz.addVideo(videoPaths[i])
+	print "totalLengthOfEachStimulationSessionInSeconds = " + str(totalLengthOfEachStimulationSessionInSeconds)
+	print "videoPlaceholder[" + str(i) + "].getDuration() = " + str(videoPlaceholder[i].getDuration())
 	videoLoopsRemaining[i] = totalLengthOfEachStimulationSessionInSeconds/videoPlaceholder[i].getDuration()
 
 maxNumberOfVideoLoops = videoLoopsRemaining[0]
