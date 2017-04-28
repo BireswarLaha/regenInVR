@@ -17,11 +17,14 @@ totalLengthOfEachStimulationSessionInSeconds = 60 #the length of each stimulatio
 width = 0.11	#http://doc-ok.org/?p=1414 - Vive has approximately 100 degrees HFOV at 10 mm screen separation from the eyes
 height = 0.11	#http://doc-ok.org/?p=1414 - Vive has approximately 110 degrees VFOV at 10 mm screen separation from the eyes
 scale = 5.25
-gapFromViveScreens = 0.34
+gapFromViveScreens = 0.43
 
 # Initialize window
 viz.setMultiSample(8)
 viz.go()
+
+colorSaturationValue = 0.51
+viz.clearcolor(colorSaturationValue, colorSaturationValue, colorSaturationValue)
 
 choices = ['experimental condition', 'control condition']
 conditionChosen = viz.choose('Choose the condition for this run: ', choices)
@@ -452,9 +455,39 @@ trackpadState = 0
 stimulate = False
 vidLoopsRemaining = -1
 
+def setVisibilityOfBackground(visibility = False):
+	global gallery, painting_birth_of_venus_black, painting_dali_memory_black, painting_harring_bestbuddies_black, painting_magritte_black
+	global painting_monalisa_black, painting_monet_venice_black, painting_picasso_black, painting_scream_black, painting_starry_night_black
+	global painting_van_gogh_black, painting_warhol_soup_black
+	
+	gallery.visible(visibility)
+	
+#	painting_birth_of_venus_black.visible(visibility)
+#
+#	painting_dali_memory_black.visible(visibility)
+#
+#	painting_harring_bestbuddies_black.visible(visibility)
+#
+#	painting_magritte_black.visible(visibility)
+#
+#	painting_monalisa_black.visible(visibility)
+#
+#	painting_monet_venice_black.visible(visibility)
+#
+#	painting_picasso_black.visible(visibility)
+#
+#	painting_scream_black.visible(visibility)
+#
+#	painting_starry_night_black.visible(visibility)
+#
+#	painting_van_gogh_black.visible(visibility)
+#
+#	painting_warhol_soup_black.visible(visibility)
+
 videoToPlay = None
 def onSensorUp(e):
 	global theController, trackpadState, stimulate, leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, videoLoopsRemaining, vidLoopsRemaining, videoToPlay
+
 #	print "e.button = " + str(e.button)
 	if e.object is theController:
 		if e.button == steamvr.BUTTON_TRACKPAD:
@@ -462,6 +495,7 @@ def onSensorUp(e):
 			leftVideoRenderingBoard.visible(False)
 			rightVideoRenderingBoard.visible(False)
 			videoRenderingBoard.visible(False)
+			setVisibilityOfBackground(True)
 			
 #			if videoToPlay is not None:
 #				if (videoToPlay.getState() == viz.MEDIA_RUNNING): videoToPlay.stop()
@@ -511,6 +545,7 @@ def visualStim(controller):
 def onSensorDown(e):
 #	print "e.button1 = " + str(e.button)
 	global theController, trackpadState, stimulate, videoListIndex, paintingIndex, videoPlaceholder, videoLoopsRemaining, leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, vidLoopsRemaining, videoToPlay
+
 	if e.object is theController:
 		if (e.button == steamvr.BUTTON_TRACKPAD) and (stimulate):
 			#stimulation code below:
@@ -521,6 +556,7 @@ def onSensorDown(e):
 #				leftVideoRenderingBoard.visible(True)
 #				rightVideoRenderingBoard.visible(True)
 				videoRenderingBoard.visible(True)
+				setVisibilityOfBackground(False)
 
 #				leftVideoRenderingBoard.texture(videoToPlay)
 #				rightVideoRenderingBoard.texture(videoToPlay)
@@ -801,9 +837,22 @@ def resize(direction="scaleUp"):
 	print "scale = " + str(scale)
 	
 	videoRenderingBoard.setSize([width*scale, height*scale])
-
+	
 vizact.onkeydown('j', resize, "scaleUp")
 vizact.onkeydown('k', resize, "scaleDown")
+
+def changeBackgroundColor(direction="scaleUp"):
+	global colorSaturationValue
+	if (direction == "scaleUp") and (colorSaturationValue < 0.9): colorSaturationValue += 0.01
+	elif (direction == "scaleDown") and (colorSaturationValue > 0.1): colorSaturationValue -= 0.01
+	
+	print "colorSaturationValue = " + str(colorSaturationValue)
+
+	viz.clearcolor(colorSaturationValue, colorSaturationValue, colorSaturationValue)
+
+
+vizact.onkeydown('g', changeBackgroundColor, "scaleUp")
+vizact.onkeydown('h', changeBackgroundColor, "scaleDown")
 
 #scale = 3.81
 #gapFromViveScreens = 0.2
