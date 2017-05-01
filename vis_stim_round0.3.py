@@ -23,7 +23,7 @@ gapFromViveScreens = 0.43
 viz.setMultiSample(8)
 viz.go()
 
-colorSaturationValue = 0.51
+colorSaturationValue = 0.5
 viz.clearcolor(colorSaturationValue, colorSaturationValue, colorSaturationValue)
 
 choices = ['experimental condition', 'control condition']
@@ -52,12 +52,17 @@ gallery.hint(viz.OPTIMIZE_INTERSECT_HINT)
 gallery.disable(viz.SHADOW_CASTING)
 
 paintingsDictionary = {}
+
 #load paintings
 numberOfPaintings = 11
 paintings = [None] * numberOfPaintings
 positionOfTex = [None] * numberOfPaintings
 eulerOfTex = [None] * numberOfPaintings
 sizeOfTex = [None] * numberOfPaintings
+
+#0-(numberOfPaintings-1) paintingsInTheBackground are the texquads for the paintings
+#numberOfPaintings-(2*numberOfPaintings-1) paintingsInTheBackground are the black osgbs, hiding the main paintings
+paintingsInTheBackground = [None] * (numberOfPaintings * 2)
 
 pathToTextureForPainting = [None] * numberOfPaintings
 pathToTextureForPainting[0] = 'textures/painting_picasso.png'
@@ -119,6 +124,8 @@ for i in range(numberOfPaintings):
 	paintings[i].texblend(0.0, '', 1)
 	paintings[i].setPosition(positionOfTex[i])
 	paintings[i].setEuler(eulerOfTex[i])
+	paintingsInTheBackground[i] = paintings[i]
+	print "name of this tex quad node = " + str(paintingsInTheBackground[i].getNodeNames())
 
 #painting_birth_of_venus = vizfx.addChild('models/painting_birth-of-venus.osgb')
 #paintingsDictionary['painting_birth-of-venus'] = painting_birth_of_venus
@@ -168,46 +175,57 @@ for i in range(numberOfPaintings):
 painting_birth_of_venus_black = vizfx.addChild('models/painting_birth-of-venus_black.osgb')
 paintingsDictionary['painting_birth-of-venus_black'] = painting_birth_of_venus_black
 #paintingsDictionary['painting_birth-of-venus_black'].visible(False)
+paintingsInTheBackground[0 + numberOfPaintings] = painting_birth_of_venus_black
 
 painting_dali_memory_black = vizfx.addChild('models/painting_dali-memory_black.osgb')
 paintingsDictionary['painting_dali-memory_black'] = painting_dali_memory_black
 #paintingsDictionary['painting_dali-memory_black'].visible(False)
+paintingsInTheBackground[1 + numberOfPaintings] = painting_dali_memory_black
 
 painting_harring_bestbuddies_black = vizfx.addChild('models/painting_harring-bestbuddies_black.osgb')
 paintingsDictionary['painting_harring-bestbuddies_black'] = painting_harring_bestbuddies_black
 #paintingsDictionary['painting_harring-bestbuddies_black'].visible(False)
+paintingsInTheBackground[2 + numberOfPaintings] = painting_harring_bestbuddies_black
 
 painting_magritte_black = vizfx.addChild('models/painting_magritte_black.osgb')
 paintingsDictionary['painting_magritte_black'] = painting_magritte_black
 #paintingsDictionary['painting_magritte_black'].visible(False)
+paintingsInTheBackground[3 + numberOfPaintings] = painting_magritte_black
 
 painting_monalisa_black = vizfx.addChild('models/painting_monalisa_black.osgb')
 paintingsDictionary['painting_monalisa_black'] = painting_monalisa_black
 #paintingsDictionary['painting_monalisa_black'].visible(False)
+paintingsInTheBackground[4 + numberOfPaintings] = painting_monalisa_black
 
 painting_monet_venice_black = vizfx.addChild('models/painting_monet-venice_black.osgb')
 paintingsDictionary['painting_monet-venice_black'] = painting_monet_venice_black
 #paintingsDictionary['painting_monet-venice_black'].visible(False)
+paintingsInTheBackground[5 + numberOfPaintings] = painting_monet_venice_black
 
 painting_picasso_black = vizfx.addChild('models/painting_picasso_black.osgb')
 paintingsDictionary['painting_picasso_black'] = painting_picasso_black
 #paintingsDictionary['painting_picasso_black'].visible(False)
+paintingsInTheBackground[6 + numberOfPaintings] = painting_picasso_black
 
 painting_scream_black = vizfx.addChild('models/painting_scream_black.osgb')
 paintingsDictionary['painting_scream_black'] = painting_scream_black
 #paintingsDictionary['painting_scream_black'].visible(False)
+paintingsInTheBackground[7 + numberOfPaintings] = painting_scream_black
 
 painting_starry_night_black = vizfx.addChild('models/painting_starry-night_black.osgb')
 paintingsDictionary['painting_starry-night_black'] = painting_starry_night_black
 #paintingsDictionary['painting_starry-night_black'].visible(False)
+paintingsInTheBackground[8 + numberOfPaintings] = painting_starry_night_black
 
 painting_van_gogh_black = vizfx.addChild('models/painting_van-gogh_black.osgb')
 paintingsDictionary['painting_van-gogh_black'] = painting_van_gogh_black
 #paintingsDictionary['painting_van-gogh_black'].visible(False)
+paintingsInTheBackground[9 + numberOfPaintings] = painting_van_gogh_black
 
 painting_warhol_soup_black = vizfx.addChild('models/painting_warhol_soup_black.osgb')
 paintingsDictionary['painting_warhol_soup_black'] = painting_warhol_soup_black
 #paintingsDictionary['painting_warhol_soup_black'].visible(False)
+paintingsInTheBackground[10 + numberOfPaintings] = painting_warhol_soup_black
 
 #fader
 #fader = view_fader.addFader()
@@ -455,13 +473,23 @@ trackpadState = 0
 stimulate = False
 vidLoopsRemaining = -1
 
-def setVisibilityOfBackground(visibility = False):
+visibilityArray = [None] * (numberOfPaintings * 2)
+def setBackgroundVisibility(visibility = False):
 	global gallery, painting_birth_of_venus_black, painting_dali_memory_black, painting_harring_bestbuddies_black, painting_magritte_black
 	global painting_monalisa_black, painting_monet_venice_black, painting_picasso_black, painting_scream_black, painting_starry_night_black
-	global painting_van_gogh_black, painting_warhol_soup_black
+	global painting_van_gogh_black, painting_warhol_soup_black, paintingsInTheBackground, numberOfPaintings, visibilityArray
 	
 	gallery.visible(visibility)
 	
+	if visibility == False:
+		#save the current visibility in a global array, and hide all paintingsInTheBackground
+		for i in range(numberOfPaintings * 2):
+			visibilityArray[i] = paintingsInTheBackground[i].getVisible()
+			paintingsInTheBackground[i].visible(False)
+	else:
+		for i in range(numberOfPaintings * 2):
+			paintingsInTheBackground[i].visible(visibilityArray[i])
+
 #	painting_birth_of_venus_black.visible(visibility)
 #
 #	painting_dali_memory_black.visible(visibility)
@@ -495,7 +523,7 @@ def onSensorUp(e):
 			leftVideoRenderingBoard.visible(False)
 			rightVideoRenderingBoard.visible(False)
 			videoRenderingBoard.visible(False)
-			setVisibilityOfBackground(True)
+			setBackgroundVisibility(True)
 			
 #			if videoToPlay is not None:
 #				if (videoToPlay.getState() == viz.MEDIA_RUNNING): videoToPlay.stop()
@@ -556,7 +584,7 @@ def onSensorDown(e):
 #				leftVideoRenderingBoard.visible(True)
 #				rightVideoRenderingBoard.visible(True)
 				videoRenderingBoard.visible(True)
-				setVisibilityOfBackground(False)
+				setBackgroundVisibility(False)
 
 #				leftVideoRenderingBoard.texture(videoToPlay)
 #				rightVideoRenderingBoard.texture(videoToPlay)
