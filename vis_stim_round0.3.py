@@ -1,6 +1,6 @@
 ﻿#Developed on Vizard sample code, titled 'steamvrExample.py'
 #Bireswar Laha, Huberman Lab, Department of Neurobiology, Stanford University
-#Dated: March-April, 2017
+#Dated: March-May, 2017
 
 import sys
 import viz
@@ -378,6 +378,7 @@ def HighlightTask(controller):
 
 previousPaintingName = None
 previousVidListIndex = -1
+videoListIndex = None
 def JumpTask(controller):
 	"""Task that users trigger button press/release to jump to painting locations"""
 	while True:
@@ -413,7 +414,7 @@ def JumpTask(controller):
 			jump_flash.runAction(vizact.fadeTo(viz.BLACK, begin=viz.WHITE, time=2.0, interpolate=vizact.easeOutStrong))
 			jump_flash.addAction(vizact.method.visible(False))
 
-			global itemIndexWithNoStimulation, paintingNames, canvasForStim, canvasWithoutStim, canvasForInitMsg, paintingsDictionary, dictionaryMappingPaintingNamesToVideoListIndex, videoPlaceholder, videoPaths, fader
+			global itemIndexWithNoStimulation, paintingNames, canvasForStim, canvasWithoutStim, canvasForInitMsg, paintingsDictionary, dictionaryMappingPaintingNamesToVideoListIndex, sparseVideoPaths, fader
 			global leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, totalLengthOfEachStimulationSessionInSeconds, videoLoopsRemaining, maxNumberOfVideoLoops, trackpadState
 			global paintings, stimulate, videoListIndex, paintingIndex, previousPaintingName, previousVidListIndex
 
@@ -432,8 +433,8 @@ def JumpTask(controller):
 			if (info.name != paintingNames[itemIndexWithNoStimulation]):
 				#visual stimulation ready to be taken
 				stimulate = True
-				print "\n==========================\nPainting: " + info.name + ". Video: " + videoPaths[videoListIndex] + ". Index# " + str(videoListIndex)
-				messageAtTheStartOfCycle()
+				print "\n==========================\nPainting: " + info.name + ". Video: " + sparseVideoPaths[videoListIndex] + ". Index# " + str(videoListIndex)
+				printMessageAtTheStartOfCycle()
 			else:
 				#visual stimulation unavailable or already taken
 				print "\n=========================\nPainting: " + info.name + ". The visual stimulation here is either unavailable, or is complete for this round. Please check other canvases."
@@ -448,12 +449,14 @@ def JumpTask(controller):
 
 # Add controllers
 theController = None
+controllerModel = None
 for controller in steamvr.getControllerList():
 
 	# Create model for controller
 	controller.model = controller.addModel(parent=navigationNode)
 	controller.model.disable(viz.INTERSECTION)
 	viz.link(controller, controller.model)
+	controllerModel = controller.model
 
 	# Create pointer line for controller
 	viz.startLayer(viz.LINES)
@@ -478,8 +481,10 @@ def setBackgroundVisibility(visibility = False):
 	global gallery, painting_birth_of_venus_black, painting_dali_memory_black, painting_harring_bestbuddies_black, painting_magritte_black
 	global painting_monalisa_black, painting_monet_venice_black, painting_picasso_black, painting_scream_black, painting_starry_night_black
 	global painting_van_gogh_black, painting_warhol_soup_black, paintingsInTheBackground, numberOfPaintings, visibilityArray
+	global controllerModel
 	
 	gallery.visible(visibility)
+	controllerModel.visible(visibility)
 	
 	if visibility == False:
 		#save the current visibility in a global array, and hide all paintingsInTheBackground
@@ -520,8 +525,8 @@ def onSensorUp(e):
 	if e.object is theController:
 		if e.button == steamvr.BUTTON_TRACKPAD:
 #			stimulate = False
-			leftVideoRenderingBoard.visible(False)
-			rightVideoRenderingBoard.visible(False)
+#			leftVideoRenderingBoard.visible(False)
+#			rightVideoRenderingBoard.visible(False)
 			videoRenderingBoard.visible(False)
 			setBackgroundVisibility(True)
 			
@@ -532,22 +537,42 @@ viz.callback(viz.SENSOR_UP_EVENT,onSensorUp)
 
 lowerTimeThresholdForStimCycleCompletion = 0.8
 
-def messageAtTheStartOfCycle():
-	global videoLoopsRemaining, videoListIndex, videoPlaceholder
+def printMessageAtTheStartOfCycle():
+	global videoLoopsRemaining, videoListIndex, sparseVideoPlaceholder, sparseVideoPaths
 
-	print "\nStimulation cycles remaining: " + str(videoLoopsRemaining[videoListIndex]) + "; each of duration:" + str((videoPlaceholder[videoListIndex]).getDuration())
-	print "Press the trackpad to play the stimulation video: " + videoPaths[videoListIndex]
+	print "\nStimulation cycles remaining: " + str(videoLoopsRemaining[videoListIndex]) + "; each of duration:" + str((sparseVideoPlaceholder[videoListIndex]).getDuration())
+	print "Press the trackpad to play the stimulation video: " + sparseVideoPaths[videoListIndex]
 
+def printMessageAtTheEndOfCycle():
+	print "Visual stimulation is complete for this round. Please check other canvases.\n"
+
+def getCompletion_ONLY_FromVisualStimFunction():
+	global maxNumberOfVideoLoops, vidLoopsRemaining, videoListIndex
+	return (maxNumberOfVideoLoops - vidLoopsRemaining)*100.0/maxNumberOfVideoLoops
+
+lowerCompletionThresholdForDenserStim = 30
+upperCompletionThresholdForDenserStim = 70
 def visualStim(controller):
-	global theController, trackpadState, stimulate, videoListIndex, paintingIndex, videoPlaceholder, videoLoopsRemaining
+	global theController, trackpadState, stimulate, videoListIndex, paintingIndex, sparseVideoPlaceholder, denseVideoPlaceholder, videoLoopsRemaining
 	global leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, vidLoopsRemaining, videoToPlay, lowerTimeThresholdForStimCycleCompletion
 
-	print "Initiating a stimulation cycle ..."
+	completion = getCompletion_ONLY_FromVisualStimFunction()
+	print "Stimulation completed at this portal: " + str(getCompletion_ONLY_FromVisualStimFunction())
+
+	if (completion <= lowerCompletionThresholdForDenserStim) or (completion >= upperCompletionThresholdForDenserStim):
+		print "Initiating a stimulation cycle with a sparse stimulation video"
+		videoToPlay = sparseVideoPlaceholder[videoListIndex]
+	else:
+		print "Initiating a stimulation cycle with a dense stimulation video"
+		videoToPlay = denseVideoPlaceholder[videoListIndex]
+
+	videoRenderingBoard.texture(videoToPlay)
+	
 	videoToPlay.play()
 	yield viztask.waitAny([viztask.waitMediaEnd(videoToPlay), viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)])
 	
 	paintings[paintingIndex].texblend((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops, '', 1)
-	print "Completion: " + str((maxNumberOfVideoLoops - vidLoopsRemaining)*100.0/maxNumberOfVideoLoops) + "%"
+	print "Completion: " + str(getCompletion_ONLY_FromVisualStimFunction()) + "%"
 	print "Loops remaining: " + str(vidLoopsRemaining)
 
 	if (videoToPlay.getState() == viz.MEDIA_RUNNING):
@@ -561,23 +586,23 @@ def visualStim(controller):
 		else:
 			print "Stimulation completed in this cycle: " + str(float((durationPlayed*100.0)/totalDuration)) + "% only. So this cycle will be repeated."
 		videoToPlay.stop()
-		if vidLoopsRemaining > 0: messageAtTheStartOfCycle()
+		if vidLoopsRemaining > 0: printMessageAtTheStartOfCycle()
 	else:
 		vidLoopsRemaining -= 1
 		videoLoopsRemaining[videoListIndex] = vidLoopsRemaining
 		if vidLoopsRemaining > 0:
 			viztask.schedule(visualStim(controller))
 		else:
-			print "Visual stimulation is complete for this round. Please check other canvases.\n"
+			printMessageAtTheEndOfCycle()
 
 def onSensorDown(e):
 #	print "e.button1 = " + str(e.button)
-	global theController, trackpadState, stimulate, videoListIndex, paintingIndex, videoPlaceholder, videoLoopsRemaining, leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, vidLoopsRemaining, videoToPlay
+	global theController, trackpadState, stimulate, videoListIndex, paintingIndex, videoLoopsRemaining, leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, vidLoopsRemaining, videoToPlay
 
 	if e.object is theController:
 		if (e.button == steamvr.BUTTON_TRACKPAD) and (stimulate):
 			#stimulation code below:
-			videoToPlay = videoPlaceholder[videoListIndex]
+			
 			vidLoopsRemaining = videoLoopsRemaining[videoListIndex]
 			
 			if vidLoopsRemaining > 0:
@@ -588,11 +613,12 @@ def onSensorDown(e):
 
 #				leftVideoRenderingBoard.texture(videoToPlay)
 #				rightVideoRenderingBoard.texture(videoToPlay)
-				videoRenderingBoard.texture(videoToPlay)
 				
 				viztask.schedule(visualStim(theController))
 			else:
-				print "Visual stimulation is complete for this round. Please check other canvases.\n"
+				printMessageAtTheEndOfCycle()
+				
+			
 
 viz.callback(viz.SENSOR_DOWN_EVENT,onSensorDown)
 
@@ -648,68 +674,94 @@ canvasWithoutStim.visible(False)
 
 #videos to be played
 numberOfVideos = 10
-videoPaths = [None] * numberOfVideos
-videoPlaceholder = [None] * numberOfVideos
+sparseVideoPaths = [None] * numberOfVideos
+denseVideoPaths = [None] * numberOfVideos
+sparseVideoPlaceholder = [None] * numberOfVideos
+denseVideoPlaceholder = [None] * numberOfVideos
 videoLoopsRemaining = [None] * numberOfVideos	#this stores the number of loops for each video remaining to be played, which is totalLengthOfEachStimulationSessionInSeconds/video.getDuration()
 
 if 'experimental condition' == choices[conditionChosen]:
-	videoPaths[0] = 'media/onParasol1.avi'
-	videoPaths[1] = 'media/offParasol1.avi'
-	videoPaths[2] = 'media/onMidget1.avi'
-	videoPaths[3] = 'media/offMidget1.avi'
-	videoPaths[4] = 'media/sbc1.avi'
-	videoPaths[5] = 'media/onParasol2.avi'
-	videoPaths[6] = 'media/offParasol2.avi'
-	videoPaths[7] = 'media/onMidget2.avi'
-	videoPaths[8] = 'media/offMidget2.avi'
-	videoPaths[9] = 'media/sbc2.avi'
+	sparseVideoPaths[0] = 'media/onParasol1.avi'
+	sparseVideoPaths[1] = 'media/offParasol1.avi'
+	sparseVideoPaths[2] = 'media/onMidget1.avi'
+	sparseVideoPaths[3] = 'media/offMidget1.avi'
+	sparseVideoPaths[4] = 'media/sbc1.avi'
+	sparseVideoPaths[5] = 'media/onParasol2.avi'
+	sparseVideoPaths[6] = 'media/offParasol2.avi'
+	sparseVideoPaths[7] = 'media/onMidget2.avi'
+	sparseVideoPaths[8] = 'media/offMidget2.avi'
+	sparseVideoPaths[9] = 'media/sbc2.avi'
+
+	denseVideoPaths[0] = 'media/onParasol1.avi'
+	denseVideoPaths[1] = 'media/offParasol1.avi'
+	denseVideoPaths[2] = 'media/onMidget1.avi'
+	denseVideoPaths[3] = 'media/offMidget1.avi'
+	denseVideoPaths[4] = 'media/sbc1.avi'
+	denseVideoPaths[5] = 'media/onParasol2.avi'
+	denseVideoPaths[6] = 'media/offParasol2.avi'
+	denseVideoPaths[7] = 'media/onMidget2.avi'
+	denseVideoPaths[8] = 'media/offMidget2.avi'
+	denseVideoPaths[9] = 'media/sbc2.avi'
 else:
-	videoPaths[0] = 'media/whiteNoise.avi'
-	videoPaths[1] = 'media/whiteNoise.avi'
-	videoPaths[2] = 'media/whiteNoise.avi'
-	videoPaths[3] = 'media/whiteNoise.avi'
-	videoPaths[4] = 'media/whiteNoise.avi'
-	videoPaths[5] = 'media/whiteNoise.avi'
-	videoPaths[6] = 'media/whiteNoise.avi'
-	videoPaths[7] = 'media/whiteNoise.avi'
-	videoPaths[8] = 'media/whiteNoise.avi'
-	videoPaths[9] = 'media/whiteNoise.avi'
+	sparseVideoPaths[0] = 'media/whiteNoise.avi'
+	sparseVideoPaths[1] = 'media/whiteNoise.avi'
+	sparseVideoPaths[2] = 'media/whiteNoise.avi'
+	sparseVideoPaths[3] = 'media/whiteNoise.avi'
+	sparseVideoPaths[4] = 'media/whiteNoise.avi'
+	sparseVideoPaths[5] = 'media/whiteNoise.avi'
+	sparseVideoPaths[6] = 'media/whiteNoise.avi'
+	sparseVideoPaths[7] = 'media/whiteNoise.avi'
+	sparseVideoPaths[8] = 'media/whiteNoise.avi'
+	sparseVideoPaths[9] = 'media/whiteNoise.avi'
+
+	denseVideoPaths[0] = 'media/whiteNoise.avi'
+	denseVideoPaths[1] = 'media/whiteNoise.avi'
+	denseVideoPaths[2] = 'media/whiteNoise.avi'
+	denseVideoPaths[3] = 'media/whiteNoise.avi'
+	denseVideoPaths[4] = 'media/whiteNoise.avi'
+	denseVideoPaths[5] = 'media/whiteNoise.avi'
+	denseVideoPaths[6] = 'media/whiteNoise.avi'
+	denseVideoPaths[7] = 'media/whiteNoise.avi'
+	denseVideoPaths[8] = 'media/whiteNoise.avi'
+	denseVideoPaths[9] = 'media/whiteNoise.avi'
 
 for i in range(10):
-	videoPlaceholder[i] = viz.addVideo(videoPaths[i])
+	sparseVideoPlaceholder[i] = viz.addVideo(sparseVideoPaths[i])
+	denseVideoPlaceholder[i] = viz.addVideo(denseVideoPaths[i])
 	print "totalLengthOfEachStimulationSessionInSeconds = " + str(totalLengthOfEachStimulationSessionInSeconds)
-	print "videoPlaceholder[" + str(i) + "].getDuration() = " + str(videoPlaceholder[i].getDuration())
-	videoLoopsRemaining[i] = totalLengthOfEachStimulationSessionInSeconds/videoPlaceholder[i].getDuration()
+	print "sparseVideoPlaceholder[" + str(i) + "].getDuration() = " + str(sparseVideoPlaceholder[i].getDuration())
+	print "denseVideoPlaceholder[" + str(i) + "].getDuration() = " + str(denseVideoPlaceholder[i].getDuration())
+	videoLoopsRemaining[i] = totalLengthOfEachStimulationSessionInSeconds/sparseVideoPlaceholder[i].getDuration()
 
 maxNumberOfVideoLoops = videoLoopsRemaining[0]
 
-#videoPlaceholder[0] = viz.addVideo('media/onParasol1.avi')
+#sparseVideoPlaceholder[0] = viz.addVideo('media/onParasol1.avi')
 #
-#videoPaths[1] = 'media/onParasol2.avi'
-#videoPlaceholder[1] = viz.addVideo('media/onParasol2.avi')
+#sparseVideoPaths[1] = 'media/onParasol2.avi'
+#sparseVideoPlaceholder[1] = viz.addVideo('media/onParasol2.avi')
 #
-#videoPaths[2] = 'media/offParasol1.avi'
-#videoPlaceholder[2] = viz.addVideo('media/offParasol1.avi')
+#sparseVideoPaths[2] = 'media/offParasol1.avi'
+#sparseVideoPlaceholder[2] = viz.addVideo('media/offParasol1.avi')
 #
-#videoPaths[3] = 'media/offParasol2.avi'
-#videoPlaceholder[3] = viz.addVideo('media/offParasol2.avi')
+#sparseVideoPaths[3] = 'media/offParasol2.avi'
+#sparseVideoPlaceholder[3] = viz.addVideo('media/offParasol2.avi')
 #
-#videoPaths[4] = 'media/onMidget1.avi'
-#videoPlaceholder[4] = viz.addVideo('media/onMidget1.avi')
-#videoPlaceholder[5] = viz.addVideo('media/onMidget2.avi')
-#videoPlaceholder[6] = viz.addVideo('media/offMidget1.avi')
-#videoPlaceholder[7] = viz.addVideo('media/offMidget2.avi')
-#videoPlaceholder[8] = viz.addVideo('media/sbc1.avi')
-#videoPlaceholder[9] = viz.addVideo('media/sbc2.avi')
+#sparseVideoPaths[4] = 'media/onMidget1.avi'
+#sparseVideoPlaceholder[4] = viz.addVideo('media/onMidget1.avi')
+#sparseVideoPlaceholder[5] = viz.addVideo('media/onMidget2.avi')
+#sparseVideoPlaceholder[6] = viz.addVideo('media/offMidget1.avi')
+#sparseVideoPlaceholder[7] = viz.addVideo('media/offMidget2.avi')
+#sparseVideoPlaceholder[8] = viz.addVideo('media/sbc1.avi')
+#sparseVideoPlaceholder[9] = viz.addVideo('media/sbc2.avi')
 
-videoList = []
-videoPlaceholderIndex = 0
-for i in range(11):
-	if i == itemIndexWithNoStimulation:
-		videoList.append(None)
-	else:
-		videoList.append(videoPlaceholder[videoPlaceholderIndex])
-		videoPlaceholderIndex += 1
+#videoList = []
+#videoPlaceholderIndex = 0
+#for i in range(11):
+#	if i == itemIndexWithNoStimulation:
+#		videoList.append(None)
+#	else:
+#		videoList.append(sparseVideoPlaceholder[videoPlaceholderIndex])
+#		videoPlaceholderIndex += 1
 
 
 def togglePaintingsVisibility():
@@ -774,7 +826,7 @@ def alterTheFirstPaintingsAlpha(direction = "plus"):
 #vizact.onkeydown('t', alterTheFirstPaintingsAlpha, "minus")
 
 #using a video
-video = videoPlaceholder[0]
+video = sparseVideoPlaceholder[0]
 naturalSceneVideo = viz.addVideo("media/naturalScene.avi")
 
 #video.setBorderRect([0.0, 0.0, 0.75, 1.0])
