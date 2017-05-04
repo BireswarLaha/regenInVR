@@ -27,8 +27,13 @@ colorSaturationValue = 0.5
 viz.clearcolor(colorSaturationValue, colorSaturationValue, colorSaturationValue)
 
 choices = ['experimental condition', 'control condition']
+stimuliChoices = ['dense', 'sparse']
 conditionChosen = viz.choose('Choose the condition for this run: ', choices)
-print 'Your choice:',choices[conditionChosen]
+print 'Group chosen:',choices[conditionChosen]
+
+if 'experimental condition' == choices[conditionChosen]:
+	stimChosen = viz.choose('Select stimulation: ', stimuliChoices)
+	print 'Stimulation chosen:', stimuliChoices[stimChosen]
 
 # Setup SteamVR HMD
 hmd = None
@@ -504,7 +509,8 @@ def setBackgroundVisibility(visibility = False):
 			paintingsInTheBackground[i].visible(False)
 	else:
 		for i in range(numberOfPaintings * 2):
-			paintingsInTheBackground[i].visible(visibilityArray[i])
+#			print "i = " + str(i)
+			if visibilityArray[i] is not None: paintingsInTheBackground[i].visible(visibilityArray[i])
 
 #	painting_birth_of_venus_black.visible(visibility)
 #
@@ -699,27 +705,50 @@ denseVideoPlaceholder = [None] * numberOfVideos
 videoLoopsRemaining = [None] * numberOfVideos	#this stores the number of loops for each video remaining to be played, which is totalLengthOfEachStimulationSessionInSeconds/video.getDuration()
 
 if 'experimental condition' == choices[conditionChosen]:
-	sparseVideoPaths[0] = 'media/onParasol1_sparse.avi'
-	sparseVideoPaths[1] = 'media/offParasol1_sparse.avi'
-	sparseVideoPaths[2] = 'media/onMidget1_sparse.avi'
-	sparseVideoPaths[3] = 'media/offMidget1_sparse.avi'
-	sparseVideoPaths[4] = 'media/sbc1_sparse.avi'
-	sparseVideoPaths[5] = 'media/onParasol2_sparse.avi'
-	sparseVideoPaths[6] = 'media/offParasol2_sparse.avi'
-	sparseVideoPaths[7] = 'media/onMidget2_sparse.avi'
-	sparseVideoPaths[8] = 'media/offMidget2_sparse.avi'
-	sparseVideoPaths[9] = 'media/sbc2_sparse.avi'
+	if 'dense' == stimuliChoices[stimChosen]:
+		sparseVideoPaths[0] = 'media/onParasol1_dense.avi'
+		sparseVideoPaths[1] = 'media/offParasol1_dense.avi'
+		sparseVideoPaths[2] = 'media/onMidget1_dense.avi'
+		sparseVideoPaths[3] = 'media/offMidget1_dense.avi'
+		sparseVideoPaths[4] = 'media/sbc1_dense.avi'
+		sparseVideoPaths[5] = 'media/onParasol2_dense.avi'
+		sparseVideoPaths[6] = 'media/offParasol2_dense.avi'
+		sparseVideoPaths[7] = 'media/onMidget2_dense.avi'
+		sparseVideoPaths[8] = 'media/offMidget2_dense.avi'
+		sparseVideoPaths[9] = 'media/sbc2_dense.avi'
 
-	denseVideoPaths[0] = 'media/onParasol1_dense.avi'
-	denseVideoPaths[1] = 'media/offParasol1_dense.avi'
-	denseVideoPaths[2] = 'media/onMidget1_dense.avi'
-	denseVideoPaths[3] = 'media/offMidget1_dense.avi'
-	denseVideoPaths[4] = 'media/sbc1_dense.avi'
-	denseVideoPaths[5] = 'media/onParasol2_dense.avi'
-	denseVideoPaths[6] = 'media/offParasol2_dense.avi'
-	denseVideoPaths[7] = 'media/onMidget2_dense.avi'
-	denseVideoPaths[8] = 'media/offMidget2_dense.avi'
-	denseVideoPaths[9] = 'media/sbc2_dense.avi'
+		denseVideoPaths[0] = 'media/onParasol1_densest.avi'
+		denseVideoPaths[1] = 'media/offParasol1_densest.avi'
+		denseVideoPaths[2] = 'media/onMidget1_densest.avi'
+		denseVideoPaths[3] = 'media/offMidget1_densest.avi'
+		denseVideoPaths[4] = 'media/sbc1_densest.avi'
+		denseVideoPaths[5] = 'media/onParasol2_densest.avi'
+		denseVideoPaths[6] = 'media/offParasol2_densest.avi'
+		denseVideoPaths[7] = 'media/onMidget2_densest.avi'
+		denseVideoPaths[8] = 'media/offMidget2_densest.avi'
+		denseVideoPaths[9] = 'media/sbc2_densest.avi'
+	else:
+		sparseVideoPaths[0] = 'media/onParasol1_sparse.avi'
+		sparseVideoPaths[1] = 'media/offParasol1_sparse.avi'
+		sparseVideoPaths[2] = 'media/onMidget1_sparse.avi'
+		sparseVideoPaths[3] = 'media/offMidget1_sparse.avi'
+		sparseVideoPaths[4] = 'media/sbc1_sparse.avi'
+		sparseVideoPaths[5] = 'media/onParasol2_sparse.avi'
+		sparseVideoPaths[6] = 'media/offParasol2_sparse.avi'
+		sparseVideoPaths[7] = 'media/onMidget2_sparse.avi'
+		sparseVideoPaths[8] = 'media/offMidget2_sparse.avi'
+		sparseVideoPaths[9] = 'media/sbc2_sparse.avi'
+
+		denseVideoPaths[0] = 'media/onParasol1_dense.avi'
+		denseVideoPaths[1] = 'media/offParasol1_dense.avi'
+		denseVideoPaths[2] = 'media/onMidget1_dense.avi'
+		denseVideoPaths[3] = 'media/offMidget1_dense.avi'
+		denseVideoPaths[4] = 'media/sbc1_dense.avi'
+		denseVideoPaths[5] = 'media/onParasol2_dense.avi'
+		denseVideoPaths[6] = 'media/offParasol2_dense.avi'
+		denseVideoPaths[7] = 'media/onMidget2_dense.avi'
+		denseVideoPaths[8] = 'media/offMidget2_dense.avi'
+		denseVideoPaths[9] = 'media/sbc2_dense.avi'
 else:
 	sparseVideoPaths[0] = 'media/whiteNoise.avi'
 	sparseVideoPaths[1] = 'media/whiteNoise.avi'
