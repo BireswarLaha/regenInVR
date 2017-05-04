@@ -448,8 +448,12 @@ def JumpTask(controller):
 			previousVidListIndex = videoListIndex
 
 # Add controllers
-theController = None
+theControllerToUse = None
+theControllerNOTtoUse = None
+
 controllerModel = None
+
+controllerCounter = 0
 for controller in steamvr.getControllerList():
 
 	# Create model for controller
@@ -469,7 +473,12 @@ for controller in steamvr.getControllerList():
 
 	# Setup task for triggering jumps using controller
 	viztask.schedule(JumpTask(controller))
-	theController = controller
+
+	if controllerCounter == 0:
+		theControllerToUse = controller
+	else:
+		theControllerNOTtoUse = controller
+	controllerCounter += 1
 
 # Register callback for sensor down event
 trackpadState = 0
@@ -481,10 +490,12 @@ def setBackgroundVisibility(visibility = False):
 	global gallery, painting_birth_of_venus_black, painting_dali_memory_black, painting_harring_bestbuddies_black, painting_magritte_black
 	global painting_monalisa_black, painting_monet_venice_black, painting_picasso_black, painting_scream_black, painting_starry_night_black
 	global painting_van_gogh_black, painting_warhol_soup_black, paintingsInTheBackground, numberOfPaintings, visibilityArray
-	global controllerModel
+	global controllerModel, theControllerToUse, theControllerNOTtoUse
 	
 	gallery.visible(visibility)
-	controllerModel.visible(visibility)
+#	controllerModel.visible(visibility)
+	if theControllerToUse is not None: theControllerToUse.model.visible(visibility)
+	if theControllerNOTtoUse is not None: theControllerNOTtoUse.model.visible(visibility)
 	
 	if visibility == False:
 		#save the current visibility in a global array, and hide all paintingsInTheBackground
@@ -519,10 +530,11 @@ def setBackgroundVisibility(visibility = False):
 
 videoToPlay = None
 def onSensorUp(e):
-	global theController, trackpadState, stimulate, leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, videoLoopsRemaining, vidLoopsRemaining, videoToPlay
+	global theControllerToUse, theControllerNOTtoUse, trackpadState, stimulate
+	global leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, videoLoopsRemaining, vidLoopsRemaining, videoToPlay
 
 #	print "e.button = " + str(e.button)
-	if e.object is theController:
+	if e.object is theControllerToUse:
 		if e.button == steamvr.BUTTON_TRACKPAD:
 #			stimulate = False
 #			leftVideoRenderingBoard.visible(False)
@@ -532,6 +544,9 @@ def onSensorUp(e):
 			
 #			if videoToPlay is not None:
 #				if (videoToPlay.getState() == viz.MEDIA_RUNNING): videoToPlay.stop()
+
+	elif e.object is theControllerNOTtoUse:
+		print "\nPlease use the other controller.\n"
 
 viz.callback(viz.SENSOR_UP_EVENT,onSensorUp)
 
@@ -553,7 +568,7 @@ def getCompletion_ONLY_FromVisualStimFunction():
 lowerCompletionThresholdForDenserStim = 30
 upperCompletionThresholdForDenserStim = 70
 def visualStim(controller):
-	global theController, trackpadState, stimulate, videoListIndex, paintingIndex, sparseVideoPlaceholder, denseVideoPlaceholder, videoLoopsRemaining
+	global theControllerToUse, trackpadState, stimulate, videoListIndex, paintingIndex, sparseVideoPlaceholder, denseVideoPlaceholder, videoLoopsRemaining
 	global leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, vidLoopsRemaining, videoToPlay, lowerTimeThresholdForStimCycleCompletion
 
 	completion = getCompletion_ONLY_FromVisualStimFunction()
@@ -597,9 +612,10 @@ def visualStim(controller):
 
 def onSensorDown(e):
 #	print "e.button1 = " + str(e.button)
-	global theController, trackpadState, stimulate, videoListIndex, paintingIndex, videoLoopsRemaining, leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, vidLoopsRemaining, videoToPlay
+	global theControllerToUse, theControllerNOTtoUse, trackpadState, stimulate, videoListIndex, paintingIndex, videoLoopsRemaining
+	global leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, vidLoopsRemaining, videoToPlay
 
-	if e.object is theController:
+	if e.object is theControllerToUse:
 		if (e.button == steamvr.BUTTON_TRACKPAD) and (stimulate):
 			#stimulation code below:
 			
@@ -614,10 +630,12 @@ def onSensorDown(e):
 #				leftVideoRenderingBoard.texture(videoToPlay)
 #				rightVideoRenderingBoard.texture(videoToPlay)
 				
-				viztask.schedule(visualStim(theController))
+				viztask.schedule(visualStim(theControllerToUse))
 			else:
 				printMessageAtTheEndOfCycle()
-				
+	
+	elif e.object is theControllerNOTtoUse:
+		print "\nPlease use the other controller.\n"
 			
 
 viz.callback(viz.SENSOR_DOWN_EVENT,onSensorDown)
@@ -827,7 +845,7 @@ def alterTheFirstPaintingsAlpha(direction = "plus"):
 
 #using a video
 video = sparseVideoPlaceholder[0]
-naturalSceneVideo = viz.addVideo("media/naturalScene.avi")
+#naturalSceneVideo = viz.addVideo("media/naturalScene.avi")
 
 #video.setBorderRect([0.0, 0.0, 0.75, 1.0])
 
@@ -838,12 +856,12 @@ videoRenderingBoard = viz.addTexQuad(parent = viz.WORLD)
 #leftVideoRenderingBoard.texture(video)
 #rightVideoRenderingBoard.texture(video)
 #videoRenderingBoard.texture(video)
-videoRenderingBoard.texture(naturalSceneVideo)
+#videoRenderingBoard.texture(naturalSceneVideo)
 #rightVideoRenderingBoard.setPosition([0.0, 0.0, 0.0], mode = viz.REL_PARENT)
 #video.loop()
 #video.play()
-naturalSceneVideo.loop()
-naturalSceneVideo.play()
+#naturalSceneVideo.loop()
+#naturalSceneVideo.play()
 
 #rightVideoRenderingBoard.setTexQuadDisplayMode(viz.TEXQUAD_CORNER_FIXED)
 #rightVideoRenderingBoard.setSize([1.0830, 1.2040])
