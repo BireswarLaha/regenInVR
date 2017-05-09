@@ -305,6 +305,7 @@ dictionaryMappingPaintingNamesToVideoListIndex['painting_magritte'] = 10
 
 from random import randint
 itemIndexWithNoStimulation = randint(0,10)
+#itemIndexWithNoStimulation = 10
 #print "itemIndexWithNoStimulation = " + str(itemIndexWithNoStimulation)
 #print "painting without stimulation for this round is " + str(paintingNames[itemIndexWithNoStimulation])
 print "\nPainting without stimulation is " + str(itemIndexWithNoStimulation) + "." + str(paintingNames[itemIndexWithNoStimulation])
@@ -578,7 +579,7 @@ def visualStim(controller):
 	global leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, vidLoopsRemaining, videoToPlay, lowerTimeThresholdForStimCycleCompletion
 
 	completion = getCompletion_ONLY_FromVisualStimFunction()
-	print "Stimulation completed at this portal: " + str(getCompletion_ONLY_FromVisualStimFunction())
+	print "Stimulation completed at this portal: " + str(getCompletion_ONLY_FromVisualStimFunction()) + "%"
 
 	if (completion <= lowerCompletionThresholdForDenserStim) or (completion >= upperCompletionThresholdForDenserStim):
 		print "Initiating a stimulation cycle with a sparse stimulation video"
