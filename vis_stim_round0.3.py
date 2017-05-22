@@ -13,7 +13,7 @@ import vector3
 import vizcam
 import view_fader
 
-totalLengthOfEachStimulationSessionInSeconds = 60 #the length of each stimulation session in seconds
+totalLengthOfEachStimulationSessionInSeconds = 180 #the length of each stimulation session in seconds
 width = 0.11	#http://doc-ok.org/?p=1414 - Vive has approximately 100 degrees HFOV at 10 mm screen separation from the eyes
 height = 0.11	#http://doc-ok.org/?p=1414 - Vive has approximately 110 degrees VFOV at 10 mm screen separation from the eyes
 scale = 5.25
