@@ -17,4 +17,9 @@ f. On the popup, select either experimental or control, based on the participant
 Need to train the coordinator on the following:
 1. H/w and s/w for vive
 2. vizard and github
-3. 
+3. Troubleshooting
+a. If the vive software (steam VR) starts but shows some error (see point b below) - restart the laptop. No luck? restart again. Again, no luck, restart a third time! Its strange, but patience really pays off here.
+b. Typical errors with the vive:
+i. Steam VR says restart the vive - click on the link to restart
+ii. Base stations are not detected - check if they are powered up alright.
+iii. 
