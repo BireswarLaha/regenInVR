@@ -23,3 +23,19 @@ b. Typical errors with the vive:
 i. Steam VR says restart the vive - click on the link to restart
 ii. Base stations are not detected - check if they are powered up alright.
 iii. 
+
+First login with the research coordinator:
+1. SU ID w/password
+2. takes time - may be 5 minutes
+3. welcome screen
+4. computer and network policy notice is displayed
+5. Notes for Bireswar:
+a. Pin Vizard to taskbar, and make it the default editor for python files
+b. Run steamVR and pin it to taskbar
+c. Download github and use it to download the regenVR branch
+d. Download whitenoise movie from Stanford box: box -> sharing for study
+e. Put the noise video and the readme file on the desktop
+f. Word-wrap notepad for displaying the readme
+g. Shutdown at the end of the day
+*write a script for starting up all things they need at every startup
+
