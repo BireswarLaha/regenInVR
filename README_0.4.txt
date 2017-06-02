@@ -1,11 +1,10 @@
 Tell the participants:
 1. Keep your eyes fixated on the crosshair at the center of the screen, while getting the stimulation.
 2. If its hard on your thumb to press down the trackpad for the entire session, use the other fingers, or the thumb in your other hand.
-3. 
 
 For the research co-ordinator:
 1. The white noise video is on the desktop. Rest everything is on github.
-2. On github, the branch that should be used in this study is titled "VERSION LOCKDOWN 0.4".
+2. On github, the branch that should be used in this study is titled "README_0.4_0.0".
 3. General outline:
 a. Make sure all hardware connections are right - Vive basestations are powered up, vive is connected to the laptop.
 b. Startup the laptop and login to your account.
@@ -22,7 +21,6 @@ a. If the vive software (steam VR) starts but shows some error (see point b belo
 b. Typical errors with the vive:
 i. Steam VR says restart the vive - click on the link to restart
 ii. Base stations are not detected - check if they are powered up alright.
-iii. 
 
 First login with the research coordinator:
 1. SU ID w/password
@@ -32,10 +30,10 @@ First login with the research coordinator:
 5. Notes for Bireswar:
 a. Pin Vizard to taskbar, and make it the default editor for python files
 b. Run steamVR and pin it to taskbar
-c. Download github and use it to download the regenVR branch
-d. Download whitenoise movie from Stanford box: box -> sharing for study
-e. Put the noise video and the readme file on the desktop
-f. Word-wrap notepad for displaying the readme
-g. Shutdown at the end of the day
+c. Right click on steamVR, goto Settings > Developer > Untick "Enable VR Dashboard"
+d. Download github and use it to download the regenVR branch
+e. Download whitenoise movie from Stanford box: box -> sharing for study
+f. Put the noise video and the readme file on the desktop
+g. Word-wrap notepad for displaying the readme
+h. Shutdown at the end of the day
 *write a script for starting up all things they need at every startup
-
