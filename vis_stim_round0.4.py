@@ -35,29 +35,53 @@ ID = int(time.time())
 print "ID = " + str(ID)
 print "time = " + str(datetime.datetime.utcfromtimestamp(ID))
 
-stim1time = stim2time = stim3time = stim4time = stim5time = stim6time = stim7time = stim8time = stim9time = stim10time = 0
+stimTime = [0] * 10
+#stim1time = stim2time = stim3time = stim4time = stim5time = stim6time = stim7time = stim8time = stim9time = stim10time = 0
 
 #open a CSV file at the beginning
 dataFilePresent = os.path.isfile(dataDir + dataFile)
 
 if not dataFilePresent:
 	print "creating data file and writing the header"
-	with open(dataDir + dataFile, 'w') as csvfile:
+	with open(dataDir + dataFile, 'wb') as csvfile:
 		writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 		writer.writeheader()
 		print "adding the first data line to the data file"
-		writer.writerow({'ID': ID, 'stim1time': stim1time, 'stim2time': stim2time, 'stim3time': stim3time, 'stim4time': stim4time, 'stim5time': stim5time, 'stim6time': stim6time, 'stim7time': stim7time, 'stim8time': stim8time, 'stim9time': stim9time, 'stim10time': stim10time})
+		writer.writerow({'ID': ID, 'stim1time': stimTime[0], 'stim2time': stimTime[1], 'stim3time': stimTime[2], 'stim4time': stimTime[3], 'stim5time': stimTime[4], 'stim6time': stimTime[5], 'stim7time': stimTime[6], 'stim8time': stimTime[7], 'stim9time': stimTime[8], 'stim10time': stimTime[9]})
 else:
 	print "data file is present in the data folder already"
-	with open(dataDir + dataFile, 'a') as csvfile:
+	with open(dataDir + dataFile, 'ab') as csvfile:
 		writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 		print "appending another data line to the data file"
-		writer.writerow({'ID': ID, 'stim1time': stim1time, 'stim2time': stim2time, 'stim3time': stim3time, 'stim4time': stim4time, 'stim5time': stim5time, 'stim6time': stim6time, 'stim7time': stim7time, 'stim8time': stim8time, 'stim9time': stim9time, 'stim10time': stim10time})
+		writer.writerow({'ID': ID, 'stim1time': stimTime[0], 'stim2time': stimTime[1], 'stim3time': stimTime[2], 'stim4time': stimTime[3], 'stim5time': stimTime[4], 'stim6time': stimTime[5], 'stim7time': stimTime[6], 'stim8time': stimTime[7], 'stim9time': stimTime[8], 'stim10time': stimTime[9]})
 
 #write out data to the file at the start and end of stimulation, and flush the cache!
 def writeData():
+	global ID, stimTime
 	print "Updating datafile"
+	#open data file in append format
+	#extract the line with the current global ID
+	#update the time for the specific stimulation
+	#replace the line in the data file
 	print "Datafile updated"
+
+startTimeForStim = 0
+stimTimerRunning = False
+def startStimTimer():
+	global elapsedTime, stimTimerRunning
+	print "starting a stim timer for the current stim"
+	startTimeForStim = int(time.time())
+	stimTimerRunning = True
+
+def endStimTimer():
+	global startTimeForStim, stimTimerRunning
+	if stimTimerRunning:
+		print "ending the stim timer for the current stim and updating the data file"
+		currentTime = int(time.time())
+		stimTime = currentTime - startTimeForStim
+		print "stim lasted for " + str(stimTime) + " secs"
+		writeData()
+		stimTimerRunning = False
 
 #close the file at the end of the program run
 
@@ -638,6 +662,8 @@ def visualStim(controller):
 
 	videoRenderingBoard.texture(videoToPlay)
 	
+	startStimTimer()
+	
 	videoToPlay.play()
 	yield viztask.waitAny([viztask.waitMediaEnd(videoToPlay), viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)])
 	
@@ -646,6 +672,7 @@ def visualStim(controller):
 	print "Loops remaining: " + str(vidLoopsRemaining)
 
 	if (videoToPlay.getState() == viz.MEDIA_RUNNING):
+		#the stop of the stimulation is triggered here from the release of the controller trackpad ... need to call the stim end timer
 		durationPlayed = videoToPlay.getTime()
 		print "Trackpad released. durationPlayed = " + str(durationPlayed)
 		totalDuration = videoToPlay.getDuration()
@@ -656,14 +683,19 @@ def visualStim(controller):
 		else:
 			print "Stimulation completed in this cycle: " + str(float((durationPlayed*100.0)/totalDuration)) + "% only. So this cycle will be repeated."
 		videoToPlay.stop()
+		endStimTimer()
 		if vidLoopsRemaining > 0: printMessageAtTheStartOfCycle()
 	else:
+		#the stop of the stimulation is triggered here from the end of the stimulation video
 		vidLoopsRemaining -= 1
 		videoLoopsRemaining[videoListIndex] = vidLoopsRemaining
 		if vidLoopsRemaining > 0:
+			#there is at least another round of stimulation remaining from the same stimulation video; initializing the next round now ...
 			viztask.schedule(visualStim(controller))
 		else:
+			#there are no more cycles of stimulation remaining from the same stimulation video; this is the end of this stimulation cycle ... need to call the stim end timer
 			printMessageAtTheEndOfCycle()
+			endStimTimer()
 
 def onSensorDown(e):
 #	print "e.button1 = " + str(e.button)
