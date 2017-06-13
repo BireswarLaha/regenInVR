@@ -16,6 +16,8 @@ import view_fader
 ####saving data during the stimulation runs
 import os
 import csv
+import time
+import datetime
 
 #create a data directory for writing data at runtime
 dataDir = 'data/'
@@ -27,7 +29,13 @@ if not os.path.exists(dataDir):
 else:
 	print "data directory existing"
 
-fieldnames = ['first_name', 'last_name']
+fieldnames = ['ID', 'stim1time', 'stim2time', 'stim3time', 'stim4time', 'stim5time', 'stim6time', 'stim7time', 'stim8time', 'stim9time', 'stim10time']
+
+ID = int(time.time())
+print "ID = " + str(ID)
+print "time = " + str(datetime.datetime.utcfromtimestamp(ID))
+
+stim1time = stim2time = stim3time = stim4time = stim5time = stim6time = stim7time = stim8time = stim9time = stim10time = 0
 
 #open a CSV file at the beginning
 dataFilePresent = os.path.isfile(dataDir + dataFile)
@@ -37,10 +45,20 @@ if not dataFilePresent:
 	with open(dataDir + dataFile, 'w') as csvfile:
 		writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 		writer.writeheader()
+		print "adding the first data line to the data file"
+		writer.writerow({'ID': ID, 'stim1time': stim1time, 'stim2time': stim2time, 'stim3time': stim3time, 'stim4time': stim4time, 'stim5time': stim5time, 'stim6time': stim6time, 'stim7time': stim7time, 'stim8time': stim8time, 'stim9time': stim9time, 'stim10time': stim10time})
 else:
 	print "data file is present in the data folder already"
+	with open(dataDir + dataFile, 'a') as csvfile:
+		writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+		print "appending another data line to the data file"
+		writer.writerow({'ID': ID, 'stim1time': stim1time, 'stim2time': stim2time, 'stim3time': stim3time, 'stim4time': stim4time, 'stim5time': stim5time, 'stim6time': stim6time, 'stim7time': stim7time, 'stim8time': stim8time, 'stim9time': stim9time, 'stim10time': stim10time})
 
 #write out data to the file at the start and end of stimulation, and flush the cache!
+def writeData():
+	print "Updating datafile"
+	print "Datafile updated"
+
 #close the file at the end of the program run
 
 totalLengthOfEachStimulationSessionInSeconds = 180 #the length of each stimulation session in seconds
