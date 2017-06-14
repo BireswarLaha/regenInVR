@@ -13,6 +13,12 @@ import vector3
 import vizcam
 import view_fader
 
+totalLengthOfEachStimulationSessionInSeconds = 180 #the length of each stimulation session in seconds
+width = 0.11	#http://doc-ok.org/?p=1414 - Vive has approximately 100 degrees HFOV at 10 mm screen separation from the eyes
+height = 0.11	#http://doc-ok.org/?p=1414 - Vive has approximately 110 degrees VFOV at 10 mm screen separation from the eyes
+scale = 5.25
+gapFromViveScreens = 0.43
+
 ####saving data during the stimulation runs
 import os
 import csv
@@ -57,39 +63,55 @@ else:
 
 #write out data to the file at the start and end of stimulation, and flush the cache!
 def writeData():
-	global ID, stimTime
+	global ID, stimTime, dataDir, dataFile
 	print "Updating datafile"
-	#open data file in append format
-	#extract the line with the current global ID
+	#open data file for reading
+	f = open(dataDir + dataFile, 'rb')
+	
+	#use a reader to read the lines from the file
+	r = csv.reader(f)
+
+	#putting the lines of the file in a list for parsing
+	lines = [l for l in r]
+
 	#update the time for the specific stimulation
+	for line in lines:
+#		items = line.split(',')
+		print str(line)
+	
 	#replace the line in the data file
+	
+	#open data file for writing
+	f = open(dataDir + dataFile, 'wb')
+
+	#write the lines back into the file
+	writer = csv.writer(f)
+	writer.writerows(lines)
+
 	print "Datafile updated"
 
 startTimeForStim = 0
 stimTimerRunning = False
 def startStimTimer():
-	global elapsedTime, stimTimerRunning
-	print "starting a stim timer for the current stim"
+	global elapsedTime, stimTimerRunning, startTimeForStim
+	print "stim timer start"
 	startTimeForStim = int(time.time())
+	print "startTimeForStim = " + str(startTimeForStim)
 	stimTimerRunning = True
 
 def endStimTimer():
-	global startTimeForStim, stimTimerRunning
+	global startTimeForStim, stimTimerRunning, stimTime
 	if stimTimerRunning:
-		print "ending the stim timer for the current stim and updating the data file"
+		print "ending stim timer and updating data file"
+		print "startTimeForStim inside endStimTimer = " + str(startTimeForStim)
 		currentTime = int(time.time())
 		stimTime = currentTime - startTimeForStim
+		print "currentTime = " + str(currentTime)
 		print "stim lasted for " + str(stimTime) + " secs"
 		writeData()
+		stimTime = 0
 		stimTimerRunning = False
 
-#close the file at the end of the program run
-
-totalLengthOfEachStimulationSessionInSeconds = 180 #the length of each stimulation session in seconds
-width = 0.11	#http://doc-ok.org/?p=1414 - Vive has approximately 100 degrees HFOV at 10 mm screen separation from the eyes
-height = 0.11	#http://doc-ok.org/?p=1414 - Vive has approximately 110 degrees VFOV at 10 mm screen separation from the eyes
-scale = 5.25
-gapFromViveScreens = 0.43
 
 # Initialize window
 viz.setMultiSample(8)
@@ -651,24 +673,21 @@ def visualStim(controller):
 	global leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, vidLoopsRemaining, videoToPlay, lowerTimeThresholdForStimCycleCompletion
 
 	completion = getCompletion_ONLY_FromVisualStimFunction()
-	print "Stimulation completed at this portal: " + str(getCompletion_ONLY_FromVisualStimFunction()) + "%"
+	print "Completion: " + str(completion) + "%"
 
 	if (completion <= lowerCompletionThresholdForDenserStim) or (completion >= upperCompletionThresholdForDenserStim):
-		print "Initiating a stimulation cycle with a sparse stimulation video"
+		print "Initiating a sparse stim"
 		videoToPlay = sparseVideoPlaceholder[videoListIndex]
 	else:
-		print "Initiating a stimulation cycle with a dense stimulation video"
+		print "Initiating a dense stim"
 		videoToPlay = denseVideoPlaceholder[videoListIndex]
 
 	videoRenderingBoard.texture(videoToPlay)
-	
-	startStimTimer()
 	
 	videoToPlay.play()
 	yield viztask.waitAny([viztask.waitMediaEnd(videoToPlay), viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)])
 	
 	paintings[paintingIndex].texblend((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops, '', 1)
-	print "Completion: " + str(getCompletion_ONLY_FromVisualStimFunction()) + "%"
 	print "Loops remaining: " + str(vidLoopsRemaining)
 
 	if (videoToPlay.getState() == viz.MEDIA_RUNNING):
@@ -716,6 +735,8 @@ def onSensorDown(e):
 
 #				leftVideoRenderingBoard.texture(videoToPlay)
 #				rightVideoRenderingBoard.texture(videoToPlay)
+
+				startStimTimer()
 				
 				viztask.schedule(visualStim(theControllerToUse))
 			else:
