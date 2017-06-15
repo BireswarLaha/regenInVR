@@ -62,8 +62,8 @@ else:
 		writer.writerow({'ID': ID, 'stim1time': stimTime[0], 'stim2time': stimTime[1], 'stim3time': stimTime[2], 'stim4time': stimTime[3], 'stim5time': stimTime[4], 'stim6time': stimTime[5], 'stim7time': stimTime[6], 'stim8time': stimTime[7], 'stim9time': stimTime[8], 'stim10time': stimTime[9]})
 
 #write out data to the file at the start and end of stimulation, and flush the cache!
-def writeData():
-	global ID, stimTime, dataDir, dataFile
+def writeData(lastStimTime = 0):
+	global ID, dataDir, dataFile, videoListIndex
 	print "Updating datafile"
 	#open data file for reading
 	f = open(dataDir + dataFile, 'rb')
@@ -77,8 +77,17 @@ def writeData():
 	#update the time for the specific stimulation
 	for line in lines:
 #		items = line.split(',')
-		print str(line)
-	
+#		print str(line)
+#		print "line[0] = " + str(line[0])
+		if line[0] == str(ID):
+			itemIndexToUpdate = videoListIndex + 1
+			print "line to update: " + str(line)
+			print "updating the " + str(itemIndexToUpdate) + "th counter for ID: " + str(ID)
+			currentItem = int(line[itemIndexToUpdate])
+			updatedItem = currentItem + lastStimTime
+			line[itemIndexToUpdate] = str(updatedItem)
+			print "updated line: " + str(line)
+			
 	#replace the line in the data file
 	
 	#open data file for writing
@@ -108,7 +117,7 @@ def endStimTimer():
 		stimTime = currentTime - startTimeForStim
 		print "currentTime = " + str(currentTime)
 		print "stim lasted for " + str(stimTime) + " secs"
-		writeData()
+		writeData(stimTime)
 		stimTime = 0
 		stimTimerRunning = False
 
