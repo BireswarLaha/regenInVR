@@ -96,6 +96,7 @@ def writeData(lastStimTime = 0):
 	#write the lines back into the file
 	writer = csv.writer(f)
 	writer.writerows(lines)
+	f.flush()
 
 	print "Datafile updated"
 
