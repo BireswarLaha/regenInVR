@@ -79,7 +79,7 @@ def writeData(lastStimTime = 0):
 #		items = line.split(',')
 #		print str(line)
 #		print "line[0] = " + str(line[0])
-		if line[0] == str(ID):
+		if (len(line) > 0) and (line[0] == str(ID)):
 			itemIndexToUpdate = videoListIndex + 1
 			print "line to update: " + str(line)
 			print "updating the " + str(itemIndexToUpdate) + "th counter for ID: " + str(ID)
