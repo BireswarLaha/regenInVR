@@ -1102,8 +1102,11 @@ vizact.onkeydown('h', changeBackgroundColor, "scaleDown")
 #timer and completion
 # Add canvases for timers
 timerCanvas = [0] * 10
+timerCanvasPos = [0] * 10
 timerPanel = [0] * 10
+
 completionCanvas = [0] * 10
+completionCanvasPos = [0] * 10
 completionPanel = [0] * 10
 
 timerInstructions ="""00:00
@@ -1111,18 +1114,22 @@ timerInstructions ="""00:00
 completionInstructions ="""0% complete.
 """
 
+canvasSize = 1.5
+
+timerCanvasPos[0] = [0, 3.0, 6.0]
+
 for i in range(10):
-	
+
 	timerCanvas[i] = viz.addGUICanvas(pos=[0, 3.0, 6.0])
 	timerCanvas[i].setMouseStyle(0)
 	timerCanvas[i].alignment(viz.ALIGN_CENTER)
-	timerCanvas[i].setRenderWorld([400,400], [5.0,5.0])
+	timerCanvas[i].setRenderWorld([400,400], [canvasSize,canvasSize])
 
 	timerPanel[i] = vizinfo.InfoPanel(timerInstructions, title='Timer', key=None, icon=False, align=viz.ALIGN_CENTER, parent=timerCanvas[i])
 
 	completionCanvas[i] = viz.addGUICanvas(pos=[0, 3.0, 6.0])
 	completionCanvas[i].setMouseStyle(0)
 	completionCanvas[i].alignment(viz.ALIGN_CENTER)
-	completionCanvas[i].setRenderWorld([400,400], [5.0,5.0])
+	completionCanvas[i].setRenderWorld([400,400], [canvasSize,canvasSize])
 
 	completionPanel[i] = vizinfo.InfoPanel(completionInstructions, title='Completion', key=None, icon=False, align=viz.ALIGN_CENTER, parent=completionCanvas[i])
