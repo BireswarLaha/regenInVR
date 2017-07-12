@@ -1100,14 +1100,17 @@ vizact.onkeydown('h', changeBackgroundColor, "scaleDown")
 #	
 
 #timer and completion
+totalCanvases = 11
 # Add canvases for timers
-timerCanvas = [0] * 10
-timerCanvasPos = [0] * 10
-timerPanel = [0] * 10
+timerCanvas = [0] * totalCanvases
+timerCanvasPos = [0] * totalCanvases
+timerCanvasEuler = [0] * totalCanvases
+timerPanel = [0] * totalCanvases
 
-completionCanvas = [0] * 10
-completionCanvasPos = [0] * 10
-completionPanel = [0] * 10
+completionCanvas = [0] * totalCanvases
+completionCanvasPos = [0] * totalCanvases
+completionCanvasEuler = [0] * totalCanvases
+completionPanel = [0] * totalCanvases
 
 timerInstructions ="""00:00
 """
@@ -1116,18 +1119,70 @@ completionInstructions ="""0% complete.
 
 canvasSize = 1.5
 
-timerCanvasPos[0] = [0, 3.0, 6.0]
+timerCanvasPos[0] = [-4.75, 0.85, 0.5]
+timerCanvasPos[1] = [-4.75, 0.85, 1.5]
+timerCanvasPos[2] = [-4.75, 0.85, 2.5]
+timerCanvasPos[3] = [-4.75, 0.85, 3.5]
+timerCanvasPos[4] = [-1.0, 0.85, 7.0]
+timerCanvasPos[5] = [0.0, 0.85, 7.0]
+timerCanvasPos[6] = [1.0, 0.85, 7.0]
+timerCanvasPos[7] = [4.75, 0.85, 3.5]
+timerCanvasPos[8] = [4.75, 0.85, 2.5]
+timerCanvasPos[9] = [4.75, 0.85, 1.5]
+timerCanvasPos[10] = [4.75, 0.85, 0.5]
 
-for i in range(10):
+timerCanvasEuler[0] = [-90.0, 0.0, 0.0]
+timerCanvasEuler[1] = [-90.0, 0.0, 0.0]
+timerCanvasEuler[2] = [-90.0, 0.0, 0.0]
+timerCanvasEuler[3] = [-90.0, 0.0, 0.0]
+timerCanvasEuler[4] = [-45.0, 0.0, 0.0]
+timerCanvasEuler[5] = [0.0, 0.0, 0.0]
+timerCanvasEuler[6] = [45.0, 0.0, 0.0]
+timerCanvasEuler[7] = [90.0, 0.0, 0.0]
+timerCanvasEuler[8] = [90.0, 0.0, 0.0]
+timerCanvasEuler[9] = [90.0, 0.0, 0.0]
+timerCanvasEuler[10] = [90.0, 0.0, 0.0]
 
-	timerCanvas[i] = viz.addGUICanvas(pos=[0, 3.0, 6.0])
+timerCompletionSeparation = 0.5
+
+completionCanvasPos[0] = [-4.75, 0.85, 0.5 - timerCompletionSeparation]
+completionCanvasPos[1] = [-4.75, 0.85, 1.5 - timerCompletionSeparation]
+completionCanvasPos[2] = [-4.75, 0.85, 2.5 - timerCompletionSeparation]
+completionCanvasPos[3] = [-4.75, 0.85, 3.5 - timerCompletionSeparation]
+completionCanvasPos[4] = [-1.0, 0.85, 7.0]
+completionCanvasPos[5] = [0.0, 0.85, 7.0]
+completionCanvasPos[6] = [1.0, 0.85, 7.0]
+completionCanvasPos[7] = [4.75, 0.85, 3.5 + timerCompletionSeparation]
+completionCanvasPos[8] = [4.75, 0.85, 2.5 + timerCompletionSeparation]
+completionCanvasPos[9] = [4.75, 0.85, 1.5 + timerCompletionSeparation]
+completionCanvasPos[10] = [4.75, 0.85, 0.5 + timerCompletionSeparation]
+
+completionCanvasEuler[0] = [-90.0, 0.0, 0.0]
+completionCanvasEuler[1] = [-90.0, 0.0, 0.0]
+completionCanvasEuler[2] = [-90.0, 0.0, 0.0]
+completionCanvasEuler[3] = [-90.0, 0.0, 0.0]
+completionCanvasEuler[4] = [-45.0, 0.0, 0.0]
+completionCanvasEuler[5] = [0.0, 0.0, 0.0]
+completionCanvasEuler[6] = [45.0, 0.0, 0.0]
+completionCanvasEuler[7] = [90.0, 0.0, 0.0]
+completionCanvasEuler[8] = [90.0, 0.0, 0.0]
+completionCanvasEuler[9] = [90.0, 0.0, 0.0]
+completionCanvasEuler[10] = [90.0, 0.0, 0.0]
+
+for i in range(totalCanvases):
+
+#	test = viz.addGUICanvas(pos=timerCanvasPos[i])
+#	test
+	timerCanvas[i] = viz.addGUICanvas(pos=timerCanvasPos[i])
+	timerCanvas[i].setEuler(timerCanvasEuler[i])
 	timerCanvas[i].setMouseStyle(0)
 	timerCanvas[i].alignment(viz.ALIGN_CENTER)
 	timerCanvas[i].setRenderWorld([400,400], [canvasSize,canvasSize])
 
 	timerPanel[i] = vizinfo.InfoPanel(timerInstructions, title='Timer', key=None, icon=False, align=viz.ALIGN_CENTER, parent=timerCanvas[i])
 
-	completionCanvas[i] = viz.addGUICanvas(pos=[0, 3.0, 6.0])
+	completionCanvas[i] = viz.addGUICanvas(pos=completionCanvasPos[i])
+	completionCanvas[i].setEuler(completionCanvasEuler[i])
 	completionCanvas[i].setMouseStyle(0)
 	completionCanvas[i].alignment(viz.ALIGN_CENTER)
 	completionCanvas[i].setRenderWorld([400,400], [canvasSize,canvasSize])
