@@ -1122,16 +1122,16 @@ completionInstructions ="""0% complete.
 canvasSize = 1.5
 
 timerCanvasPos[0] = [-4.75, 0.85, 0.6]
-timerCanvasPos[1] = [-4.75, 0.85, 2.8]
-timerCanvasPos[2] = [-4.75, 0.85, 5.0]
-timerCanvasPos[3] = [-4.75, 0.85, 6.8]
-timerCanvasPos[4] = [-2.5, 0.85, 8.0]
-timerCanvasPos[5] = [0.3, 0.85, 9.0]
-timerCanvasPos[6] = [3.0, 0.85, 8.0]
-timerCanvasPos[7] = [4.75, 0.85, 6.4]
-timerCanvasPos[8] = [4.75, 0.85, 4.2]
-timerCanvasPos[9] = [4.75, 0.85, 2.2]
-timerCanvasPos[10] = [4.75, 0.85, 0.03]
+timerCanvasPos[1] = [-4.75, 0.8, 2.8]
+timerCanvasPos[2] = [-4.75, 0.95, 5.0]
+timerCanvasPos[3] = [-4.75, 1.15, 6.8]
+timerCanvasPos[4] = [-2.5, 1.05, 8.0]
+timerCanvasPos[5] = [0.3, 1.15, 9.0]
+timerCanvasPos[6] = [3.0, 1.3, 8.0]
+timerCanvasPos[7] = [4.75, 1.45, 6.4]
+timerCanvasPos[8] = [4.75, 1.2, 4.2]
+timerCanvasPos[9] = [4.75, 1.6, 2.2]
+timerCanvasPos[10] = [4.75, 1.55, 0.03]
 
 timerCanvasEuler[0] = [-90.0, 0.0, 0.0]
 timerCanvasEuler[1] = [-90.0, 0.0, 0.0]
@@ -1147,17 +1147,17 @@ timerCanvasEuler[10] = [90.0, 0.0, 0.0]
 
 timerCompletionSeparation = 0.48
 
-for i in range(totalCanvases):
-	if i <= int(totalCanvases/3.0):
-		completionCanvasPos[i] = [timerCanvasPos[i][0], timerCanvasPos[i][1], timerCanvasPos[i][2] - timerCompletionSeparation]
-	elif i == 4:
-		completionCanvasPos[i] = [timerCanvasPos[i][0] - timerCompletionSeparation/2.0, timerCanvasPos[i][1], timerCanvasPos[i][2] - timerCompletionSeparation/2.0]
-	elif i == 5:
-		completionCanvasPos[i] = [timerCanvasPos[i][0] - timerCompletionSeparation, timerCanvasPos[i][1], timerCanvasPos[i][2]]
-	elif i == 6:
-		completionCanvasPos[i] = [timerCanvasPos[i][0] - timerCompletionSeparation/2.0, timerCanvasPos[i][1], timerCanvasPos[i][2] - timerCompletionSeparation/2.0]
-	elif i >= int(2 * totalCanvases/3.0):
-		completionCanvasPos[i] = [timerCanvasPos[i][0], timerCanvasPos[i][1], timerCanvasPos[i][2] + timerCompletionSeparation]
+#for i in range(totalCanvases):
+#	if i <= int(totalCanvases/3.0):
+#		completionCanvasPos[i] = [timerCanvasPos[i][0], timerCanvasPos[i][1], timerCanvasPos[i][2] - timerCompletionSeparation]
+#	elif i == 4:
+#		completionCanvasPos[i] = [timerCanvasPos[i][0] - timerCompletionSeparation/2.0, timerCanvasPos[i][1], timerCanvasPos[i][2] - timerCompletionSeparation/2.0]
+#	elif i == 5:
+#		completionCanvasPos[i] = [timerCanvasPos[i][0] - timerCompletionSeparation, timerCanvasPos[i][1], timerCanvasPos[i][2]]
+#	elif i == 6:
+#		completionCanvasPos[i] = [timerCanvasPos[i][0] - timerCompletionSeparation/2.0, timerCanvasPos[i][1], timerCanvasPos[i][2] - timerCompletionSeparation/2.0]
+#	elif i >= int(2 * totalCanvases/3.0):
+#		completionCanvasPos[i] = [timerCanvasPos[i][0], timerCanvasPos[i][1], timerCanvasPos[i][2] + timerCompletionSeparation]
 
 #completionCanvasPos[1] = [-4.75, 0.85, 2.7 - timerCompletionSeparation]
 #completionCanvasPos[2] = [-4.75, 0.85, 4.0 - timerCompletionSeparation]
@@ -1170,7 +1170,7 @@ for i in range(totalCanvases):
 #completionCanvasPos[9] = [4.75, 0.85, 1.5 + timerCompletionSeparation]
 #completionCanvasPos[10] = [4.75, 0.85, 0.5 + timerCompletionSeparation]
 
-	completionCanvasEuler[i] = [timerCanvasEuler[i][0], timerCanvasEuler[i][1], timerCanvasEuler[i][2]]
+#	completionCanvasEuler[i] = [timerCanvasEuler[i][0], timerCanvasEuler[i][1], timerCanvasEuler[i][2]]
 #completionCanvasEuler[0] = [-90.0, 0.0, 0.0]
 #completionCanvasEuler[1] = [-90.0, 0.0, 0.0]
 #completionCanvasEuler[2] = [-90.0, 0.0, 0.0]
