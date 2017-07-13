@@ -1185,6 +1185,19 @@ timerCompletionSeparation = 0.48
 #completionCanvasEuler[9] = [90.0, 0.0, 0.0]
 #completionCanvasEuler[10] = [90.0, 0.0, 0.0]
 
+#maxNumberOfVideoLoops
+#videoLoopsRemaining[
+#itemIndexWithNoStimulation
+
+def updateTimerAndCompletionDisplays(canvasIndex):
+	global maxNumberOfVideoLoops, videoLoopsRemaining
+	
+	videoListInd = canvasIndex
+	completion = 100.0
+	if videoListInd > itemIndexWithNoStimulation: videoListInd -= 1
+	if canvasIndex != itemIndexWithNoStimulation: completion = (maxNumberOfVideoLoops - videoLoopsRemaining[videoListInd])*100.0/maxNumberOfVideoLoops
+	print "for canvasIndex " + str(canvasIndex) + ", completion: " + str(completion) + "%"
+	
 for i in range(totalCanvases):
 
 #	test = viz.addGUICanvas(pos=timerCanvasPos[i])
@@ -1215,3 +1228,5 @@ for i in range(totalCanvases):
 	#positioning and orienting the timer and completion display canvases
 	timerCanvas[i].setPosition(timerCanvasPos[i])
 	timerCanvas[i].setEuler(timerCanvasEuler[i])
+	
+	updateTimerAndCompletionDisplays(i)
