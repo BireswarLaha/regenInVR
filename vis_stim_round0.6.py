@@ -41,6 +41,8 @@ ID = int(time.time())
 print "ID = " + str(ID)
 print "time = " + str(datetime.datetime.utcfromtimestamp(ID))
 
+viz.window.setSize([1980, 1080])
+
 stimTime = [0] * 10
 #stim1time = stim2time = stim3time = stim4time = stim5time = stim6time = stim7time = stim8time = stim9time = stim10time = 0
 
@@ -1121,15 +1123,15 @@ completionInstructions ="""0% complete.
 
 canvasSize = 1.5
 
-timerCanvasPos[0] = [-4.75, 0.85, 0.6]
-timerCanvasPos[1] = [-4.75, 0.8, 2.8]
-timerCanvasPos[2] = [-4.75, 0.95, 5.0]
-timerCanvasPos[3] = [-4.75, 1.15, 6.8]
-timerCanvasPos[4] = [-2.5, 1.05, 8.0]
-timerCanvasPos[5] = [0.3, 1.15, 9.0]
-timerCanvasPos[6] = [3.0, 1.3, 8.0]
-timerCanvasPos[7] = [4.75, 1.45, 6.4]
-timerCanvasPos[8] = [4.75, 1.2, 4.2]
+timerCanvasPos[0] = [-4.85, 0.85, 0.6]
+timerCanvasPos[1] = [-4.85, 0.8, 2.8]
+timerCanvasPos[2] = [-4.85, 0.95, 5.1]
+timerCanvasPos[3] = [-4.85, 1.15, 7.0]
+timerCanvasPos[4] = [-3.0, 1.05, 9.2]
+timerCanvasPos[5] = [0.3, 1.1, 9.83]
+timerCanvasPos[6] = [3.2, 1.3, 9.0]
+timerCanvasPos[7] = [4.75, 1.4, 6.4]
+timerCanvasPos[8] = [4.75, 1.2, 4.3]
 timerCanvasPos[9] = [4.75, 1.6, 2.2]
 timerCanvasPos[10] = [4.75, 1.55, 0.03]
 
@@ -1137,9 +1139,9 @@ timerCanvasEuler[0] = [-90.0, 0.0, 0.0]
 timerCanvasEuler[1] = [-90.0, 0.0, 0.0]
 timerCanvasEuler[2] = [-90.0, 0.0, 0.0]
 timerCanvasEuler[3] = [-90.0, 0.0, 0.0]
-timerCanvasEuler[4] = [-45.0, 0.0, 0.0]
+timerCanvasEuler[4] = [-35.0, 0.0, 0.0]
 timerCanvasEuler[5] = [0.0, 0.0, 0.0]
-timerCanvasEuler[6] = [45.0, 0.0, 0.0]
+timerCanvasEuler[6] = [35.0, 0.0, 0.0]
 timerCanvasEuler[7] = [90.0, 0.0, 0.0]
 timerCanvasEuler[8] = [90.0, 0.0, 0.0]
 timerCanvasEuler[9] = [90.0, 0.0, 0.0]
