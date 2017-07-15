@@ -124,7 +124,6 @@ def endStimTimer():
 		stimTime = 0
 		stimTimerRunning = False
 
-
 # Initialize window
 viz.setMultiSample(8)
 viz.go()
@@ -134,10 +133,10 @@ viz.clearcolor(colorSaturationValue, colorSaturationValue, colorSaturationValue)
 
 choices = ['experimental condition', 'control condition']
 stimuliChoices = ['dense', 'sparse']
-conditionChosen = viz.choose('Choose the condition for this run: ', choices)
-print 'Group chosen:',choices[conditionChosen]
+experimentalConditionChosen = viz.choose('Choose the condition for this run: ', choices)
+print 'Group chosen:',choices[experimentalConditionChosen]
 
-if 'experimental condition' == choices[conditionChosen]:
+if 'experimental condition' == choices[experimentalConditionChosen]:
 	stimChosen = viz.choose('Select stimulation: ', stimuliChoices)
 	print 'Stimulation chosen:', stimuliChoices[stimChosen]
 
@@ -818,7 +817,7 @@ sparseVideoPlaceholder = [None] * numberOfVideos
 denseVideoPlaceholder = [None] * numberOfVideos
 videoLoopsRemaining = [None] * numberOfVideos	#this stores the number of loops for each video remaining to be played, which is totalLengthOfEachStimulationSessionInSeconds/video.getDuration()
 
-if 'experimental condition' == choices[conditionChosen]:
+if 'experimental condition' == choices[experimentalConditionChosen]:
 	if 'dense' == stimuliChoices[stimChosen]:
 		sparseVideoPaths[0] = 'media/onParasol1_dense.avi'
 		sparseVideoPaths[1] = 'media/offParasol1_dense.avi'
@@ -893,6 +892,12 @@ for i in range(10):
 	print "sparseVideoPlaceholder[" + str(i) + "].getDuration() = " + str(sparseVideoPlaceholder[i].getDuration())
 	print "denseVideoPlaceholder[" + str(i) + "].getDuration() = " + str(denseVideoPlaceholder[i].getDuration())
 	videoLoopsRemaining[i] = totalLengthOfEachStimulationSessionInSeconds/sparseVideoPlaceholder[i].getDuration()
+
+lengthOfEachStimVideo = 0
+if 'experimental condition' == choices[experimentalConditionChosen]:
+	lengthOfEachStimVideo = denseVideoPlaceholder[0].getDuration()
+else:
+	lengthOfEachStimVideo = sparseVideoPlaceholder[0].getDuration()
 
 maxNumberOfVideoLoops = videoLoopsRemaining[0]
 
@@ -1190,14 +1195,26 @@ timerCompletionSeparation = 0.48
 #itemIndexWithNoStimulation
 
 def updateTimerAndCompletionDisplays(canvasIndex):
-	global maxNumberOfVideoLoops, videoLoopsRemaining
+	global maxNumberOfVideoLoops, videoLoopsRemaining, totalLengthOfEachStimulationSessionInSeconds, lengthOfEachStimVideo, completionPanel, timerPanel
 	
 	videoListInd = canvasIndex
 	completion = 100.0
+
 	if videoListInd > itemIndexWithNoStimulation: videoListInd -= 1
 	if canvasIndex != itemIndexWithNoStimulation: completion = (maxNumberOfVideoLoops - videoLoopsRemaining[videoListInd])*100.0/maxNumberOfVideoLoops
-	print "for canvasIndex " + str(canvasIndex) + ", completion: " + str(completion) + "%"
+
+	timeElapsed = (3 * 60.0) - (videoLoopsRemaining[videoListInd] * lengthOfEachStimVideo)
+	totalTime = totalLengthOfEachStimulationSessionInSeconds
+
+	completionPanelText = str('%0*d' % (3, int(completion))) + "%"
+	timerPanelText = str('%0*d' % (3, int(timeElapsed))) + " of " + str(totalTime) + " seconds"
+
+	print "for canvasIndex " + str(canvasIndex) + ", completion: " + completionPanelText
+	print "for canvasIndex " + str(canvasIndex) + ", timer: " + timerPanelText
 	
+	completionPanel[canvasIndex].setText(completionPanelText)
+	timerPanel[canvasIndex].setText(timerPanelText)
+
 for i in range(totalCanvases):
 
 #	test = viz.addGUICanvas(pos=timerCanvasPos[i])
@@ -1224,7 +1241,7 @@ for i in range(totalCanvases):
 	completionCanvas[i].setRenderWorld([400,400], [canvasSize,canvasSize])
 
 	completionPanel[i] = vizinfo.InfoPanel(completionInstructions, title='Completion', key=None, icon=False, align=viz.ALIGN_CENTER, parent=completionCanvas[i])
-
+	
 	#positioning and orienting the timer and completion display canvases
 	timerCanvas[i].setPosition(timerCanvasPos[i])
 	timerCanvas[i].setEuler(timerCanvasEuler[i])
