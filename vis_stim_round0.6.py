@@ -1108,94 +1108,94 @@ vizact.onkeydown('h', changeBackgroundColor, "scaleDown")
 
 #timer and completion
 totalCanvases = 11
-# Add canvases for timers
-timerCanvas = [0] * totalCanvases
-timerCanvasPos = [0] * totalCanvases
-timerCanvasEuler = [0] * totalCanvases
-timerPanel = [0] * totalCanvases
-
+# Add canvases for completion and timer displays
 completionCanvas = [0] * totalCanvases
 completionCanvasPos = [0] * totalCanvases
 completionCanvasEuler = [0] * totalCanvases
 completionPanel = [0] * totalCanvases
 
-timerCompletionLink = [0] * totalCanvases
+#timeredCanvas = [0] * totalCanvases
+#timeredCanvasPos = [0] * totalCanvases
+#timeredCanvasEuler = [0] * totalCanvases
+#timeredPanel = [0] * totalCanvases
 
-timerInstructions ="""00:00
+#timerCompletionLink = [0] * totalCanvases
+
+completionInstructions ="""00:00
 """
-completionInstructions ="""0% complete.
-"""
+#timeredInstructions ="""0% complete.
+#"""
 
 canvasSize = 1.5
 
-timerCanvasPos[0] = [-4.85, 0.85, 0.6]
-timerCanvasPos[1] = [-4.85, 0.8, 2.8]
-timerCanvasPos[2] = [-4.85, 0.95, 5.1]
-timerCanvasPos[3] = [-4.85, 1.15, 7.0]
-timerCanvasPos[4] = [-3.0, 1.05, 9.2]
-timerCanvasPos[5] = [0.3, 1.1, 9.83]
-timerCanvasPos[6] = [3.2, 1.3, 9.0]
-timerCanvasPos[7] = [4.75, 1.4, 6.4]
-timerCanvasPos[8] = [4.75, 1.2, 4.3]
-timerCanvasPos[9] = [4.75, 1.6, 2.2]
-timerCanvasPos[10] = [4.75, 1.55, 0.03]
+completionCanvasPos[0] = [-4.85, 0.85, 0.3]
+completionCanvasPos[1] = [-4.85, 0.8, 2.5]
+completionCanvasPos[2] = [-4.85, 0.95, 4.8]
+completionCanvasPos[3] = [-4.85, 1.15, 6.7]
+completionCanvasPos[4] = [-3.3, 1.05, 9.0]
+completionCanvasPos[5] = [0.0, 1.1, 9.83]
+completionCanvasPos[6] = [3.0, 1.3, 9.2]
+completionCanvasPos[7] = [4.75, 1.4, 6.7]
+completionCanvasPos[8] = [4.75, 1.2, 4.6]
+completionCanvasPos[9] = [4.75, 1.6, 2.5]
+completionCanvasPos[10] = [4.75, 1.55, 0.3]
 
-timerCanvasEuler[0] = [-90.0, 0.0, 0.0]
-timerCanvasEuler[1] = [-90.0, 0.0, 0.0]
-timerCanvasEuler[2] = [-90.0, 0.0, 0.0]
-timerCanvasEuler[3] = [-90.0, 0.0, 0.0]
-timerCanvasEuler[4] = [-35.0, 0.0, 0.0]
-timerCanvasEuler[5] = [0.0, 0.0, 0.0]
-timerCanvasEuler[6] = [35.0, 0.0, 0.0]
-timerCanvasEuler[7] = [90.0, 0.0, 0.0]
-timerCanvasEuler[8] = [90.0, 0.0, 0.0]
-timerCanvasEuler[9] = [90.0, 0.0, 0.0]
-timerCanvasEuler[10] = [90.0, 0.0, 0.0]
+completionCanvasEuler[0] = [-90.0, 0.0, 0.0]
+completionCanvasEuler[1] = [-90.0, 0.0, 0.0]
+completionCanvasEuler[2] = [-90.0, 0.0, 0.0]
+completionCanvasEuler[3] = [-90.0, 0.0, 0.0]
+completionCanvasEuler[4] = [-35.0, 0.0, 0.0]
+completionCanvasEuler[5] = [0.0, 0.0, 0.0]
+completionCanvasEuler[6] = [35.0, 0.0, 0.0]
+completionCanvasEuler[7] = [90.0, 0.0, 0.0]
+completionCanvasEuler[8] = [90.0, 0.0, 0.0]
+completionCanvasEuler[9] = [90.0, 0.0, 0.0]
+completionCanvasEuler[10] = [90.0, 0.0, 0.0]
 
-timerCompletionSeparation = 0.48
+#timerCompletionSeparation = 0.48
 
 #for i in range(totalCanvases):
 #	if i <= int(totalCanvases/3.0):
-#		completionCanvasPos[i] = [timerCanvasPos[i][0], timerCanvasPos[i][1], timerCanvasPos[i][2] - timerCompletionSeparation]
+#		timeredCanvasPos[i] = [completionCanvasPos[i][0], completionCanvasPos[i][1], completionCanvasPos[i][2] - timerCompletionSeparation]
 #	elif i == 4:
-#		completionCanvasPos[i] = [timerCanvasPos[i][0] - timerCompletionSeparation/2.0, timerCanvasPos[i][1], timerCanvasPos[i][2] - timerCompletionSeparation/2.0]
+#		timeredCanvasPos[i] = [completionCanvasPos[i][0] - timerCompletionSeparation/2.0, completionCanvasPos[i][1], completionCanvasPos[i][2] - timerCompletionSeparation/2.0]
 #	elif i == 5:
-#		completionCanvasPos[i] = [timerCanvasPos[i][0] - timerCompletionSeparation, timerCanvasPos[i][1], timerCanvasPos[i][2]]
+#		timeredCanvasPos[i] = [completionCanvasPos[i][0] - timerCompletionSeparation, completionCanvasPos[i][1], completionCanvasPos[i][2]]
 #	elif i == 6:
-#		completionCanvasPos[i] = [timerCanvasPos[i][0] - timerCompletionSeparation/2.0, timerCanvasPos[i][1], timerCanvasPos[i][2] - timerCompletionSeparation/2.0]
+#		timeredCanvasPos[i] = [completionCanvasPos[i][0] - timerCompletionSeparation/2.0, completionCanvasPos[i][1], completionCanvasPos[i][2] - timerCompletionSeparation/2.0]
 #	elif i >= int(2 * totalCanvases/3.0):
-#		completionCanvasPos[i] = [timerCanvasPos[i][0], timerCanvasPos[i][1], timerCanvasPos[i][2] + timerCompletionSeparation]
+#		timeredCanvasPos[i] = [completionCanvasPos[i][0], completionCanvasPos[i][1], completionCanvasPos[i][2] + timerCompletionSeparation]
 
-#completionCanvasPos[1] = [-4.75, 0.85, 2.7 - timerCompletionSeparation]
-#completionCanvasPos[2] = [-4.75, 0.85, 4.0 - timerCompletionSeparation]
-#completionCanvasPos[3] = [-4.75, 0.85, 5.5 - timerCompletionSeparation]
-#completionCanvasPos[4] = [-1.0, 0.85, 7.0]
-#completionCanvasPos[5] = [0.0, 0.85, 7.0]
-#completionCanvasPos[6] = [1.0, 0.85, 7.0]
-#completionCanvasPos[7] = [4.75, 0.85, 3.5 + timerCompletionSeparation]
-#completionCanvasPos[8] = [4.75, 0.85, 2.5 + timerCompletionSeparation]
-#completionCanvasPos[9] = [4.75, 0.85, 1.5 + timerCompletionSeparation]
-#completionCanvasPos[10] = [4.75, 0.85, 0.5 + timerCompletionSeparation]
+#timeredCanvasPos[1] = [-4.75, 0.85, 2.7 - timerCompletionSeparation]
+#timeredCanvasPos[2] = [-4.75, 0.85, 4.0 - timerCompletionSeparation]
+#timeredCanvasPos[3] = [-4.75, 0.85, 5.5 - timerCompletionSeparation]
+#timeredCanvasPos[4] = [-1.0, 0.85, 7.0]
+#timeredCanvasPos[5] = [0.0, 0.85, 7.0]
+#timeredCanvasPos[6] = [1.0, 0.85, 7.0]
+#timeredCanvasPos[7] = [4.75, 0.85, 3.5 + timerCompletionSeparation]
+#timeredCanvasPos[8] = [4.75, 0.85, 2.5 + timerCompletionSeparation]
+#timeredCanvasPos[9] = [4.75, 0.85, 1.5 + timerCompletionSeparation]
+#timeredCanvasPos[10] = [4.75, 0.85, 0.5 + timerCompletionSeparation]
 
-#	completionCanvasEuler[i] = [timerCanvasEuler[i][0], timerCanvasEuler[i][1], timerCanvasEuler[i][2]]
-#completionCanvasEuler[0] = [-90.0, 0.0, 0.0]
-#completionCanvasEuler[1] = [-90.0, 0.0, 0.0]
-#completionCanvasEuler[2] = [-90.0, 0.0, 0.0]
-#completionCanvasEuler[3] = [-90.0, 0.0, 0.0]
-#completionCanvasEuler[4] = [-45.0, 0.0, 0.0]
-#completionCanvasEuler[5] = [0.0, 0.0, 0.0]
-#completionCanvasEuler[6] = [45.0, 0.0, 0.0]
-#completionCanvasEuler[7] = [90.0, 0.0, 0.0]
-#completionCanvasEuler[8] = [90.0, 0.0, 0.0]
-#completionCanvasEuler[9] = [90.0, 0.0, 0.0]
-#completionCanvasEuler[10] = [90.0, 0.0, 0.0]
+#	timeredCanvasEuler[i] = [completionCanvasEuler[i][0], completionCanvasEuler[i][1], completionCanvasEuler[i][2]]
+#timeredCanvasEuler[0] = [-90.0, 0.0, 0.0]
+#timeredCanvasEuler[1] = [-90.0, 0.0, 0.0]
+#timeredCanvasEuler[2] = [-90.0, 0.0, 0.0]
+#timeredCanvasEuler[3] = [-90.0, 0.0, 0.0]
+#timeredCanvasEuler[4] = [-45.0, 0.0, 0.0]
+#timeredCanvasEuler[5] = [0.0, 0.0, 0.0]
+#timeredCanvasEuler[6] = [45.0, 0.0, 0.0]
+#timeredCanvasEuler[7] = [90.0, 0.0, 0.0]
+#timeredCanvasEuler[8] = [90.0, 0.0, 0.0]
+#timeredCanvasEuler[9] = [90.0, 0.0, 0.0]
+#timeredCanvasEuler[10] = [90.0, 0.0, 0.0]
 
 #maxNumberOfVideoLoops
 #videoLoopsRemaining[
 #itemIndexWithNoStimulation
 
-def updateTimerAndCompletionDisplays(canvasIndex):
-	global maxNumberOfVideoLoops, videoLoopsRemaining, totalLengthOfEachStimulationSessionInSeconds, lengthOfEachStimVideo, completionPanel, timerPanel
+def updateCompletionDisplays(canvasIndex):
+	global maxNumberOfVideoLoops, videoLoopsRemaining, totalLengthOfEachStimulationSessionInSeconds, lengthOfEachStimVideo, completionPanel#, timeredPanel
 	
 	videoListInd = canvasIndex
 	completion = 100.0
@@ -1206,44 +1206,44 @@ def updateTimerAndCompletionDisplays(canvasIndex):
 	timeElapsed = (3 * 60.0) - (videoLoopsRemaining[videoListInd] * lengthOfEachStimVideo)
 	totalTime = totalLengthOfEachStimulationSessionInSeconds
 
-	completionPanelText = str('%0*d' % (3, int(completion))) + "%"
-	timerPanelText = str('%0*d' % (3, int(timeElapsed))) + " of " + str(totalTime) + " seconds"
+#	timeredPanelText = str('%0*d' % (3, int(completion))) + "%"
+	completionPanelText = str('%0*d' % (3, int(completion))) + "%: " + str('%0*d' % (3, int(timeElapsed))) + " of " + str(totalTime) + " seconds"
 
-	print "for canvasIndex " + str(canvasIndex) + ", completion: " + completionPanelText
-	print "for canvasIndex " + str(canvasIndex) + ", timer: " + timerPanelText
+#	print "for canvasIndex " + str(canvasIndex) + ", completion: " + timeredPanelText
+	print "for canvasIndex " + str(canvasIndex) + ", timer: " + completionPanelText
 	
+#	timeredPanel[canvasIndex].setText(timeredPanelText)
 	completionPanel[canvasIndex].setText(completionPanelText)
-	timerPanel[canvasIndex].setText(timerPanelText)
 
 for i in range(totalCanvases):
 
-#	test = viz.addGUICanvas(pos=timerCanvasPos[i])
+#	test = viz.addGUICanvas(pos=completionCanvasPos[i])
 #	test
-#	timerCanvas[i] = viz.addGUICanvas(pos=timerCanvasPos[i])
-	timerCanvas[i] = viz.addGUICanvas()
-	timerCanvas[i].setMouseStyle(0)
-	timerCanvas[i].alignment(viz.ALIGN_CENTER)
-	timerCanvas[i].setRenderWorld([400,400], [canvasSize,canvasSize])
-
-	timerPanel[i] = vizinfo.InfoPanel(timerInstructions, title='Timer', key=None, icon=False, align=viz.ALIGN_CENTER, parent=timerCanvas[i])
-
 #	completionCanvas[i] = viz.addGUICanvas(pos=completionCanvasPos[i])
-#	completionCanvas[i].setEuler(completionCanvasEuler[i])
 	completionCanvas[i] = viz.addGUICanvas()
-#	link = viz.link(timerCanvas[i], completionCanvas[i])
-#	link.
-	timerCompletionLink[i] = viz.link(timerCanvas[i], completionCanvas[i])
-	timerCompletionLink[i].preTrans([-timerCompletionSeparation, 0.0, 0.0])
-#	completionCanvas[i].setParent(timerCanvas[i])
-#	completionCanvas[i].setPosition([-timerCompletionSeparation, 0.0, 0.0])
 	completionCanvas[i].setMouseStyle(0)
 	completionCanvas[i].alignment(viz.ALIGN_CENTER)
 	completionCanvas[i].setRenderWorld([400,400], [canvasSize,canvasSize])
 
 	completionPanel[i] = vizinfo.InfoPanel(completionInstructions, title='Completion', key=None, icon=False, align=viz.ALIGN_CENTER, parent=completionCanvas[i])
+
+#	timeredCanvas[i] = viz.addGUICanvas(pos=timeredCanvasPos[i])
+#	timeredCanvas[i].setEuler(timeredCanvasEuler[i])
+#	timeredCanvas[i] = viz.addGUICanvas()
+#	link = viz.link(completionCanvas[i], timeredCanvas[i])
+#	link.
+#	timerCompletionLink[i] = viz.link(completionCanvas[i], timeredCanvas[i])
+#	timerCompletionLink[i].preTrans([-timerCompletionSeparation, 0.0, 0.0])
+#	timeredCanvas[i].setParent(completionCanvas[i])
+#	timeredCanvas[i].setPosition([-timerCompletionSeparation, 0.0, 0.0])
+#	timeredCanvas[i].setMouseStyle(0)
+#	timeredCanvas[i].alignment(viz.ALIGN_CENTER)
+#	timeredCanvas[i].setRenderWorld([400,400], [canvasSize,canvasSize])
+
+#	timeredPanel[i] = vizinfo.InfoPanel(timeredInstructions, title='Completion', key=None, icon=False, align=viz.ALIGN_CENTER, parent=timeredCanvas[i])
 	
 	#positioning and orienting the timer and completion display canvases
-	timerCanvas[i].setPosition(timerCanvasPos[i])
-	timerCanvas[i].setEuler(timerCanvasEuler[i])
+	completionCanvas[i].setPosition(completionCanvasPos[i])
+	completionCanvas[i].setEuler(completionCanvasEuler[i])
 	
-	updateTimerAndCompletionDisplays(i)
+	updateCompletionDisplays(i)
