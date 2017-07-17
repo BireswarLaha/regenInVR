@@ -110,6 +110,7 @@ def startStimTimer():
 	startTimeForStim = int(time.time())
 	print "startTimeForStim = " + str(startTimeForStim)
 	stimTimerRunning = True
+	setCompletionBoardVisibility(False)
 
 def endStimTimer():
 	global startTimeForStim, stimTimerRunning, stimTime
@@ -123,6 +124,7 @@ def endStimTimer():
 		writeData(stimTime)
 		stimTime = 0
 		stimTimerRunning = False
+		setCompletionBoardVisibility(True)
 
 # Initialize window
 viz.setMultiSample(8)
@@ -639,6 +641,12 @@ def setBackgroundVisibility(visibility = False):
 #	painting_van_gogh_black.visible(visibility)
 #
 #	painting_warhol_soup_black.visible(visibility)
+
+def setCompletionBoardVisibility(state = False):
+	global totalCanvases, completionCanvas
+	
+	for i in range(totalCanvases):
+		completionCanvas[i].visible(state)
 
 videoToPlay = None
 def onSensorUp(e):
