@@ -65,7 +65,7 @@ else:
 
 #write out data to the file at the start and end of stimulation, and flush the cache!
 def writeData(lastStimTime = 0):
-	global ID, dataDir, dataFile, videoListIndex
+	global ID, dataDir, dataFile, videoListIndex, stimTimeCalc
 	print "Updating datafile"
 	#open data file for reading
 	f = open(dataDir + dataFile, 'rb')
@@ -105,7 +105,8 @@ def writeData(lastStimTime = 0):
 startTimeForStim = 0
 stimTimerRunning = False
 def startStimTimer():
-	global elapsedTime, stimTimerRunning, startTimeForStim
+	global elapsedTime, stimTimerRunning, startTimeForStim, stimTimeCalc
+	stimTimeCalc = 0
 	print "stim timer start"
 	startTimeForStim = int(time.time())
 	print "startTimeForStim = " + str(startTimeForStim)
@@ -113,7 +114,7 @@ def startStimTimer():
 	setCompletionBoardVisibility(False)
 
 def endStimTimer():
-	global startTimeForStim, stimTimerRunning, stimTime
+	global startTimeForStim, stimTimerRunning, stimTime, stimTimeCalc
 	if stimTimerRunning:
 		print "ending stim timer and updating data file"
 		print "startTimeForStim inside endStimTimer = " + str(startTimeForStim)
@@ -121,8 +122,11 @@ def endStimTimer():
 		stimTime = currentTime - startTimeForStim
 		print "currentTime = " + str(currentTime)
 		print "stim lasted for " + str(stimTime) + " secs"
-		writeData(stimTime)
+		print "stimTimeCalc " + str(stimTimeCalc) + " secs"
+#		writeData(stimTime)
+		writeData(stimTimeCalc)
 		stimTime = 0
+		stimTimeCalc = 0
 		stimTimerRunning = False
 		setCompletionBoardVisibility(True)
 
@@ -688,8 +692,8 @@ def getCompletion_ONLY_FromVisualStimFunction():
 lowerCompletionThresholdForDenserStim = 30
 upperCompletionThresholdForDenserStim = 70
 def visualStim(controller):
-	global theControllerToUse, trackpadState, stimulate, videoListIndex, paintingIndex, sparseVideoPlaceholder, denseVideoPlaceholder, videoLoopsRemaining
-	global leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, vidLoopsRemaining, videoToPlay, lowerTimeThresholdForStimCycleCompletion
+	global theControllerToUse, trackpadState, stimulate, videoListIndex, paintingIndex, sparseVideoPlaceholder, denseVideoPlaceholder, videoLoopsRemaining, stimTimeCalc
+	global leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, vidLoopsRemaining, videoToPlay, lowerTimeThresholdForStimCycleCompletion, timeToStartPlayingTheVideoFrom
 
 	completion = getCompletion_ONLY_FromVisualStimFunction()
 	print "Completion: " + str(completion) + "%"
@@ -703,30 +707,41 @@ def visualStim(controller):
 
 	videoRenderingBoard.texture(videoToPlay)
 	
+	print "Loops remaining: " + str(vidLoopsRemaining)
+	print "Playing the stim video from: " + str(timeToStartPlayingTheVideoFrom[videoListIndex]) + " secs"
+	#setting the time of the video to the number of seconds at which the last cycle ended
+	videoToPlay.setTime(timeToStartPlayingTheVideoFrom[videoListIndex])
 	videoToPlay.play()
 	yield viztask.waitAny([viztask.waitMediaEnd(videoToPlay), viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)])
 	
 	paintings[paintingIndex].texblend((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops, '', 1)
-	print "Loops remaining: " + str(vidLoopsRemaining)
 
 	if (videoToPlay.getState() == viz.MEDIA_RUNNING):
 		#the stop of the stimulation is triggered here from the release of the controller trackpad ... need to call the stim end timer
-		durationPlayed = videoToPlay.getTime()
-		print "Trackpad released. durationPlayed = " + str(durationPlayed)
+		durationPlayed = int(videoToPlay.getTime())
 		totalDuration = videoToPlay.getDuration()
-		print "durationPlayed = " + str(durationPlayed) + "; totalDuration = " + str(totalDuration)
-		if (float(durationPlayed/totalDuration) > lowerTimeThresholdForStimCycleCompletion):
-			vidLoopsRemaining -= 1
-			videoLoopsRemaining[videoListIndex] = vidLoopsRemaining
-		else:
-			print "Stimulation completed in this cycle: " + str(float((durationPlayed*100.0)/totalDuration)) + "% only. So this cycle will be repeated."
+		print "Trackpad released. durationPlayed = " + str(durationPlayed) + " secs; totalDuration = " + str(totalDuration) + " secs"
+#		if (float(durationPlayed/totalDuration) > lowerTimeThresholdForStimCycleCompletion):
+#			vidLoopsRemaining -= 1
+#			videoLoopsRemaining[videoListIndex] = vidLoopsRemaining
+#		else:
+#			print "Stimulation completed in this cycle: " + str(float((durationPlayed*100.0)/totalDuration)) + "% only. So this cycle will be repeated."
 		videoToPlay.stop()
+		print "Stimulation completed for this round of stim video: " + str(float((durationPlayed*100.0)/totalDuration)) + "%"
+		
+		stimTimeCalc += durationPlayed - timeToStartPlayingTheVideoFrom[videoListIndex]
+		timeToStartPlayingTheVideoFrom[videoListIndex] = durationPlayed
+		
 		endStimTimer()
 		if vidLoopsRemaining > 0: printMessageAtTheStartOfCycle()
 	else:
 		#the stop of the stimulation is triggered here from the end of the stimulation video
 		vidLoopsRemaining -= 1
 		videoLoopsRemaining[videoListIndex] = vidLoopsRemaining
+
+		stimTimeCalc += videoToPlay.getDuration() - timeToStartPlayingTheVideoFrom[videoListIndex]
+		timeToStartPlayingTheVideoFrom[videoListIndex] = 0
+
 		if vidLoopsRemaining > 0:
 			#there is at least another round of stimulation remaining from the same stimulation video; initializing the next round now ...
 			viztask.schedule(visualStim(controller))
@@ -824,9 +839,12 @@ denseVideoPaths = [None] * numberOfVideos
 sparseVideoPlaceholder = [None] * numberOfVideos
 denseVideoPlaceholder = [None] * numberOfVideos
 videoLoopsRemaining = [None] * numberOfVideos	#this stores the number of loops for each video remaining to be played, which is totalLengthOfEachStimulationSessionInSeconds/video.getDuration()
+timeToStartPlayingTheVideoFrom = [None] * numberOfVideos		#this stores the number of seconds into the video from where it should start playing in the next cycle
 
 if 'experimental condition' == choices[experimentalConditionChosen]:
 	if 'dense' == stimuliChoices[stimChosen]:
+		#In the "dense" experimental condition, during the first 30% and the last 30% of time, the _dense vids are shown, 
+		#and the _densest videos are shown during the middle 40% of time.
 		sparseVideoPaths[0] = 'media/onParasol1_dense.avi'
 		sparseVideoPaths[1] = 'media/offParasol1_dense.avi'
 		sparseVideoPaths[2] = 'media/onMidget1_dense.avi'
@@ -849,27 +867,29 @@ if 'experimental condition' == choices[experimentalConditionChosen]:
 		denseVideoPaths[8] = 'media/offMidget2_densest.avi'
 		denseVideoPaths[9] = 'media/sbc2_densest.avi'
 	else:
-		sparseVideoPaths[0] = 'media/onParasol1_sparse.avi'
-		sparseVideoPaths[1] = 'media/offParasol1_sparse.avi'
-		sparseVideoPaths[2] = 'media/onMidget1_sparse.avi'
-		sparseVideoPaths[3] = 'media/offMidget1_sparse.avi'
-		sparseVideoPaths[4] = 'media/sbc1_sparse.avi'
-		sparseVideoPaths[5] = 'media/onParasol2_sparse.avi'
-		sparseVideoPaths[6] = 'media/offParasol2_sparse.avi'
-		sparseVideoPaths[7] = 'media/onMidget2_sparse.avi'
-		sparseVideoPaths[8] = 'media/offMidget2_sparse.avi'
-		sparseVideoPaths[9] = 'media/sbc2_sparse.avi'
+		#In the "sparse" experimental condition, during the first 30% and the last 30% of time, the _sparsest vids are shown, 
+		#and the _sparse videos are shown during the middle 40% of time.
+		sparseVideoPaths[0] = 'media/onParasol1_sparsest.avi'
+		sparseVideoPaths[1] = 'media/offParasol1_sparsest.avi'
+		sparseVideoPaths[2] = 'media/onMidget1_sparsest.avi'
+		sparseVideoPaths[3] = 'media/offMidget1_sparsest.avi'
+		sparseVideoPaths[4] = 'media/sbc1_sparsest.avi'
+		sparseVideoPaths[5] = 'media/onParasol2_sparsest.avi'
+		sparseVideoPaths[6] = 'media/offParasol2_sparsest.avi'
+		sparseVideoPaths[7] = 'media/onMidget2_sparsest.avi'
+		sparseVideoPaths[8] = 'media/offMidget2_sparsest.avi'
+		sparseVideoPaths[9] = 'media/sbc2_sparsest.avi'
 
-		denseVideoPaths[0] = 'media/onParasol1_dense.avi'
-		denseVideoPaths[1] = 'media/offParasol1_dense.avi'
-		denseVideoPaths[2] = 'media/onMidget1_dense.avi'
-		denseVideoPaths[3] = 'media/offMidget1_dense.avi'
-		denseVideoPaths[4] = 'media/sbc1_dense.avi'
-		denseVideoPaths[5] = 'media/onParasol2_dense.avi'
-		denseVideoPaths[6] = 'media/offParasol2_dense.avi'
-		denseVideoPaths[7] = 'media/onMidget2_dense.avi'
-		denseVideoPaths[8] = 'media/offMidget2_dense.avi'
-		denseVideoPaths[9] = 'media/sbc2_dense.avi'
+		denseVideoPaths[0] = 'media/onParasol1_sparse.avi'
+		denseVideoPaths[1] = 'media/offParasol1_sparse.avi'
+		denseVideoPaths[2] = 'media/onMidget1_sparse.avi'
+		denseVideoPaths[3] = 'media/offMidget1_sparse.avi'
+		denseVideoPaths[4] = 'media/sbc1_sparse.avi'
+		denseVideoPaths[5] = 'media/onParasol2_sparse.avi'
+		denseVideoPaths[6] = 'media/offParasol2_sparse.avi'
+		denseVideoPaths[7] = 'media/onMidget2_sparse.avi'
+		denseVideoPaths[8] = 'media/offMidget2_sparse.avi'
+		denseVideoPaths[9] = 'media/sbc2_sparse.avi'
 else:
 	sparseVideoPaths[0] = 'media/whiteNoise.avi'
 	sparseVideoPaths[1] = 'media/whiteNoise.avi'
@@ -900,6 +920,7 @@ for i in range(10):
 	print "sparseVideoPlaceholder[" + str(i) + "].getDuration() = " + str(sparseVideoPlaceholder[i].getDuration())
 	print "denseVideoPlaceholder[" + str(i) + "].getDuration() = " + str(denseVideoPlaceholder[i].getDuration())
 	videoLoopsRemaining[i] = totalLengthOfEachStimulationSessionInSeconds/sparseVideoPlaceholder[i].getDuration()
+	timeToStartPlayingTheVideoFrom[i] = 0
 
 lengthOfEachStimVideo = 0
 if 'experimental condition' == choices[experimentalConditionChosen]:
