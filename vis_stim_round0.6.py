@@ -114,7 +114,7 @@ def startStimTimer():
 	setCompletionBoardVisibility(False)
 
 def endStimTimer():
-	global startTimeForStim, stimTimerRunning, stimTime, stimTimeCalc
+	global startTimeForStim, stimTimerRunning, stimTime, stimTimeCalc, selectedPaintingIndex
 	if stimTimerRunning:
 		print "ending stim timer and updating data file"
 #		print "startTimeForStim inside endStimTimer = " + str(startTimeForStim)
@@ -125,6 +125,7 @@ def endStimTimer():
 		print "***stimTimeCalc " + str(stimTimeCalc) + " secs"
 #		writeData(stimTime)
 		writeData(stimTimeCalc)
+		updateCompletionDisplay(selectedPaintingIndex)
 		stimTime = 0
 		stimTimeCalc = 0
 		stimTimerRunning = False
@@ -496,6 +497,8 @@ def HighlightTask(controller):
 previousPaintingName = None
 previousVidListIndex = -1
 videoListIndex = None
+selectedPaintingIndex = -1
+
 def JumpTask(controller):
 	"""Task that users trigger button press/release to jump to painting locations"""
 	while True:
@@ -533,7 +536,7 @@ def JumpTask(controller):
 
 			global itemIndexWithNoStimulation, paintingNames, canvasForStim, canvasWithoutStim, canvasForInitMsg, paintingsDictionary, dictionaryMappingPaintingNamesToVideoListIndex, sparseVideoPaths, fader
 			global leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, totalLengthOfEachStimulationSessionInSeconds, videoLoopsRemaining, maxNumberOfVideoLoops, trackpadState
-			global paintings, stimulate, videoListIndex, paintingIndex, previousPaintingName, previousVidListIndex
+			global paintings, stimulate, videoListIndex, selectedPaintingIndex, previousPaintingName, previousVidListIndex
 
 			# Hide instruction canvasForInitMsg after first jump
 			canvasForInitMsg.visible(False)
@@ -543,7 +546,7 @@ def JumpTask(controller):
 			normalizedDirectionToShiftTheCanvas = vector3.Vec3ToVizardFloatList(vector3.vizardFloatListToVec3([-info.normal[0], 0.0, -info.normal[2]]).normalize())
 
 			videoListIndex = dictionaryMappingPaintingNamesToVideoListIndex[info.name]
-			paintingIndex = dictionaryMappingPaintingNamesToVideoListIndex[info.name]
+			selectedPaintingIndex = dictionaryMappingPaintingNamesToVideoListIndex[info.name]
 			if videoListIndex > itemIndexWithNoStimulation: videoListIndex -= 1	#this is under the assumption that the indices of the videos associated to the canvases go up from 0 to 10, ignoring the index for the item to be ignored
 			paintingsDictionary[info.name + "_black"].visible(False)
 
@@ -555,7 +558,7 @@ def JumpTask(controller):
 			else:
 				#visual stimulation unavailable or already taken
 				print "\n=========================\nPainting: " + info.name + ". The visual stimulation here is either unavailable, or is complete for this round. Please check other canvases."
-				paintings[paintingIndex].texblend(1.0, '', 1)
+				paintings[selectedPaintingIndex].texblend(1.0, '', 1)
 				stimulate = False
 
 			#show the previous empty canvas if the stimulation is incomplete there
@@ -692,7 +695,7 @@ def getCompletion_ONLY_FromVisualStimFunction():
 lowerCompletionThresholdForDenserStim = 30
 upperCompletionThresholdForDenserStim = 70
 def visualStim(controller):
-	global theControllerToUse, trackpadState, stimulate, videoListIndex, paintingIndex, sparseVideoPlaceholder, denseVideoPlaceholder, videoLoopsRemaining, stimTimeCalc
+	global theControllerToUse, trackpadState, stimulate, videoListIndex, selectedPaintingIndex, sparseVideoPlaceholder, denseVideoPlaceholder, videoLoopsRemaining, stimTimeCalc, maxNumberOfVideoLoops
 	global leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, vidLoopsRemaining, videoToPlay, lowerTimeThresholdForStimCycleCompletion, timeToStartPlayingTheVideoFrom
 
 	completion = getCompletion_ONLY_FromVisualStimFunction()
@@ -714,7 +717,7 @@ def visualStim(controller):
 	videoToPlay.play()
 	yield viztask.waitAny([viztask.waitMediaEnd(videoToPlay), viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)])
 	
-	paintings[paintingIndex].texblend((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops, '', 1)
+	paintings[selectedPaintingIndex].texblend((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops, '', 1)
 
 	if (videoToPlay.getState() == viz.MEDIA_RUNNING):
 		#the stop of the stimulation is triggered here from the release of the controller trackpad ... need to call the stim end timer
@@ -752,7 +755,7 @@ def visualStim(controller):
 
 def onSensorDown(e):
 #	print "e.button1 = " + str(e.button)
-	global theControllerToUse, theControllerNOTtoUse, trackpadState, stimulate, videoListIndex, paintingIndex, videoLoopsRemaining
+	global theControllerToUse, theControllerNOTtoUse, trackpadState, stimulate, videoListIndex, selectedPaintingIndex, videoLoopsRemaining
 	global leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, vidLoopsRemaining, videoToPlay
 
 	if e.object is theControllerToUse:
@@ -1223,23 +1226,28 @@ completionCanvasEuler[10] = [90.0, 0.0, 0.0]
 #videoLoopsRemaining[
 #itemIndexWithNoStimulation
 
-def updateCompletionDisplays(canvasIndex):
-	global maxNumberOfVideoLoops, videoLoopsRemaining, totalLengthOfEachStimulationSessionInSeconds, lengthOfEachStimVideo, completionPanel#, timeredPanel
+def updateCompletionDisplay(canvasIndex = selectedPaintingIndex):
+	global maxNumberOfVideoLoops, videoLoopsRemaining, totalLengthOfEachStimulationSessionInSeconds, lengthOfEachStimVideo, completionPanel, timeToStartPlayingTheVideoFrom
+
+	if canvasIndex == -1: return
 	
 	videoListInd = canvasIndex
 	completion = 100.0
 
 	if videoListInd > itemIndexWithNoStimulation: videoListInd -= 1
-	if canvasIndex != itemIndexWithNoStimulation: completion = (maxNumberOfVideoLoops - videoLoopsRemaining[videoListInd])*100.0/maxNumberOfVideoLoops
-
-	timeElapsed = (3 * 60.0) - (videoLoopsRemaining[videoListInd] * lengthOfEachStimVideo)
+	
 	totalTime = totalLengthOfEachStimulationSessionInSeconds
+	timeElapsed = totalTime - (videoLoopsRemaining[videoListInd] * lengthOfEachStimVideo - timeToStartPlayingTheVideoFrom[videoListInd])	#this is the stim-time that is remaining at this specific stimulation portal
+	if canvasIndex != itemIndexWithNoStimulation:
+		completion = (timeElapsed/totalTime) * 100.0
+#		completion = (maxNumberOfVideoLoops - videoLoopsRemaining[videoListInd])*100.0/maxNumberOfVideoLoops
+	
 
 #	timeredPanelText = str('%0*d' % (3, int(completion))) + "%"
 	completionPanelText = str('%0*d' % (3, int(completion))) + "%: " + str('%0*d' % (3, int(timeElapsed))) + " of " + str(totalTime) + " seconds"
 
 #	print "for canvasIndex " + str(canvasIndex) + ", completion: " + timeredPanelText
-	print "for canvasIndex " + str(canvasIndex) + ", timer: " + completionPanelText
+	print "for canvasIndex " + str(canvasIndex) + ", completion: " + completionPanelText
 	
 #	timeredPanel[canvasIndex].setText(timeredPanelText)
 	completionPanel[canvasIndex].setText(completionPanelText)
@@ -1275,4 +1283,4 @@ for i in range(totalCanvases):
 	completionCanvas[i].setPosition(completionCanvasPos[i])
 	completionCanvas[i].setEuler(completionCanvasEuler[i])
 	
-	updateCompletionDisplays(i)
+	updateCompletionDisplay(i)
