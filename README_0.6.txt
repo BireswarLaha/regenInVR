@@ -4,7 +4,7 @@ Tell the participants:
 
 For the research co-ordinator:
 1. The white noise video is on the desktop. Rest everything is on github.
-2. On github, the branch that should be used in this study is titled "VERSION LOCKDOWN 0.5".
+2. On github, the branch that should be used in this study is titled "VERSION LOCKDOWN 0.6".
 3. General outline:
 a. Make sure all hardware connections are right - Vive basestations are powered up, vive is connected to the laptop.
 b. Startup the laptop and login to your account.
