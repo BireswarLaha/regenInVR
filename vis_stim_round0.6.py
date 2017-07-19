@@ -66,7 +66,7 @@ else:
 #write out data to the file at the start and end of stimulation, and flush the cache!
 def writeData(lastStimTime = 0):
 	global ID, dataDir, dataFile, videoListIndex, stimTimeCalc
-	print "Updating datafile"
+	print "Updating datafile now ..."
 	#open data file for reading
 	f = open(dataDir + dataFile, 'rb')
 	
@@ -100,7 +100,7 @@ def writeData(lastStimTime = 0):
 	writer.writerows(lines)
 	f.flush()
 
-	print "Datafile updated"
+	print "datafile updated."
 
 startTimeForStim = 0
 stimTimerRunning = False
@@ -117,12 +117,12 @@ def endStimTimer():
 	global startTimeForStim, stimTimerRunning, stimTime, stimTimeCalc
 	if stimTimerRunning:
 		print "ending stim timer and updating data file"
-		print "startTimeForStim inside endStimTimer = " + str(startTimeForStim)
+#		print "startTimeForStim inside endStimTimer = " + str(startTimeForStim)
 		currentTime = int(time.time())
 		stimTime = currentTime - startTimeForStim
 		print "currentTime = " + str(currentTime)
-		print "stim lasted for " + str(stimTime) + " secs"
-		print "stimTimeCalc " + str(stimTimeCalc) + " secs"
+		print "time spent between the trackpad press and release " + str(stimTime) + " secs"
+		print "***stimTimeCalc " + str(stimTimeCalc) + " secs"
 #		writeData(stimTime)
 		writeData(stimTimeCalc)
 		stimTime = 0
@@ -677,10 +677,10 @@ viz.callback(viz.SENSOR_UP_EVENT,onSensorUp)
 lowerTimeThresholdForStimCycleCompletion = 0.8
 
 def printMessageAtTheStartOfCycle():
-	global videoLoopsRemaining, videoListIndex, sparseVideoPlaceholder, sparseVideoPaths
+	global videoLoopsRemaining, videoListIndex, lengthOfEachStimVideo
 
-	print "\nStimulation cycles remaining: " + str(videoLoopsRemaining[videoListIndex]) + "; each of duration:" + str((sparseVideoPlaceholder[videoListIndex]).getDuration())
-	print "Press the trackpad to play the stimulation video: " + sparseVideoPaths[videoListIndex]
+	print "\nStimulation cycles remaining: " + str(int(videoLoopsRemaining[videoListIndex])) + ", each of duration " + str(lengthOfEachStimVideo)
+	print "Press the trackpad to play the stimulation video now ..."# + sparseVideoPaths[videoListIndex]
 
 def printMessageAtTheEndOfCycle():
 	print "Visual stimulation is complete for this round. Please check other canvases.\n"
@@ -707,7 +707,7 @@ def visualStim(controller):
 
 	videoRenderingBoard.texture(videoToPlay)
 	
-	print "Loops remaining: " + str(vidLoopsRemaining)
+	print "Loops remaining: " + str(int(vidLoopsRemaining))
 	print "Playing the stim video from: " + str(timeToStartPlayingTheVideoFrom[videoListIndex]) + " secs"
 	#setting the time of the video to the number of seconds at which the last cycle ended
 	videoToPlay.setTime(timeToStartPlayingTheVideoFrom[videoListIndex])
@@ -720,7 +720,7 @@ def visualStim(controller):
 		#the stop of the stimulation is triggered here from the release of the controller trackpad ... need to call the stim end timer
 		durationPlayed = int(videoToPlay.getTime())
 		totalDuration = videoToPlay.getDuration()
-		print "Trackpad released. durationPlayed = " + str(durationPlayed) + " secs; totalDuration = " + str(totalDuration) + " secs"
+		print "Trackpad released. durationPlayed for this round = " + str(durationPlayed) + " secs; totalDuration = " + str(totalDuration) + " secs"
 #		if (float(durationPlayed/totalDuration) > lowerTimeThresholdForStimCycleCompletion):
 #			vidLoopsRemaining -= 1
 #			videoLoopsRemaining[videoListIndex] = vidLoopsRemaining
@@ -729,7 +729,7 @@ def visualStim(controller):
 		videoToPlay.stop()
 		print "Stimulation completed for this round of stim video: " + str(float((durationPlayed*100.0)/totalDuration)) + "%"
 		
-		stimTimeCalc += durationPlayed - timeToStartPlayingTheVideoFrom[videoListIndex]
+		stimTimeCalc += int(durationPlayed - timeToStartPlayingTheVideoFrom[videoListIndex])
 		timeToStartPlayingTheVideoFrom[videoListIndex] = durationPlayed
 		
 		endStimTimer()
@@ -739,7 +739,7 @@ def visualStim(controller):
 		vidLoopsRemaining -= 1
 		videoLoopsRemaining[videoListIndex] = vidLoopsRemaining
 
-		stimTimeCalc += videoToPlay.getDuration() - timeToStartPlayingTheVideoFrom[videoListIndex]
+		stimTimeCalc += int(videoToPlay.getDuration() - timeToStartPlayingTheVideoFrom[videoListIndex])
 		timeToStartPlayingTheVideoFrom[videoListIndex] = 0
 
 		if vidLoopsRemaining > 0:
