@@ -112,9 +112,11 @@ def startStimTimer():
 	print "startTimeForStim = " + str(startTimeForStim)
 	stimTimerRunning = True
 	setCompletionBoardVisibility(False)
+	videoRenderingBoard.visible(True)
+	setBackgroundVisibility(False)
 
 def endStimTimer():
-	global startTimeForStim, stimTimerRunning, stimTime, stimTimeCalc, selectedPaintingIndex
+	global startTimeForStim, stimTimerRunning, stimTime, stimTimeCalc, selectedPaintingIndex, videoRenderingBoard
 	if stimTimerRunning:
 		print "ending stim timer and updating data file"
 #		print "startTimeForStim inside endStimTimer = " + str(startTimeForStim)
@@ -130,6 +132,8 @@ def endStimTimer():
 		stimTimeCalc = 0
 		stimTimerRunning = False
 		setCompletionBoardVisibility(True)
+		videoRenderingBoard.visible(False)
+		setBackgroundVisibility(True)
 
 # Initialize window
 viz.setMultiSample(8)
@@ -673,6 +677,7 @@ def onSensorUp(e):
 #				if (videoToPlay.getState() == viz.MEDIA_RUNNING): videoToPlay.stop()
 
 	elif e.object is theControllerNOTtoUse:
+#	if e.object is theControllerNOTtoUse:
 		print "\nPlease use the other controller.\n"
 
 viz.callback(viz.SENSOR_UP_EVENT,onSensorUp)
@@ -767,8 +772,8 @@ def onSensorDown(e):
 			if vidLoopsRemaining > 0:
 #				leftVideoRenderingBoard.visible(True)
 #				rightVideoRenderingBoard.visible(True)
-				videoRenderingBoard.visible(True)
-				setBackgroundVisibility(False)
+#				videoRenderingBoard.visible(True)
+#				setBackgroundVisibility(False)
 
 #				leftVideoRenderingBoard.texture(videoToPlay)
 #				rightVideoRenderingBoard.texture(videoToPlay)
@@ -781,7 +786,6 @@ def onSensorDown(e):
 	
 	elif e.object is theControllerNOTtoUse:
 		print "\nPlease use the other controller.\n"
-			
 
 viz.callback(viz.SENSOR_DOWN_EVENT,onSensorDown)
 
@@ -1237,14 +1241,20 @@ def updateCompletionDisplay(canvasIndex = selectedPaintingIndex):
 	if videoListInd > itemIndexWithNoStimulation: videoListInd -= 1
 	
 	totalTime = totalLengthOfEachStimulationSessionInSeconds
-	timeElapsed = totalTime - (videoLoopsRemaining[videoListInd] * lengthOfEachStimVideo - timeToStartPlayingTheVideoFrom[videoListInd])	#this is the stim-time that is remaining at this specific stimulation portal
+	
 	if canvasIndex != itemIndexWithNoStimulation:
+		timeElapsed = totalTime - (videoLoopsRemaining[videoListInd] * lengthOfEachStimVideo - timeToStartPlayingTheVideoFrom[videoListInd])	#this is the stim-time that is remaining at this specific stimulation portal
 		completion = (timeElapsed/totalTime) * 100.0
+	else:
+		timeElapsed = totalTime
 #		completion = (maxNumberOfVideoLoops - videoLoopsRemaining[videoListInd])*100.0/maxNumberOfVideoLoops
 	
 
 #	timeredPanelText = str('%0*d' % (3, int(completion))) + "%"
-	completionPanelText = str('%0*d' % (3, int(completion))) + "%: " + str('%0*d' % (3, int(timeElapsed))) + " of " + str(totalTime) + " seconds"
+	if int(completion) == 100:
+		completionPanelText = str('%0*d' % (3, int(completion))) + "%"
+	else:
+		completionPanelText = str('%0*d' % (3, int(completion))) + "%: " + str('%0*d' % (3, int(timeElapsed))) + " of " + str(totalTime) + " seconds"
 
 #	print "for canvasIndex " + str(canvasIndex) + ", completion: " + timeredPanelText
 	print "for canvasIndex " + str(canvasIndex) + ", completion: " + completionPanelText
