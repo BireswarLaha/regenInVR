@@ -695,13 +695,16 @@ def printMessageAtTheEndOfCycle():
 
 def getCompletion_ONLY_FromVisualStimFunction():
 	global maxNumberOfVideoLoops, vidLoopsRemaining, videoListIndex
-	return (maxNumberOfVideoLoops - vidLoopsRemaining)*100.0/maxNumberOfVideoLoops
+	global totalLengthOfEachStimulationSessionInSeconds, videoLoopsRemaining, lengthOfEachStimVideo, timeToStartPlayingTheVideoFrom
+#	return (maxNumberOfVideoLoops - vidLoopsRemaining)*100.0/maxNumberOfVideoLoops
+	return int(((totalLengthOfEachStimulationSessionInSeconds - (videoLoopsRemaining[videoListIndex] * lengthOfEachStimVideo - timeToStartPlayingTheVideoFrom[videoListIndex]))/totalLengthOfEachStimulationSessionInSeconds) * 100.0)
 
 lowerCompletionThresholdForDenserStim = 30
 upperCompletionThresholdForDenserStim = 70
 def visualStim(controller):
 	global theControllerToUse, trackpadState, stimulate, videoListIndex, selectedPaintingIndex, sparseVideoPlaceholder, denseVideoPlaceholder, videoLoopsRemaining, stimTimeCalc, maxNumberOfVideoLoops
 	global leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, vidLoopsRemaining, videoToPlay, lowerTimeThresholdForStimCycleCompletion, timeToStartPlayingTheVideoFrom
+	global totalLengthOfEachStimulationSessionInSeconds, lengthOfEachStimVideo
 
 	completion = getCompletion_ONLY_FromVisualStimFunction()
 	print "Completion: " + str(completion) + "%"
@@ -722,8 +725,6 @@ def visualStim(controller):
 	videoToPlay.play()
 	yield viztask.waitAny([viztask.waitMediaEnd(videoToPlay), viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)])
 	
-	paintings[selectedPaintingIndex].texblend((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops, '', 1)
-
 	if (videoToPlay.getState() == viz.MEDIA_RUNNING):
 		#the stop of the stimulation is triggered here from the release of the controller trackpad ... need to call the stim end timer
 		durationPlayed = int(videoToPlay.getTime())
@@ -757,6 +758,10 @@ def visualStim(controller):
 			#there are no more cycles of stimulation remaining from the same stimulation video; this is the end of this stimulation cycle ... need to call the stim end timer
 			printMessageAtTheEndOfCycle()
 			endStimTimer()
+
+#	paintings[selectedPaintingIndex].texblend((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops, '', 1)
+	print "Visibility/completion of this image is at " + str(getCompletion_ONLY_FromVisualStimFunction()) + "%\n---------------------"
+	paintings[selectedPaintingIndex].texblend(completion, '', 1)
 
 def onSensorDown(e):
 #	print "e.button1 = " + str(e.button)
