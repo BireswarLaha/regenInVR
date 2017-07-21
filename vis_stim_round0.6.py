@@ -761,7 +761,7 @@ def visualStim(controller):
 
 #	paintings[selectedPaintingIndex].texblend((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops, '', 1)
 	print "Visibility/completion of this image is at " + str(getCompletion_ONLY_FromVisualStimFunction()) + "%\n---------------------"
-	paintings[selectedPaintingIndex].texblend(completion, '', 1)
+	paintings[selectedPaintingIndex].texblend(completion/100.0, '', 1)
 
 def onSensorDown(e):
 #	print "e.button1 = " + str(e.button)
