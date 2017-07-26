@@ -311,18 +311,18 @@ for i in range(numberOfPaintings):
 #painting_van_gogh.visible(False)
 #painting_warhol_soup.visible(False)
 #
-#painting_birth_of_venus_black = vizfx.addChild('models/painting_birth-of-venus_black.osgb')
-painting_birth_of_venus_black = vizfx.addChild('models/painting_birth-of-venus.osgb')
-painting_birth_of_venus_black.visible(False)
+painting_birth_of_venus_black = vizfx.addChild('models/painting_birth-of-venus_black.osgb')
+#painting_birth_of_venus_black = vizfx.addChild('models/painting_birth-of-venus.osgb')
+#painting_birth_of_venus_black.visible(False)
 #paintingsDictionary['painting_birth-of-venus_black'] = painting_birth_of_venus_black
 #paintingsDictionary['painting_birth-of-venus_black'] = paintings[0]
 paintingsDictionary[textureNameForPainting[0]] = paintings[0]
 #paintingsDictionary['painting_birth-of-venus_black'].visible(False)
 paintingsInTheBackground[0 + numberOfPaintings] = painting_birth_of_venus_black
 
-#painting_dali_memory_black = vizfx.addChild('models/painting_dali-memory_black.osgb')
-painting_dali_memory_black = vizfx.addChild('models/painting_dali-memory.osgb')
-painting_dali_memory_black.visible(False)
+painting_dali_memory_black = vizfx.addChild('models/painting_dali-memory_black.osgb')
+#painting_dali_memory_black = vizfx.addChild('models/painting_dali-memory.osgb')
+#painting_dali_memory_black.visible(False)
 #paintingsDictionary['painting_dali-memory_black'] = painting_dali_memory_black
 #paintingsDictionary['painting_dali-memory_black'] = paintings[1]
 paintingsDictionary[textureNameForPainting[1]] = paintings[1]
@@ -529,10 +529,12 @@ def HighlightPainting(name, mode):
 
 		if mode:
 #			gallery.apply(highlightEffect, node=name)
-			paintingsDictionary[nameNew].apply(highlightEffect, node=name)
-		else:
+			paintingsDictionary[nameNew].apply(highlightEffect, node=paintingsDictionary[nameNew])
+#			paintingsDictionary[nameNew].apply(highlightEffect, node=name)
+#		else:
 #			gallery.unapply(highlightEffect, node=name)
-			paintingsDictionary[nameNew].unapply(highlightEffect, node=name)
+			paintingsDictionary[nameNew].unapply(highlightEffect, node=paintingsDictionary[nameNew])
+#			paintingsDictionary[nameNew].unapply(highlightEffect, node=name)
 
 def HighlightTask(controller):
 	"""Task that highlights jump locations pointed at by controller"""
@@ -548,18 +550,18 @@ def HighlightTask(controller):
 			# Intersect pointer with scene
 			info = IntersectController(controller)
 			
-			if ((info.name != "drawable") and (info.name != "whitewall") and (info.name != "frame")):
-				print "name of object intersected with = " + str(info.name)
+#			if ((info.name != "drawable") and (info.name != "whitewall") and (info.name != "frame")):
+#				print "name of object intersected with = " + str(info.name)
 				
 			node_name = ''
 #			print "info.object = " + str(info.object)
 			if info.object in listOfPaintings:
-				print "intersected with " + str(info.object.name)
+#				print "intersected with " + str(info.object.name)
 			
 			# Check if name is a jump location painting
 #			node_name = info.name if info.name in JUMP_LOCATIONS else ''
 				node_name = info.object.name if info.object.name in JUMP_LOCATIONS else ''
-				print "node_name = " + str(node_name)
+#				print "node_name = " + str(node_name)
 
 			# Update highlight state if selected painting changed
 			if last_highlight != node_name:
