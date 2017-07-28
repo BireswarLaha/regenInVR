@@ -264,7 +264,8 @@ for i in range(numberOfPaintings):
 	paintings[i].setEuler(eulerOfTex[i])
 	paintingsInTheBackground[i] = paintings[i]
 	listOfPaintings.append(paintings[i])
-	print "name of this tex quad node = " + str(paintingsInTheBackground[i].getNodeNames())
+	paintings[i].visible(False)
+#	print "name of this tex quad node = " + str(paintingsInTheBackground[i].getNodeNames())
 
 #painting_birth_of_venus = vizfx.addChild('models/painting_birth-of-venus.osgb')
 #paintingsDictionary['painting_birth-of-venus'] = painting_birth_of_venus
@@ -384,7 +385,7 @@ paintingsInTheBackground[7 + numberOfPaintings] = painting_scream_black
 
 painting_starry_night_black = vizfx.addChild('models/painting_starry-night_black.osgb')
 #painting_starry_night_black = vizfx.addChild('models/painting_starry-night.osgb')
-#painting_starry_night_black.visible(False)
+painting_starry_night_black.visible(False)
 paintingsDictionary['painting_starry-night_black'] = painting_starry_night_black
 #paintingsDictionary['painting_starry-night_black'] = paintings[8]
 #paintingsDictionary[textureNameForPainting[8]] = paintings[8]
@@ -531,7 +532,7 @@ def HighlightPainting(name, mode):
 #			gallery.apply(highlightEffect, node=name)
 #			paintingsDictionary[nameNew].apply(highlightEffect, node=paintingsDictionary[nameNew])
 			paintingsDictionary[nameNew].apply(highlightEffect, node=name)
-#		else:
+		else:
 #			gallery.unapply(highlightEffect, node=name)
 #			paintingsDictionary[nameNew].unapply(highlightEffect, node=paintingsDictionary[nameNew])
 			paintingsDictionary[nameNew].unapply(highlightEffect, node=name)
@@ -649,8 +650,8 @@ def JumpTask(controller):
 				stimulate = False
 
 			#show the previous empty canvas if the stimulation is incomplete there
-			if (previousPaintingName is not None) and (previousVidListIndex != -1) and (previousPaintingName != paintingNames[itemIndexWithNoStimulation]) and (videoLoopsRemaining[previousVidListIndex] > 0):	#stimulation is not complete at the previous canvas
-				paintingsDictionary[previousPaintingName + "_black"].visible(True)
+#			if (previousPaintingName is not None) and (previousVidListIndex != -1) and (previousPaintingName != paintingNames[itemIndexWithNoStimulation]) and (videoLoopsRemaining[previousVidListIndex] > 0):	#stimulation is not complete at the previous canvas
+#				paintingsDictionary[previousPaintingName + "_black"].visible(True)
 			previousPaintingName = info.name
 			previousVidListIndex = videoListIndex
 
@@ -704,15 +705,15 @@ def setBackgroundVisibility(visibility = False):
 	if theControllerToUse is not None: theControllerToUse.model.visible(visibility)
 	if theControllerNOTtoUse is not None: theControllerNOTtoUse.model.visible(visibility)
 	
-	if visibility == False:
-		#save the current visibility in a global array, and hide all paintingsInTheBackground
-		for i in range(numberOfPaintings * 2):
-			visibilityArray[i] = paintingsInTheBackground[i].getVisible()
-			paintingsInTheBackground[i].visible(False)
-	else:
-		for i in range(numberOfPaintings * 2):
-#			print "i = " + str(i)
-			if visibilityArray[i] is not None: paintingsInTheBackground[i].visible(visibilityArray[i])
+#	if visibility == False:
+#		#save the current visibility in a global array, and hide all paintingsInTheBackground
+#		for i in range(numberOfPaintings * 2):
+#			visibilityArray[i] = paintingsInTheBackground[i].getVisible()
+#			paintingsInTheBackground[i].visible(False)
+#	else:
+#		for i in range(numberOfPaintings * 2):
+##			print "i = " + str(i)
+#			if visibilityArray[i] is not None: paintingsInTheBackground[i].visible(visibilityArray[i])
 
 #	painting_birth_of_venus_black.visible(visibility)
 #
@@ -1382,3 +1383,73 @@ for i in range(totalCanvases):
 	completionCanvas[i].setEuler(completionCanvasEuler[i])
 	
 	updateCompletionDisplay(i)
+
+
+#testing for transparency below
+gallery.visible(False)
+#starry_night_black = vizfx.addChild('models/painting_starry-night_black.osgb')
+#starry_night = vizfx.addChild('models/painting_starry-night.osgb')
+#
+#starry_night_black.drawOrder(0)
+#starry_night.drawOrder(1)
+#
+#starry_night.enable(viz.BLEND)
+#starry_night.blendFunc(viz.GL_SRC_ALPHA, viz.GL_ONE_MINUS_SRC_ALPHA)
+
+#viz.enable(viz.ALPHA_TEST)
+#starry_night.alphaFunc(viz.GL_LESS)
+#starry_night.alpha(0.1)
+
+starry_night = vizfx.addChild('models/painting_starry-night_blend.osgb')
+#logo = viz.addChild('logo.ive')
+#logo.visible(False)
+#logo.setPosition(starry_night.getPosition())
+#tex1 = viz.addTexture('brick.jpg', wrap=viz.REPEAT)
+#tex2 = viz.addTexture('gb_noise.jpg', wrap=viz.REPEAT)
+
+# Create shader effect that blends textures and applies to diffuse color
+code = """
+Effect "Texture Blend" {
+
+	Float BlendAmount { value 0 }
+	Texture2D Texture1 { unit 0 }
+	Texture2D Texture2 { unit 1 }
+
+	Shader {
+
+		BEGIN Material
+		m.diffuse = mix( texture2D( Texture1, uvTexture1).rgb, texture2D( Texture2, uvTexture2).rgb, BlendAmount);
+		END
+
+	}
+
+}
+"""
+texBlendEffect = viz.addEffect(code)
+
+# Apply the effect to the models
+starry_night.apply(texBlendEffect)
+
+def SetBlendAmount(pos, model):
+	#Set the value of the blend amount property
+	model.setUniformFloat('BlendAmount', pos)
+
+# Create sliders to control the blend amount for each object
+slider1 = viz.addSlider(pos=[0.75,0.1,0])
+vizact.onslider(slider1, SetBlendAmount, starry_night)
+
+
+#starry_night.texture(tex1)
+#starry_night.texture(tex2,'',1)
+#blend = viz.addFragmentProgram('multitexblend.fp')
+#starry_night.apply(blend)
+#
+#blend.param(0,0.0)
+#
+#slider = viz.addSlider()
+#slider.setPosition(0.5,0.1)
+#
+#def blendTextures(pos):
+#	blend.param(0,pos)
+#
+#vizact.onslider(slider, blendTextures)
