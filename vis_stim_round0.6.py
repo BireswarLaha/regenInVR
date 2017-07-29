@@ -312,103 +312,136 @@ for i in range(numberOfPaintings):
 #painting_van_gogh.visible(False)
 #painting_warhol_soup.visible(False)
 #
-painting_birth_of_venus_black = vizfx.addChild('models/painting_birth-of-venus_black.osgb')
+painting_birth_of_venus_blend = vizfx.addChild('models/painting_birth-of-venus_blend.osgb')
+#painting_birth_of_venus_black = vizfx.addChild('models/painting_birth-of-venus_black.osgb')
 #painting_birth_of_venus_black = vizfx.addChild('models/painting_birth-of-venus.osgb')
-painting_birth_of_venus_black.visible(False)
-paintingsDictionary['painting_birth-of-venus_black'] = painting_birth_of_venus_black
+#painting_birth_of_venus_black.visible(False)
+paintingsDictionary['painting_birth-of-venus_blend'] = painting_birth_of_venus_blend
+#paintingsDictionary['painting_birth-of-venus_black'] = painting_birth_of_venus_black
 #paintingsDictionary['painting_birth-of-venus_black'] = paintings[0]
 #paintingsDictionary[textureNameForPainting[0]] = paintings[0]
 #paintingsDictionary['painting_birth-of-venus_black'].visible(False)
-paintingsInTheBackground[0 + numberOfPaintings] = painting_birth_of_venus_black
+paintingsInTheBackground[0 + numberOfPaintings] = painting_birth_of_venus_blend
+#paintingsInTheBackground[0 + numberOfPaintings] = painting_birth_of_venus_black
 
-painting_dali_memory_black = vizfx.addChild('models/painting_dali-memory_black.osgb')
+painting_dali_memory_blend = vizfx.addChild('models/painting_dali-memory_blend.osgb')
+#painting_dali_memory_black = vizfx.addChild('models/painting_dali-memory_black.osgb')
 #painting_dali_memory_black = vizfx.addChild('models/painting_dali-memory.osgb')
-painting_dali_memory_black.visible(False)
-paintingsDictionary['painting_dali-memory_black'] = painting_dali_memory_black
+#painting_dali_memory_black.visible(False)
+paintingsDictionary['painting_dali-memory_blend'] = painting_dali_memory_blend
+#paintingsDictionary['painting_dali-memory_black'] = painting_dali_memory_black
 #paintingsDictionary['painting_dali-memory_black'] = paintings[1]
 #paintingsDictionary[textureNameForPainting[1]] = paintings[1]
 #paintingsDictionary['painting_dali-memory_black'].visible(False)
-paintingsInTheBackground[1 + numberOfPaintings] = painting_dali_memory_black
+paintingsInTheBackground[1 + numberOfPaintings] = painting_dali_memory_blend
+#paintingsInTheBackground[1 + numberOfPaintings] = painting_dali_memory_black
 
-painting_harring_bestbuddies_black = vizfx.addChild('models/painting_harring-bestbuddies_black.osgb')
+painting_harring_bestbuddies_blend = vizfx.addChild('models/painting_harring-bestbuddies_blend.osgb')
+#painting_harring_bestbuddies_black = vizfx.addChild('models/painting_harring-bestbuddies_black.osgb')
 #painting_harring_bestbuddies_black = vizfx.addChild('models/painting_harring-bestbuddies.osgb')
-painting_harring_bestbuddies_black.visible(False)
-paintingsDictionary['painting_harring-bestbuddies_black'] = painting_harring_bestbuddies_black
+#painting_harring_bestbuddies_black.visible(False)
+paintingsDictionary['painting_harring-bestbuddies_blend'] = painting_harring_bestbuddies_blend
+#paintingsDictionary['painting_harring-bestbuddies_black'] = painting_harring_bestbuddies_black
 #paintingsDictionary['painting_harring-bestbuddies_black'] = paintings[2]
 #paintingsDictionary[textureNameForPainting[2]] = paintings[2]
 #paintingsDictionary['painting_harring-bestbuddies_black'].visible(False)
-paintingsInTheBackground[2 + numberOfPaintings] = painting_harring_bestbuddies_black
+paintingsInTheBackground[2 + numberOfPaintings] = painting_harring_bestbuddies_blend
+#paintingsInTheBackground[2 + numberOfPaintings] = painting_harring_bestbuddies_black
 
-painting_magritte_black = vizfx.addChild('models/painting_magritte_black.osgb')
+painting_magritte_blend = vizfx.addChild('models/painting_magritte_blend.osgb')
+#painting_magritte_black = vizfx.addChild('models/painting_magritte_black.osgb')
 #painting_magritte_black = vizfx.addChild('models/painting_magritte.osgb')
-painting_magritte_black.visible(False)
-paintingsDictionary['painting_magritte_black'] = painting_magritte_black
+#painting_magritte_black.visible(False)
+paintingsDictionary['painting_magritte_blend'] = painting_magritte_blend
+#paintingsDictionary['painting_magritte_black'] = painting_magritte_black
 #paintingsDictionary['painting_magritte_black'] = paintings[3]
 #paintingsDictionary[textureNameForPainting[3]] = paintings[3]
 #paintingsDictionary['painting_magritte_black'].visible(False)
-paintingsInTheBackground[3 + numberOfPaintings] = painting_magritte_black
+paintingsInTheBackground[3 + numberOfPaintings] = painting_magritte_blend
+#paintingsInTheBackground[3 + numberOfPaintings] = painting_magritte_black
 
-painting_monalisa_black = vizfx.addChild('models/painting_monalisa_black.osgb')
+painting_monalisa_blend = vizfx.addChild('models/painting_monalisa_blend.osgb')
+#painting_monalisa_black = vizfx.addChild('models/painting_monalisa_black.osgb')
 #painting_monalisa_black = vizfx.addChild('models/painting_monalisa.osgb')
-painting_monalisa_black.visible(False)
-paintingsDictionary['painting_monalisa_black'] = painting_monalisa_black
+#painting_monalisa_black.visible(False)
+paintingsDictionary['painting_monalisa_blend'] = painting_monalisa_blend
+#paintingsDictionary['painting_monalisa_black'] = painting_monalisa_black
 #paintingsDictionary[textureNameForPainting[4]] = paintings[4]
 #paintingsDictionary['painting_monalisa_black'].visible(False)
-paintingsInTheBackground[4 + numberOfPaintings] = painting_monalisa_black
+paintingsInTheBackground[4 + numberOfPaintings] = painting_monalisa_blend
+#paintingsInTheBackground[4 + numberOfPaintings] = painting_monalisa_black
 
-painting_monet_venice_black = vizfx.addChild('models/painting_monet-venice_black.osgb')
+painting_monet_venice_blend = vizfx.addChild('models/painting_monet-venice_blend.osgb')
+#painting_monet_venice_black = vizfx.addChild('models/painting_monet-venice_black.osgb')
 #painting_monet_venice_black = vizfx.addChild('models/painting_monet-venice.osgb')
-painting_monet_venice_black.visible(False)
-paintingsDictionary['painting_monet-venice_black'] = painting_monet_venice_black
+#painting_monet_venice_black.visible(False)
+paintingsDictionary['painting_monet-venice_blend'] = painting_monet_venice_blend
+#paintingsDictionary['painting_monet-venice_black'] = painting_monet_venice_black
 #paintingsDictionary['painting_monet-venice_black'] = paintings[5]
 #paintingsDictionary[textureNameForPainting[5]] = paintings[5]
 #paintingsDictionary['painting_monet-venice_black'].visible(False)
-paintingsInTheBackground[5 + numberOfPaintings] = painting_monet_venice_black
+paintingsInTheBackground[5 + numberOfPaintings] = painting_monet_venice_blend
+#paintingsInTheBackground[5 + numberOfPaintings] = painting_monet_venice_black
 
-painting_picasso_black = vizfx.addChild('models/painting_picasso_black.osgb')
+painting_picasso_blend = vizfx.addChild('models/painting_picasso_blend.osgb')
+#painting_picasso_black = vizfx.addChild('models/painting_picasso_black.osgb')
 #painting_picasso_black = vizfx.addChild('models/painting_picasso.osgb')
-painting_picasso_black.visible(False)
-paintingsDictionary['painting_picasso_black'] = painting_picasso_black
+#painting_picasso_black.visible(False)
+paintingsDictionary['painting_picasso_blend'] = painting_picasso_blend
+#paintingsDictionary['painting_picasso_black'] = painting_picasso_black
 #paintingsDictionary['painting_picasso_black'] = paintings[6]
 #paintingsDictionary[textureNameForPainting[6]] = paintings[6]
 #paintingsDictionary['painting_picasso_black'].visible(False)
-paintingsInTheBackground[6 + numberOfPaintings] = painting_picasso_black
+paintingsInTheBackground[6 + numberOfPaintings] = painting_picasso_blend
+#paintingsInTheBackground[6 + numberOfPaintings] = painting_picasso_black
 
-painting_scream_black = vizfx.addChild('models/painting_scream_black.osgb')
+painting_scream_blend = vizfx.addChild('models/painting_scream_blend.osgb')
+#painting_scream_black = vizfx.addChild('models/painting_scream_black.osgb')
 #painting_scream_black = vizfx.addChild('models/painting_scream.osgb')
-painting_scream_black.visible(False)
-paintingsDictionary['painting_scream_black'] = painting_scream_black
+#painting_scream_black.visible(False)
+paintingsDictionary['painting_scream_blend'] = painting_scream_blend
+#paintingsDictionary['painting_scream_black'] = painting_scream_black
 #paintingsDictionary['painting_scream_black'] = paintings[7]
 #paintingsDictionary[textureNameForPainting[7]] = paintings[7]
 #paintingsDictionary['painting_scream_black'].visible(False)
-paintingsInTheBackground[7 + numberOfPaintings] = painting_scream_black
+paintingsInTheBackground[7 + numberOfPaintings] = painting_scream_blend
+#paintingsInTheBackground[7 + numberOfPaintings] = painting_scream_black
 
-painting_starry_night_black = vizfx.addChild('models/painting_starry-night_black.osgb')
+painting_starry_night_blend = vizfx.addChild('models/painting_starry-night_blend.osgb')
+#painting_starry_night_black = vizfx.addChild('models/painting_starry-night_black.osgb')
 #painting_starry_night_black = vizfx.addChild('models/painting_starry-night.osgb')
-painting_starry_night_black.visible(False)
-paintingsDictionary['painting_starry-night_black'] = painting_starry_night_black
+#painting_starry_night_black.visible(False)
+paintingsDictionary['painting_starry-night_blend'] = painting_starry_night_blend
+#paintingsDictionary['painting_starry-night_black'] = painting_starry_night_black
 #paintingsDictionary['painting_starry-night_black'] = paintings[8]
 #paintingsDictionary[textureNameForPainting[8]] = paintings[8]
 #paintingsDictionary['painting_starry-night_black'].visible(False)
-paintingsInTheBackground[8 + numberOfPaintings] = painting_starry_night_black
+paintingsInTheBackground[8 + numberOfPaintings] = painting_starry_night_blend
+#paintingsInTheBackground[8 + numberOfPaintings] = painting_starry_night_black
 
-painting_van_gogh_black = vizfx.addChild('models/painting_van-gogh_black.osgb')
+painting_van_gogh_blend = vizfx.addChild('models/painting_van-gogh_blend.osgb')
+#painting_van_gogh_black = vizfx.addChild('models/painting_van-gogh_black.osgb')
 #painting_van_gogh_black = vizfx.addChild('models/painting_van-gogh.osgb')
-painting_van_gogh_black.visible(False)
-paintingsDictionary['painting_van-gogh_black'] = painting_van_gogh_black
+#painting_van_gogh_black.visible(False)
+paintingsDictionary['painting_van-gogh_blend'] = painting_van_gogh_blend
+#paintingsDictionary['painting_van-gogh_black'] = painting_van_gogh_black
 #paintingsDictionary['painting_van-gogh_black'] = paintings[9]
 #paintingsDictionary[textureNameForPainting[9]] = paintings[9]
 #paintingsDictionary['painting_van-gogh_black'].visible(False)
-paintingsInTheBackground[9 + numberOfPaintings] = painting_van_gogh_black
+paintingsInTheBackground[9 + numberOfPaintings] = painting_van_gogh_blend
+#paintingsInTheBackground[9 + numberOfPaintings] = painting_van_gogh_black
 
-painting_warhol_soup_black = vizfx.addChild('models/painting_warhol_soup_black.osgb')
+painting_warhol_soup_blend = vizfx.addChild('models/painting_warhol_soup_blend.osgb')
+#painting_warhol_soup_black = vizfx.addChild('models/painting_warhol_soup_black.osgb')
 #painting_warhol_soup_black = vizfx.addChild('models/painting_warhol_soup.osgb')
-painting_warhol_soup_black.visible(False)
-paintingsDictionary['painting_warhol_soup_black'] = painting_warhol_soup_black
+#painting_warhol_soup_black.visible(False)
+paintingsDictionary['painting_warhol_soup_blend'] = painting_warhol_soup_blend
+#paintingsDictionary['painting_warhol_soup_black'] = painting_warhol_soup_black
 #paintingsDictionary['painting_warhol_soup_black'] = paintings[10]
 #paintingsDictionary[textureNameForPainting[10]] = paintings[10]
 #paintingsDictionary['painting_warhol_soup_black'].visible(False)
-paintingsInTheBackground[10 + numberOfPaintings] = painting_warhol_soup_black
+paintingsInTheBackground[10 + numberOfPaintings] = painting_warhol_soup_blend
+#paintingsInTheBackground[10 + numberOfPaintings] = painting_warhol_soup_black
 
 #fader
 #fader = view_fader.addFader()
@@ -431,6 +464,26 @@ Effect {
 }
 """
 highlightEffect = viz.addEffect(code)
+
+# Create shader effect that blends textures and applies to diffuse color
+code = """
+Effect "Texture Blend" {
+
+	Float BlendAmount { value 0 }
+	Texture2D Texture1 { unit 0 }
+	Texture2D Texture2 { unit 1 }
+
+	Shader {
+
+		BEGIN Material
+		m.diffuse = mix( texture2D( Texture1, uvTexture1).rgb, texture2D( Texture2, uvTexture2).rgb, BlendAmount);
+		END
+
+	}
+
+}
+"""
+texBlendEffect = viz.addEffect(code)
 
 # Map painting name to jump location
 JUMP_LOCATIONS = {   'painting_picasso': [-3.4, -0.00000, 0.42632]
@@ -518,7 +571,8 @@ def HighlightPainting(name, mode):
 	if name:
 		
 		nameNew = name
-		nameNew = name + "_black"
+#		nameNew = name + "_black"
+		nameNew = name + "_blend"
 		splitNames = nameNew.split("-")
 		
 #		print "name = " + name
@@ -636,7 +690,7 @@ def JumpTask(controller):
 			videoListIndex = dictionaryMappingPaintingNamesToVideoListIndex[info.name]
 			selectedPaintingIndex = dictionaryMappingPaintingNamesToVideoListIndex[info.name]
 			if videoListIndex > itemIndexWithNoStimulation: videoListIndex -= 1	#this is under the assumption that the indices of the videos associated to the canvases go up from 0 to 10, ignoring the index for the item to be ignored
-			paintingsDictionary[info.name + "_black"].visible(False)
+#			paintingsDictionary[info.name + "_black"].visible(False)
 
 			if (info.name != paintingNames[itemIndexWithNoStimulation]):
 				#visual stimulation ready to be taken
@@ -646,6 +700,7 @@ def JumpTask(controller):
 			else:
 				#visual stimulation unavailable or already taken
 				print "\n=========================\nPainting: " + info.name + ". The visual stimulation here is either unavailable, or is complete for this round. Please check other canvases."
+				######Use paintingsDictionary to retrieve the painting in focus, instead of paintings list in line below				
 				paintings[selectedPaintingIndex].texblend(1.0, '', 1)
 				stimulate = False
 
@@ -715,27 +770,27 @@ def setBackgroundVisibility(visibility = False):
 ##			print "i = " + str(i)
 #			if visibilityArray[i] is not None: paintingsInTheBackground[i].visible(visibilityArray[i])
 
-#	painting_birth_of_venus_black.visible(visibility)
-#
-#	painting_dali_memory_black.visible(visibility)
-#
-#	painting_harring_bestbuddies_black.visible(visibility)
-#
-#	painting_magritte_black.visible(visibility)
-#
-#	painting_monalisa_black.visible(visibility)
-#
-#	painting_monet_venice_black.visible(visibility)
-#
-#	painting_picasso_black.visible(visibility)
-#
-#	painting_scream_black.visible(visibility)
-#
-#	painting_starry_night_black.visible(visibility)
-#
-#	painting_van_gogh_black.visible(visibility)
-#
-#	painting_warhol_soup_black.visible(visibility)
+	painting_birth_of_venus_blend.visible(visibility)
+
+	painting_dali_memory_blend.visible(visibility)
+
+	painting_harring_bestbuddies_blend.visible(visibility)
+
+	painting_magritte_blend.visible(visibility)
+
+	painting_monalisa_blend.visible(visibility)
+
+	painting_monet_venice_blend.visible(visibility)
+
+	painting_picasso_blend.visible(visibility)
+
+	painting_scream_blend.visible(visibility)
+
+	painting_starry_night_blend.visible(visibility)
+
+	painting_van_gogh_blend.visible(visibility)
+
+	painting_warhol_soup_blend.visible(visibility)
 
 def setCompletionBoardVisibility(state = False):
 	global totalCanvases, completionCanvas
@@ -845,6 +900,7 @@ def visualStim(controller):
 
 #	paintings[selectedPaintingIndex].texblend((maxNumberOfVideoLoops - vidLoopsRemaining)/maxNumberOfVideoLoops, '', 1)
 	print "Visibility/completion of this image is at " + str(getCompletion_ONLY_FromVisualStimFunction()) + "%\n---------------------"
+	######Use paintingsDictionary to retrieve the painting in focus, instead of paintings list in line below
 	paintings[selectedPaintingIndex].texblend(completion/100.0, '', 1)
 
 def onSensorDown(e):
@@ -1386,7 +1442,7 @@ for i in range(totalCanvases):
 
 
 #testing for transparency below
-gallery.visible(False)
+#gallery.visible(False)
 #starry_night_black = vizfx.addChild('models/painting_starry-night_black.osgb')
 #starry_night = vizfx.addChild('models/painting_starry-night.osgb')
 #
@@ -1400,17 +1456,18 @@ gallery.visible(False)
 #starry_night.alphaFunc(viz.GL_LESS)
 #starry_night.alpha(0.1)
 
-birth_of_venus = vizfx.addChild('models/painting_birth-of-venus_blend.osgb')
-dali_memory = vizfx.addChild('models/painting_dali-memory_blend.osgb')
-harring_bestbuddies = vizfx.addChild('models/painting_harring-bestbuddies_blend.osgb')
-magritte = vizfx.addChild('models/painting_magritte_blend.osgb')
-monalisa = vizfx.addChild('models/painting_monalisa_blend.osgb')
-monet_venice = vizfx.addChild('models/painting_monet-venice_blend.osgb')
-picasso = vizfx.addChild('models/painting_picasso_blend.osgb')
-scream = vizfx.addChild('models/painting_scream_blend.osgb')
-starry_night = vizfx.addChild('models/painting_starry-night_blend.osgb')
-van_gogh = vizfx.addChild('models/painting_van-gogh_blend.osgb')
-warhol_soup = vizfx.addChild('models/painting_warhol_soup_blend.osgb')
+#birth_of_venus = vizfx.addChild('models/painting_birth-of-venus_blend.osgb')
+#dali_memory = vizfx.addChild('models/painting_dali-memory_blend.osgb')
+#harring_bestbuddies = vizfx.addChild('models/painting_harring-bestbuddies_blend.osgb')
+#magritte = vizfx.addChild('models/painting_magritte_blend.osgb')
+#monalisa = vizfx.addChild('models/painting_monalisa_blend.osgb')
+#monet_venice = vizfx.addChild('models/painting_monet-venice_blend.osgb')
+#picasso = vizfx.addChild('models/painting_picasso_blend.osgb')
+#scream = vizfx.addChild('models/painting_scream_blend.osgb')
+#starry_night = vizfx.addChild('models/painting_starry-night_blend.osgb')
+#van_gogh = vizfx.addChild('models/painting_van-gogh_blend.osgb')
+#warhol_soup = vizfx.addChild('models/painting_warhol_soup_blend.osgb')
+
 #starry_night.visible(False)
 #logo = viz.addChild('logo.ive')
 #logo.visible(False)
@@ -1418,57 +1475,37 @@ warhol_soup = vizfx.addChild('models/painting_warhol_soup_blend.osgb')
 #tex1 = viz.addTexture('brick.jpg', wrap=viz.REPEAT)
 #tex2 = viz.addTexture('gb_noise.jpg', wrap=viz.REPEAT)
 
-# Create shader effect that blends textures and applies to diffuse color
-code = """
-Effect "Texture Blend" {
-
-	Float BlendAmount { value 0 }
-	Texture2D Texture1 { unit 0 }
-	Texture2D Texture2 { unit 1 }
-
-	Shader {
-
-		BEGIN Material
-		m.diffuse = mix( texture2D( Texture1, uvTexture1).rgb, texture2D( Texture2, uvTexture2).rgb, BlendAmount);
-		END
-
-	}
-
-}
-"""
-texBlendEffect = viz.addEffect(code)
-
 # Apply the effect to the models
-birth_of_venus.apply(texBlendEffect)
-dali_memory.apply(texBlendEffect)
-harring_bestbuddies.apply(texBlendEffect)
-magritte.apply(texBlendEffect)
-monalisa.apply(texBlendEffect)
-monet_venice.apply(texBlendEffect)
-picasso.apply(texBlendEffect)
-scream.apply(texBlendEffect)
-starry_night.apply(texBlendEffect)
-van_gogh.apply(texBlendEffect)
-warhol_soup.apply(texBlendEffect)
+#birth_of_venus.apply(texBlendEffect)
+#dali_memory.apply(texBlendEffect)
+#harring_bestbuddies.apply(texBlendEffect)
+#magritte.apply(texBlendEffect)
+#monalisa.apply(texBlendEffect)
+#monet_venice.apply(texBlendEffect)
+#picasso.apply(texBlendEffect)
+#scream.apply(texBlendEffect)
+#starry_night.apply(texBlendEffect)
+#van_gogh.apply(texBlendEffect)
+#warhol_soup.apply(texBlendEffect)
 
-def SetBlendAmount(pos, model):
-	#Set the value of the blend amount property
-	model.setUniformFloat('BlendAmount', pos)
+#def SetBlendAmount(pos, model):
+#	#Set the value of the blend amount property
+#	model.setUniformFloat('BlendAmount', pos)
 
 # Create sliders to control the blend amount for each object
-slider1 = viz.addSlider(pos=[0.75,0.1,0])
+#slider1 = viz.addSlider(pos=[0.75,0.1,0])
 
-vizact.onslider(slider1, SetBlendAmount, birth_of_venus)
-vizact.onslider(slider1, SetBlendAmount, dali_memory)
-vizact.onslider(slider1, SetBlendAmount, harring_bestbuddies)
-vizact.onslider(slider1, SetBlendAmount, magritte)
-vizact.onslider(slider1, SetBlendAmount, monalisa)
-vizact.onslider(slider1, SetBlendAmount, monet_venice)
-vizact.onslider(slider1, SetBlendAmount, picasso)
-vizact.onslider(slider1, SetBlendAmount, scream)
-vizact.onslider(slider1, SetBlendAmount, starry_night)
-vizact.onslider(slider1, SetBlendAmount, van_gogh)
-vizact.onslider(slider1, SetBlendAmount, warhol_soup)
+#vizact.onslider(slider1, SetBlendAmount, birth_of_venus)
+#vizact.onslider(slider1, SetBlendAmount, dali_memory)
+#vizact.onslider(slider1, SetBlendAmount, harring_bestbuddies)
+#vizact.onslider(slider1, SetBlendAmount, magritte)
+#vizact.onslider(slider1, SetBlendAmount, monalisa)
+#vizact.onslider(slider1, SetBlendAmount, monet_venice)
+#vizact.onslider(slider1, SetBlendAmount, picasso)
+#vizact.onslider(slider1, SetBlendAmount, scream)
+#vizact.onslider(slider1, SetBlendAmount, starry_night)
+#vizact.onslider(slider1, SetBlendAmount, van_gogh)
+#vizact.onslider(slider1, SetBlendAmount, warhol_soup)
 
 #starry_night.texture(tex1)
 #starry_night.texture(tex2,'',1)
