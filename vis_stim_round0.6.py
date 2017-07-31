@@ -1,6 +1,6 @@
 ﻿#Developed on Vizard sample code, titled 'steamvrExample.py'
 #Bireswar Laha, Huberman Lab, Department of Neurobiology, Stanford University
-#Dated: March-May, 2017
+#Dated: March-July, 2017
 
 import sys
 import viz
