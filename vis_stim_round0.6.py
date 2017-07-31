@@ -729,7 +729,7 @@ def JumpTask(controller):
 				print "\n=========================\nPainting: " + info.name + ". The visual stimulation here is either unavailable, or is complete for this round. Please check other canvases."
 				######Use paintingsDictionary to retrieve the painting in focus, instead of paintings list in line below
 #				paintings[selectedPaintingIndex].texblend(1.0, '', 1)
-				print "paintingsDictionary[selectedKeyForPaintingsDictionary] = " + str(paintingsDictionary[selectedKeyForPaintingsDictionary])
+#				print "paintingsDictionary[selectedKeyForPaintingsDictionary] = " + str(paintingsDictionary[selectedKeyForPaintingsDictionary])
 				paintingsDictionary[selectedKeyForPaintingsDictionary].setUniformFloat('BlendAmount', 0.0)
 				stimulate = False
 
@@ -931,8 +931,8 @@ def visualStim(controller):
 	print "Visibility/completion of this image is at " + str(getCompletion_ONLY_FromVisualStimFunction()) + "%\n---------------------"
 	######Use paintingsDictionary to retrieve the painting in focus, instead of paintings list in line below
 #	paintings[selectedPaintingIndex].texblend(completion/100.0, '', 1)
-	print "paintingsDictionary[selectedKeyForPaintingsDictionary] = " + str(paintingsDictionary[selectedKeyForPaintingsDictionary])
-	print "completion/100.0 = " + str(completion/100.0)
+#	print "paintingsDictionary[selectedKeyForPaintingsDictionary] = " + str(paintingsDictionary[selectedKeyForPaintingsDictionary])
+#	print "completion/100.0 = " + str(completion/100.0)
 	paintingsDictionary[selectedKeyForPaintingsDictionary].setUniformFloat('BlendAmount', 1.0 - float(completion/100.0))
 
 def onSensorDown(e):
