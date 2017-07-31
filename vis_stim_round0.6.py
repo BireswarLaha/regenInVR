@@ -249,6 +249,7 @@ sizeOfTex[9] = [1.68, 1.21]
 sizeOfTex[10] = [1.21, 1.71]
 
 # Create shader effect that blends textures and applies to diffuse color
+#code borrowed from tutorial_multiTexture.py of worldviz, and modified
 code = """
 Effect "Texture Blend" {
 
