@@ -1,6 +1,6 @@
 Tell the participants:
-1. Keep your eyes fixated on the crosshair at the center of the screen, while getting the stimulation.
-2. If its hard on your thumb to press down the trackpad for the entire session, use the other fingers, or the thumb in your other hand.
+1. DO NOT FALL ASLEEP and keep your eyes fixated on the crosshair at the center of the screen, while getting the stimulation.
+2. If its hard on your thumb (index finger) to press down on the trackpad (or pull the trigger) for the entire session, use the other fingers, or the thumb in your other hand.
 
 For the research co-ordinator:
 1. The white noise video is on the desktop. Rest everything is on github.

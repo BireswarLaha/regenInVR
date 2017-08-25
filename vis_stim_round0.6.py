@@ -671,13 +671,13 @@ def JumpTask(controller):
 	while True:
 
 		# Wait for trigger to press
-		yield viztask.waitSensorDown(controller, steamvr.BUTTON_TRIGGER)
+		yield viztask.waitSensorDown(controller, steamvr.BUTTON_TRACKPAD)
 
 		# Start highlighting task
 		highlightTask = viztask.schedule(HighlightTask(controller))
 
 		# Wait for trigger to release
-		yield viztask.waitSensorUp(controller, steamvr.BUTTON_TRIGGER)
+		yield viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)
 
 		# Stop highlighting task
 		highlightTask.remove()
@@ -834,7 +834,7 @@ def onSensorUp(e):
 
 #	print "e.button = " + str(e.button)
 	if e.object is theControllerToUse:
-		if e.button == steamvr.BUTTON_TRACKPAD:
+		if e.button == steamvr.BUTTON_TRIGGER:
 #			stimulate = False
 #			leftVideoRenderingBoard.visible(False)
 #			rightVideoRenderingBoard.visible(False)
@@ -891,7 +891,7 @@ def visualStim(controller):
 	#setting the time of the video to the number of seconds at which the last cycle ended
 	videoToPlay.setTime(timeToStartPlayingTheVideoFrom[videoListIndex])
 	videoToPlay.play()
-	yield viztask.waitAny([viztask.waitMediaEnd(videoToPlay), viztask.waitSensorUp(controller, steamvr.BUTTON_TRACKPAD)])
+	yield viztask.waitAny([viztask.waitMediaEnd(videoToPlay), viztask.waitSensorUp(controller, steamvr.BUTTON_TRIGGER)])
 	
 	if (videoToPlay.getState() == viz.MEDIA_RUNNING):
 		#the stop of the stimulation is triggered here from the release of the controller trackpad ... need to call the stim end timer
@@ -941,7 +941,7 @@ def onSensorDown(e):
 	global leftVideoRenderingBoard, rightVideoRenderingBoard, videoRenderingBoard, vidLoopsRemaining, videoToPlay
 
 	if e.object is theControllerToUse:
-		if (e.button == steamvr.BUTTON_TRACKPAD) and (stimulate):
+		if (e.button == steamvr.BUTTON_TRIGGER) and (stimulate):
 			#stimulation code below:
 			
 			vidLoopsRemaining = videoLoopsRemaining[videoListIndex]
